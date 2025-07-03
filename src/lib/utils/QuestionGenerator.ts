@@ -153,28 +153,23 @@ class QuestionGenerator {
 
   private buildPrompt(sednaTip: SednaTip, difficulty: Difficulty): string {
     const difficultyInstructions = {
-      easy: 'Use simple, clear language that is easy for everyone to understand. The myth or fact should be presented in a way that is straightforward, making it easy for anyone to determine whether the statement is true or false.',
-      medium: 'Use moderate complexity, including some technical terms and intermediate AI concepts. The statement should challenge the user’s understanding without being too difficult to decipher.',
-      hard: 'Use advanced, technical language and complex AI concepts. The statement should be phrased in such a way that it is difficult for the user to immediately tell whether it is a myth or a fact, requiring deeper understanding to discern the truth.'      
+      easy: 'Use simple, clear language. Make it easy to decide if the statement is true or false.',
+      medium: 'Use moderate complexity and some technical terms. Challenge the user\'s understanding.',
+      hard: 'Use advanced technical language and complex AI concepts. Require deep understanding.'
     };
 
-    return `You are an AI expert creating Myth vs Fact questions for a gameshow about AI in government and public sector.
+    return `Create a Myth vs Fact question about AI in government/public sector, based on this case study: "${sednaTip.tip}".
 
-Based on this Sedna Consulting Group case study:
-"${sednaTip.tip}"
-
-Create a Myth vs Fact question that tests understanding of AI capabilities and limitations. The question should be educational and engaging.
-
-DIFFICULTY LEVEL: ${difficulty.toUpperCase()}
+DIFFICULTY: ${difficulty.toUpperCase()}
 ${difficultyInstructions[difficulty]}
 
-Format your response exactly as follows:
-STATEMENT: [Write a clear, concise statement about AI that could be either a myth or fact]
+Format:
+STATEMENT: [A myth or fact statement about AI, focusing on a key lesson (e.g., bias, fairness, transparency, accountability, explainability, ethics, unintended consequences, etc.). Relate it to the case study.]
 IS_FACT: [true or false]
-EXPLANATION: [Provide a brief, educational explanation of why this is a myth or fact.  Do not mention Sedna or any company by name or try to reference the case study or sedna for the explanation alone.]
+EXPLANATION: [Briefly explain why this is a myth or fact. Do not mention Sedna or any company.]
+`;
+}
 
-The statement should be related to the Sedna case study but test general AI knowledge. Make it engaging and thought-provoking. Do not mention Sedna tip here.`;
-  }
 
   private parseOllamaResponse(response: string, sednaTip: SednaTip, difficulty: Difficulty): Question | null {
     try {
