@@ -1,12 +1,18 @@
 <script lang="ts">
 import { onMount } from 'svelte';
-import { getAllUsers, updateUserField, deleteUserById, deleteUsersByIds } from '$lib/utils/userdb';
+import { getAllUsers, updateUserField, deleteUserById, deleteUsersByIds, updateUserRaffleEntries } from '$lib/utils/userdb';
 
 let password = '';
 let authenticated = false;
 let users: any[] = [];
 let error = '';
 let selectedIds: number[] = [];
+let winner: any = null;
+let currentPage = 1;
+const pageSize = 10;
+
+$: totalPages = Math.ceil(users.length / pageSize);
+$: pagedUsers = users.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
 async function fetchUsers() {
   users = await getAllUsers();
@@ -68,6 +74,28 @@ async function deleteSingle(id: number) {
     await fetchUsers();
   }
 }
+
+async function updateRaffleEntries(id: number, value: number) {
+  await updateUserRaffleEntries(id, value);
+  await fetchUsers();
+}
+
+function chooseWinner() {
+  // Build the raffle pool
+  const pool = users.flatMap(u => Array(u.raffleEntries ?? 1).fill(u));
+  if (pool.length === 0) {
+    winner = null;
+    return;
+  }
+  const idx = Math.floor(Math.random() * pool.length);
+  winner = pool[idx];
+}
+
+function goToPage(page: number) {
+  if (page >= 1 && page <= totalPages) {
+    currentPage = page;
+  }
+}
 </script>
 
 <svelte:head>
@@ -111,11 +139,12 @@ async function deleteSingle(id: number) {
               <th class="border-b-2 p-2">Pain Point</th>
               <th class="border-b-2 p-2">Occupation</th>
               <th class="border-b-2 p-2">Timestamp</th>
+              <th class="border-b-2 p-2">Raffle Entries</th>
               <th class="border-b-2 p-2">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {#each users as user}
+            {#each pagedUsers as user}
               <tr>
                 <td class="border-b p-2">
                   <input type="checkbox" checked={selectedIds.includes(user.id)} on:change={() => toggleSelect(user.id)}>
@@ -125,12 +154,31 @@ async function deleteSingle(id: number) {
                 <td class="border-b p-2">{user.occupation}</td>
                 <td class="border-b p-2">{new Date(user.timestamp).toLocaleString()}</td>
                 <td class="border-b p-2">
+                  <input type="number" min="1" class="w-16 border rounded px-2 py-1" value={user.raffleEntries} on:change={e => updateRaffleEntries(user.id, +e.target.value)}>
+                </td>
+                <td class="border-b p-2">
                   <button class="text-xs text-red-600 underline" on:click={() => deleteSingle(user.id)}>Delete</button>
                 </td>
               </tr>
             {/each}
           </tbody>
         </table>
+        <!-- Pagination controls -->
+        {#if totalPages > 1}
+        <div class="flex justify-center items-center gap-2 mt-4">
+          <button class="sedna-btn sedna-btn-secondary px-3 py-1" on:click={() => goToPage(currentPage - 1)} disabled={currentPage === 1}>&lt;</button>
+          {#each Array(totalPages) as _, i}
+            <button class="sedna-btn px-3 py-1 {currentPage === i + 1 ? 'sedna-btn-accent' : 'sedna-btn-secondary'}" on:click={() => goToPage(i + 1)}>{i + 1}</button>
+          {/each}
+          <button class="sedna-btn sedna-btn-secondary px-3 py-1" on:click={() => goToPage(currentPage + 1)} disabled={currentPage === totalPages}>&gt;</button>
+        </div>
+        {/if}
+        <div class="mt-6 flex flex-col items-center gap-2">
+          <button class="sedna-btn sedna-btn-accent" on:click={chooseWinner}>Choose Winner</button>
+          {#if winner}
+            <div class="mt-2 text-lg font-bold text-sedna-orange">Winner: {winner.name} ({winner.occupation})</div>
+          {/if}
+        </div>
       {/if}
     </div>
   {/if}

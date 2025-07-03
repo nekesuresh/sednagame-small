@@ -13,12 +13,14 @@ export const dbPromise = openDB(DB_NAME, DB_VERSION, {
 
 export async function saveUserInfo({ name, painPoint, occupation }: { name: string, painPoint: string, occupation: string }) {
   const db = await dbPromise;
-  await db.add('users', { name, painPoint, occupation, timestamp: Date.now() });
+  await db.add('users', { name, painPoint, occupation, timestamp: Date.now(), raffleEntries: 1 });
 }
 
 export async function getAllUsers() {
   const db = await dbPromise;
-  return db.getAll('users');
+  const users = await db.getAll('users');
+  // Ensure all users have raffleEntries
+  return users.map(u => ({ ...u, raffleEntries: u.raffleEntries ?? 1 }));
 }
 
 export async function updateUserField(id: number, field: 'name' | 'painPoint' | 'occupation', value: string) {
@@ -47,4 +49,13 @@ export async function deleteUsersByIds(ids: number[]) {
     tx.store.delete(id);
   }
   await tx.done;
+}
+
+export async function updateUserRaffleEntries(id: number, value: number) {
+  const db = await dbPromise;
+  const user = await db.get('users', id);
+  if (user) {
+    user.raffleEntries = value;
+    await db.put('users', user);
+  }
 } 

@@ -7,6 +7,9 @@
 
 	onMount(() => {
 		userInfo = answerHandler.getUserInfo();
+		if (!userInfo || answerHandler.getScore() < 100) {
+			goto('/');
+		}
 	});
 
 	function handlePlayAgain() {
