@@ -94,9 +94,58 @@ class QuestionGenerator {
   private ollamaUrl: string;
   private isOllamaAvailable: boolean = false;
 
+  // Track last two isFact values for alternation
+  private lastIsFacts: boolean[] = [];
+  // Track unused tip IDs for unique tip usage
+  private unusedTipIds: number[] = [];
+
   constructor(ollamaUrl: string = 'http://localhost:11434') {
     this.ollamaUrl = ollamaUrl;
-    // Don't check availability in constructor - let it be checked explicitly
+    // Load unused tips from localStorage if available
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('sedna-unused-tip-ids');
+      if (stored) {
+        try {
+          this.unusedTipIds = JSON.parse(stored);
+        } catch (e) {
+          this.unusedTipIds = [];
+        }
+      }
+    }
+  }
+
+  private saveUnusedTips() {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('sedna-unused-tip-ids', JSON.stringify(this.unusedTipIds));
+    }
+  }
+
+  // Helper to get a tip that hasn't been used yet
+  private async getUniqueRandomTip(): Promise<SednaTip> {
+    const { sednaTips } = await import('$lib/data/sednaTips');
+    if (this.unusedTipIds.length === 0) {
+      // Refill and shuffle
+      this.unusedTipIds = sednaTips.map(t => t.id).sort(() => Math.random() - 0.5);
+      this.saveUnusedTips();
+    }
+    const tipId = this.unusedTipIds.pop();
+    this.saveUnusedTips();
+    return sednaTips.find(t => t.id === tipId) || sednaTips[0];
+  }
+
+  // Helper to enforce alternation: no 3 in a row
+  private enforceAlternation(isFact: boolean): boolean {
+    if (this.lastIsFacts.length < 2) return true;
+    if (this.lastIsFacts[this.lastIsFacts.length - 1] === isFact && this.lastIsFacts[this.lastIsFacts.length - 2] === isFact) {
+      return false;
+    }
+    return true;
+  }
+
+  // Update lastIsFacts with the new value
+  private pushIsFact(isFact: boolean) {
+    this.lastIsFacts.push(isFact);
+    if (this.lastIsFacts.length > 2) this.lastIsFacts.shift();
   }
 
   private async checkOllamaAvailability(): Promise<void> {
@@ -249,15 +298,30 @@ EXPLANATION: [Briefly explain why this is a myth or fact. Do not mention Sedna o
   }
 
   public async generateQuestionFromRandomTip(difficulty: Difficulty = 'medium'): Promise<Question> {
-    // Ensure Ollama status is checked before generating
     if (!this.isOllamaAvailable) {
       await this.checkOllamaAvailability();
     }
-    
-    // Import here to avoid circular dependencies
-    const { getRandomTip } = await import('$lib/data/sednaTips');
-    const randomTip = getRandomTip();
-    return this.generateQuestion(randomTip, difficulty);
+    // Get a unique tip
+    const randomTip = await this.getUniqueRandomTip();
+    // Try to generate a question that alternates myth/fact
+    let question: Question | null = null;
+    let attempts = 0;
+    do {
+      question = await this.generateQuestion(randomTip, difficulty);
+      attempts++;
+      // If alternation fails, flip isFact and try again (max 5 attempts)
+      if (question && !this.enforceAlternation(question.isFact)) {
+        // Try to flip isFact if possible (fallback only)
+        if (!this.isOllamaAvailable) {
+          question.isFact = !question.isFact;
+        } else {
+          // For Ollama, just try again (may not be perfect)
+          question = null;
+        }
+      }
+    } while ((!question || !this.enforceAlternation(question.isFact)) && attempts < 5);
+    if (question) this.pushIsFact(question.isFact);
+    return question!;
   }
 
   public getOllamaStatus(): boolean {

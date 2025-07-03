@@ -21,6 +21,7 @@
 	let isPreloadingNext = false;
 	let ollamaStatus = false;
 	let showDifficultyModal = false;
+	let showEndGameModal = false;
 	let didYouKnowFacts = [
 		"Did you know? AI can write an entire book, but it might still struggle to tell you the difference between a banana and an apple in a photo.",
 		"Did you know? AI can predict the weather with impressive accuracy, but it still can't predict when your internet will cut out mid-stream.",
@@ -204,6 +205,19 @@
 		}
 	}
 
+	function handleEndGame() {
+		showEndGameModal = true;
+	}
+
+	function confirmEndGame() {
+		showEndGameModal = false;
+		goto('/completion');
+	}
+
+	function cancelEndGame() {
+		showEndGameModal = false;
+	}
+
 	$: if (isGeneratingQuestion) {
 		if (!factInterval) {
 			factInterval = setInterval(() => {
@@ -351,6 +365,12 @@
 								>
 									🔄 RESET GAME
 								</button>
+								<button
+									class="sedna-btn sedna-btn-warning text-2xl py-6 px-10"
+									on:click={handleEndGame}
+								>
+									🏁 END GAME
+								</button>
 							</div>
 							{#if isPreloadingNext}
 								<div class="text-center mt-4">
@@ -453,6 +473,21 @@
 							</div>
 						</button>
 					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{/if}
+
+{#if showEndGameModal}
+	<div class="sedna-modal" on:click={cancelEndGame}>
+		<div class="sedna-modal-content" on:click|stopPropagation>
+			<div class="flex flex-col items-center gap-4">
+				<h2 class="text-2xl font-retro-bold text-sedna-orange">End Game?</h2>
+				<p class="text-lg text-sedna-dark-grey">Are you sure you want to end the game and see your score?</p>
+				<div class="flex gap-4 mt-4">
+					<button class="sedna-btn sedna-btn-accent px-8 py-3 text-lg" on:click={confirmEndGame}>Yes, End Game</button>
+					<button class="sedna-btn sedna-btn-secondary px-8 py-3 text-lg" on:click={cancelEndGame}>Cancel</button>
 				</div>
 			</div>
 		</div>

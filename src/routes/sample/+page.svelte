@@ -86,8 +86,10 @@ function handlePlayForReal() {
                 <div class="text-gray-700">While AI can assist in threat detection, human analysts are still essential for context, decision-making, and handling complex scenarios that require human judgment.</div>
               </div>
               <div class="bg-blue-50 p-3 rounded-lg">
-                <strong class="text-blue-800">💡 Sedna Tip:</strong>
+                <strong class="text-blue-800">💡 Sedna did this:</strong>
                 <div class="text-blue-700 mt-1">AI can help, but not fully replace, human experts in cybersecurity.</div>
+                <div class="text-sedna-steel-blue-tint text-sm mt-2 italic">This is a real example of how Sedna solved a similar challenge:</div>
+                <div class="text-blue-900 mt-1 border-l-4 border-sedna-cool-blue pl-3">Sedna helped a national cybersecurity agency stop data leaks using AI, achieving zero malicious exfiltrations for three years.</div>
               </div>
               <div class="flex justify-center gap-4 mt-6">
                 <button class="sedna-btn sedna-btn-accent text-lg py-4 px-8 opacity-80 cursor-default">🎯 NEXT QUESTION</button>
