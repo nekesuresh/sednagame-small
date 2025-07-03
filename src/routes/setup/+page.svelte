@@ -36,11 +36,15 @@
 		'Other'
 	];
 
+	// Reactive statement to generate question when difficulty changes
+	$: if (difficulty && !questionPreloaded && !isPreloading) {
+		handleDifficultyChange(difficulty);
+	}
+
 	async function handleDifficultyChange(newDifficulty: 'easy' | 'medium' | 'hard') {
-		difficulty = newDifficulty;
 		isPreloading = true;
 		try {
-			const preloadedQuestion = await questionGenerator.generateQuestionFromRandomTip(difficulty);
+			const preloadedQuestion = await questionGenerator.generateQuestionFromRandomTip(newDifficulty);
 			questionPreloaded = true;
 			localStorage.setItem('sedna_first_question_preloaded', 'true');
 			localStorage.setItem('sedna_preloaded_question', JSON.stringify(preloadedQuestion));
@@ -94,46 +98,49 @@
 					<label class="block text-xl font-retro-bold text-sedna-navy mb-3">
 						🎯 Choose your difficulty level:
 					</label>
+					<p class="text-sm text-sedna-steel-blue-tint mb-4 text-center">
+						💡 Don't worry, you can change this later in the game!
+					</p>
 					<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-						<label class="cursor-pointer block">
+						<label class="block {difficulty ? 'cursor-not-allowed' : 'cursor-pointer'}">
 							<input
 								type="radio"
 								bind:group={difficulty}
 								value="easy"
 								class="sr-only"
-								on:change={() => handleDifficultyChange('easy')}
+								disabled={difficulty}
 							/>
-							<div class="bg-white border-2 rounded-xl p-4 text-center transition-all duration-200 hover:shadow-lg {difficulty === 'easy' ? 'border-sedna-bright-yellow bg-sedna-pale-blue-grey shadow-lg' : 'border-sedna-dark-slate-blue hover:border-sedna-bright-yellow'}">
+							<div class="bg-white border-2 rounded-xl p-4 text-center transition-all duration-200 {difficulty === 'easy' ? 'border-sedna-bright-yellow bg-sedna-pale-blue-grey shadow-lg' : 'border-sedna-dark-slate-blue'} {difficulty ? 'opacity-60 cursor-not-allowed' : 'hover:shadow-lg hover:border-sedna-bright-yellow cursor-pointer'}">
 								<div class="text-3xl mb-2">🌱</div>
 								<div class="font-retro-bold text-lg text-sedna-dark-slate-blue">EASY</div>
 								<div class="text-sm text-sedna-steel-blue-tint">Basic concepts</div>
 								<div class="text-xs text-sedna-bright-yellow mt-1 font-bold">10 pts</div>
 							</div>
 						</label>
-						<label class="cursor-pointer block">
+						<label class="block {difficulty ? 'cursor-not-allowed' : 'cursor-pointer'}">
 							<input
 								type="radio"
 								bind:group={difficulty}
 								value="medium"
 								class="sr-only"
-								on:change={() => handleDifficultyChange('medium')}
+								disabled={difficulty}
 							/>
-							<div class="bg-white border-2 rounded-xl p-4 text-center transition-all duration-200 hover:shadow-lg {difficulty === 'medium' ? 'border-sedna-bright-yellow bg-sedna-pale-blue-grey shadow-lg' : 'border-sedna-dark-slate-blue hover:border-sedna-bright-yellow'}">
+							<div class="bg-white border-2 rounded-xl p-4 text-center transition-all duration-200 {difficulty === 'medium' ? 'border-sedna-bright-yellow bg-sedna-pale-blue-grey shadow-lg' : 'border-sedna-dark-slate-blue'} {difficulty ? 'opacity-60 cursor-not-allowed' : 'hover:shadow-lg hover:border-sedna-bright-yellow cursor-pointer'}">
 								<div class="text-3xl mb-2">🎯</div>
 								<div class="font-retro-bold text-lg text-sedna-dark-slate-blue">MEDIUM</div>
 								<div class="text-sm text-sedna-steel-blue-tint">Moderate complexity</div>
 								<div class="text-xs text-sedna-bright-yellow mt-1 font-bold">20 pts</div>
 							</div>
 						</label>
-						<label class="cursor-pointer block">
+						<label class="block {difficulty ? 'cursor-not-allowed' : 'cursor-pointer'}">
 							<input
 								type="radio"
 								bind:group={difficulty}
 								value="hard"
 								class="sr-only"
-								on:change={() => handleDifficultyChange('hard')}
+								disabled={difficulty}
 							/>
-							<div class="bg-white border-2 rounded-xl p-4 text-center transition-all duration-200 hover:shadow-lg {difficulty === 'hard' ? 'border-sedna-bright-yellow bg-sedna-pale-blue-grey shadow-lg' : 'border-sedna-dark-slate-blue hover:border-sedna-bright-yellow'}">
+							<div class="bg-white border-2 rounded-xl p-4 text-center transition-all duration-200 {difficulty === 'hard' ? 'border-sedna-bright-yellow bg-sedna-pale-blue-grey shadow-lg' : 'border-sedna-dark-slate-blue'} {difficulty ? 'opacity-60 cursor-not-allowed' : 'hover:shadow-lg hover:border-sedna-bright-yellow cursor-pointer'}">
 								<div class="text-3xl mb-2">🔥</div>
 								<div class="font-retro-bold text-lg text-sedna-dark-slate-blue">HARD</div>
 								<div class="text-sm text-sedna-steel-blue-tint">Advanced concepts</div>

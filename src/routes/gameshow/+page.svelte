@@ -49,8 +49,7 @@
 			return;
 		}
 
-		// Wait for Ollama status check to complete before generating the first question
-		await questionGenerator.refreshOllamaStatus();
+		// Get Ollama status without waiting for a network check
 		ollamaStatus = questionGenerator.getOllamaStatus();
 		
 		// Check if first question was preloaded
