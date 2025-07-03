@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="description" content="Sedna AI Gameshow - Test your AI knowledge with Myth vs Fact questions!" />
+		%sveltekit.head%
+		<title>%sveltekit.title%</title>
+		<style>
+			/* Kiosk mode styles */
+			html, body {
+				height: 100%;
+				overflow: hidden;
+				-webkit-user-select: none;
+				-moz-user-select: none;
+				-ms-user-select: none;
+				user-select: none;
+				-webkit-touch-callout: none;
+				-webkit-tap-highlight-color: transparent;
+			}
+			
+			/* Prevent context menu */
+			* {
+				-webkit-touch-callout: none;
+				-webkit-user-select: none;
+				-khtml-user-select: none;
+				-moz-user-select: none;
+				-ms-user-select: none;
+				user-select: none;
+			}
+			
+			/* Hide scrollbars */
+			::-webkit-scrollbar {
+				display: none;
+			}
+			
+			/* Fullscreen kiosk mode */
+			@media screen and (display-mode: fullscreen) {
+				body {
+					background: #000;
+				}
+			}
+		</style>
+	</head>
+	<body data-sveltekit-preload-data="hover" class="h-full">
+		<div style="display: contents">%sveltekit.body%</div>
+	</body>
+</html> 

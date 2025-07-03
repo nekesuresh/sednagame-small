@@ -1,0 +1,157 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom retro styles */
+@layer base {
+  html {
+    font-family: 'Inter', Arial, sans-serif;
+    background: #d5dde3;
+    color: #39424d;
+  }
+  
+  body {
+    background: #d5dde3;
+    color: #39424d;
+  }
+}
+
+@layer components {
+  .sedna-btn {
+    @apply bg-sedna-bright-yellow text-[#39424d] font-sedna-bold py-4 px-8 rounded-lg border-2 border-sedna-bright-yellow shadow hover:bg-sedna-muted-gold hover:border-sedna-muted-gold transition-all duration-200 active:scale-95 focus:outline-none focus:ring-4 focus:ring-sedna-muted-gold focus:ring-opacity-50;
+  }
+  
+  .sedna-btn-accent {
+    @apply bg-sedna-muted-gold text-white border-sedna-muted-gold hover:bg-sedna-bright-yellow hover:border-sedna-bright-yellow;
+  }
+  
+  .sedna-btn-secondary {
+    @apply bg-sedna-dark-slate-blue text-sedna-bright-yellow border-sedna-dark-slate-blue hover:bg-sedna-muted-gold hover:text-white hover:border-sedna-muted-gold;
+  }
+  
+  .sedna-card {
+    @apply bg-white border-2 border-sedna-pale-blue-grey rounded-xl p-6 shadow-md;
+  }
+  
+  .sedna-header {
+    @apply font-sedna-bold text-4xl md:text-6xl text-sedna-bright-yellow mb-4 bg-sedna-dark-slate-blue px-4 py-2 rounded-lg shadow;
+  }
+  
+  .sedna-subheader {
+    @apply font-sedna-bold text-2xl text-sedna-steel-blue-tint mb-2;
+  }
+  
+  .sedna-highlight {
+    @apply text-sedna-bright-yellow font-sedna-bold;
+  }
+  
+  .sedna-section-bg {
+    @apply bg-sedna-dark-slate-blue;
+  }
+  
+  .sedna-divider {
+    @apply border-t-2 border-sedna-pale-blue-grey my-8;
+  }
+  
+  .sedna-text {
+    @apply text-sedna-steel-blue-tint font-sedna text-lg leading-relaxed;
+  }
+  
+  .sedna-badge {
+    @apply inline-block bg-sedna-muted-gold text-white px-3 py-1 rounded-full text-sm font-sedna-bold border-2 border-sedna-bright-yellow;
+  }
+  
+  .sedna-badge-accent {
+    @apply bg-sedna-bright-yellow text-[#39424d] border-sedna-bright-yellow;
+  }
+  
+  .sedna-badge-secondary {
+    @apply bg-sedna-dark-slate-blue text-sedna-bright-yellow border-sedna-dark-slate-blue;
+  }
+  
+  .sedna-modal {
+    @apply fixed inset-0 bg-sedna-dark-slate-blue bg-opacity-80 flex items-center justify-center z-50;
+  }
+  
+  .sedna-modal-content {
+    @apply bg-white border-2 border-sedna-pale-blue-grey rounded-xl p-8 max-w-2xl mx-4 shadow-lg;
+  }
+  
+  .sedna-input {
+    @apply bg-sedna-pale-blue-grey border-2 border-sedna-dark-slate-blue rounded-lg px-4 py-3 text-sedna-dark-slate-blue font-sedna placeholder-sedna-steel-blue-tint focus:outline-none focus:border-sedna-bright-yellow focus:ring-2 focus:ring-sedna-bright-yellow focus:ring-opacity-50;
+  }
+  
+  .sedna-select {
+    @apply bg-sedna-pale-blue-grey border-2 border-sedna-dark-slate-blue rounded-lg px-4 py-3 text-sedna-dark-slate-blue font-sedna focus:outline-none focus:border-sedna-bright-yellow focus:ring-2 focus:ring-sedna-bright-yellow focus:ring-opacity-50;
+  }
+}
+
+/* Custom animations */
+@layer utilities {
+  .animate-bounce-slow {
+    animation: bounce 2s infinite;
+  }
+  
+  .animate-pulse-slow {
+    animation: pulse 3s infinite;
+  }
+  
+  .animate-spin-slow {
+    animation: spin 4s linear infinite;
+  }
+  
+  .animate-wiggle {
+    animation: wiggle 1s ease-in-out infinite;
+  }
+  
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+  
+  .animate-slide-up {
+    animation: slideUp 0.5s ease-out;
+  }
+  
+  .animate-slide-down {
+    animation: slideDown 0.5s ease-out;
+  }
+  
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out;
+  }
+  
+  .animate-scale-in {
+    animation: scaleIn 0.3s ease-out;
+  }
+  
+  .animate-shake {
+    animation: shake 0.5s ease-in-out;
+  }
+  
+  .animate-flip {
+    animation: flip 0.6s ease-in-out;
+  }
+}
+
+/* Kiosk mode enhancements */
+@media (display-mode: fullscreen) {
+  .retro-container {
+    @apply max-w-none px-8;
+  }
+  
+  .retro-title {
+    @apply text-8xl lg:text-9xl;
+  }
+  
+  .retro-subtitle {
+    @apply text-3xl md:text-4xl;
+  }
+  
+  .retro-text {
+    @apply text-2xl;
+  }
+  
+  .retro-button {
+    @apply py-6 px-12 text-2xl;
+  }
+} 
