@@ -64,8 +64,7 @@
 					localStorage.removeItem('sedna_first_question_preloaded');
 					localStorage.removeItem('sedna_preloaded_question');
 					isLoading = false;
-					// Start preloading the next question
-					preloadNextQuestion();
+					// Do NOT preload next question yet
 				} else {
 					// Only fall back to normal generation if no question data found
 					await generateNewQuestion();
@@ -94,8 +93,7 @@
 		try {
 			const userInfo = answerHandler.getUserInfo();
 			const difficulty = userInfo?.difficulty || 'medium';
-			
-			// If we have a preloaded question, use it
+			// If we have a preloaded next question, use it
 			if (nextQuestion) {
 				currentQuestion = nextQuestion;
 				nextQuestion = null;
@@ -120,9 +118,10 @@
 		} finally {
 			isLoading = false;
 			isGeneratingQuestion = false;
-			
-			// Preload next question after current question is loaded
-			preloadNextQuestion();
+			// Only preload next question if this is not the first question (i.e., after user answers)
+			if (showAnswer !== false) {
+				preloadNextQuestion();
+			}
 		}
 	}
 
