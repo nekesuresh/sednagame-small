@@ -227,7 +227,7 @@
 <div class="sedna-section-bg min-h-screen">
 	<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16 lg:py-20">
 		<!-- Header with Stats -->
-		<div class="flex justify-between items-center mb-8">
+		<div class="flex justify-center items-center mb-8">
 			<div class="flex items-center space-x-4">
 				<button 
 					class="sedna-btn sedna-btn-secondary"
@@ -247,15 +247,7 @@
 				>
 					⚙️ DIFFICULTY
 				</button>
-			</div>
-			<div class="text-right">
-				<div class="sedna-badge sedna-badge-secondary text-lg">
-					Score: {currentScore}
-				</div>
-				<div class="sedna-text text-sm mt-1">
-					Accuracy: {currentAccuracy}%
-				</div>
-				<div class="sedna-text text-sm mt-1">
+				<div class="ml-4 sedna-badge sedna-badge-secondary text-lg">
 					Level: {currentDifficulty}
 				</div>
 			</div>
