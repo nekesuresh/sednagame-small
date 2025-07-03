@@ -7,6 +7,7 @@
 	import type { AnswerResult } from '$lib/utils/AnswerHandler';
 	import CaseStudyModal from './CaseStudyModal.svelte';
 	import StatsModal from './StatsModal.svelte';
+	import confetti from 'canvas-confetti';
 
 	let currentQuestion: Question | null = null;
 	let nextQuestion: Question | null = null;
@@ -123,7 +124,17 @@
 		userAnswer = answer;
 		showAnswer = true;
 		answerResult = answerHandler.handleAnswer(currentQuestion, answer);
-		
+
+		if (answerResult?.isCorrect) {
+			// Trigger confetti burst
+			confetti({
+				particleCount: 60,
+				spread: 70,
+				origin: { y: 0.6 },
+				colors: ['#39ff14', '#c29a3b', '#d5dde3']
+			});
+		}
+
 		// Check if game is complete
 		if (answerHandler.isGameComplete()) {
 			handleGameCompletion();
@@ -215,7 +226,8 @@
 	<title>Gameshow - Sedna AI Gameshow</title>
 </svelte:head>
 
-<div class="sedna-section-bg min-h-screen">
+<div class="sedna-section-bg min-h-screen relative">
+	<div class="crt-overlay pointer-events-none"></div>
 	<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16 lg:py-20">
 		<!-- Header with Stats -->
 		<div class="flex justify-center items-center mb-8">
@@ -262,7 +274,7 @@
 					</div>
 				</div>
 			{:else if currentQuestion}
-				<div class="sedna-card">
+				<div class="sedna-card {showAnswer ? (answerResult?.isCorrect ? 'correct-pop' : 'shake-card') : ''}">
 					<div class="text-center mb-8">
 						<h2 class="text-2xl md:text-3xl font-retro-bold text-sedna-orange mb-4">
 							MYTH OR FACT?
@@ -326,7 +338,7 @@
 							{/if}
 							<div class="flex flex-col md:flex-row items-center justify-center gap-6">
 								<button
-									class="sedna-btn sedna-btn-accent"
+									class="sedna-btn sedna-btn-accent {(!isGeneratingQuestion && nextQuestion) ? 'pulse' : ''} text-2xl py-6 px-10"
 									on:click={handleNextQuestion}
 									disabled={isGeneratingQuestion || !nextQuestion}
 									title={!nextQuestion ? 'Please wait for question to finish generating' : ''}
@@ -334,7 +346,7 @@
 									{isGeneratingQuestion ? '🔄 LOADING...' : nextQuestion ? '🎯 NEXT QUESTION' : '⏳ GENERATING QUESTION'}
 								</button>
 								<button
-									class="sedna-btn sedna-btn-secondary"
+									class="sedna-btn sedna-btn-secondary text-2xl py-6 px-10"
 									on:click={handleResetGame}
 								>
 									🔄 RESET GAME

@@ -62,12 +62,7 @@
 			columns = columns; // Trigger Svelte reactivity
 		}, 50);
 		window.addEventListener('resize', setupColumns);
-		// Redirect if user already set up
-		const answerHandler = new AnswerHandler();
-		const userInfo = answerHandler.getUserInfo();
-		if (userInfo && !localStorage.getItem('sedna_show_start_page')) {
-			goto('/gameshow');
-		}
+		// Remove redirect to /gameshow or /setup; always show start page
 		return () => {
 			clearInterval(interval);
 			window.removeEventListener('resize', setupColumns);

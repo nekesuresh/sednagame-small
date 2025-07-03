@@ -14,7 +14,7 @@
 
 	function handlePlayAgain() {
 		answerHandler.resetStats();
-		goto('/setup');
+		goto('/');
 	}
 
 	function handleBackToHome() {

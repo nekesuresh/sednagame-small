@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@sveltejs/kit": "^1.29.0",
+    "canvas-confetti": "^1.9.3",
     "idb": "^8.0.3",
     "svelte": "^5.0.0"
   },
