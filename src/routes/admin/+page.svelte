@@ -30,8 +30,8 @@ function handleLogin() {
 
 function exportCSV() {
   if (!users.length) return;
-  const header = 'Name,Pain Point,Occupation,Timestamp\n';
-  const rows = users.map(u => `"${u.name}","${u.painPoint}","${u.occupation}","${new Date(u.timestamp).toLocaleString()}"`).join('\n');
+  const header = 'Name,Phone,Email,Pain Point,Occupation,Timestamp\n';
+  const rows = users.map(u => `"${u.name}","${u.phone}","${u.email}","${u.painPoint}","${u.occupation}","${new Date(u.timestamp).toLocaleString()}"`).join('\n');
   const csv = header + rows;
   const blob = new Blob([csv], { type: 'text/csv' });
   const url = URL.createObjectURL(blob);
@@ -136,6 +136,8 @@ function goToPage(page: number) {
             <tr>
               <th class="border-b-2 p-2"><input type="checkbox" checked={selectedIds.length === users.length && users.length > 0} on:change={selectAll}></th>
               <th class="border-b-2 p-2">Name</th>
+              <th class="border-b-2 p-2">Phone</th>
+              <th class="border-b-2 p-2">Email</th>
               <th class="border-b-2 p-2">Pain Point</th>
               <th class="border-b-2 p-2">Occupation</th>
               <th class="border-b-2 p-2">Timestamp</th>
@@ -150,6 +152,8 @@ function goToPage(page: number) {
                   <input type="checkbox" checked={selectedIds.includes(user.id)} on:change={() => toggleSelect(user.id)}>
                 </td>
                 <td class="border-b p-2">{user.name}</td>
+                <td class="border-b p-2">{user.phone}</td>
+                <td class="border-b p-2">{user.email}</td>
                 <td class="border-b p-2">{user.painPoint}</td>
                 <td class="border-b p-2">{user.occupation}</td>
                 <td class="border-b p-2">{new Date(user.timestamp).toLocaleString()}</td>

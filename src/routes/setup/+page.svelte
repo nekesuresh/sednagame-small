@@ -11,6 +11,8 @@
 	let isSubmitting = false;
 	let isPreloading = false;
 	let questionPreloaded = false;
+	let phone = '';
+	let email = '';
 
 	const occupations = [
 		'Government Employee',
@@ -50,7 +52,7 @@
 	}
 
 	async function handleSubmit() {
-		if (!name.trim() || !occupation.trim() || !aiConcern.trim() || !difficulty) {
+		if (!name.trim() || !occupation.trim() || !aiConcern.trim() || !difficulty || !phone.trim() || !email.trim()) {
 			alert('Please fill in all fields');
 			return;
 		}
@@ -58,7 +60,7 @@
 		isSubmitting = true;
 
 		try {
-			await saveUserInfo({ name: name.trim(), painPoint: aiConcern.trim(), occupation: occupation.trim() });
+			await saveUserInfo({ name: name.trim(), painPoint: aiConcern.trim(), occupation: occupation.trim(), phone: phone.trim(), email: email.trim() });
 			answerHandler.initializeUserInfo(name.trim(), occupation.trim(), aiConcern.trim(), difficulty as 'easy' | 'medium' | 'hard');
 			localStorage.removeItem('sedna_show_start_page');
 			goto('/sample');
@@ -186,6 +188,34 @@
 						class="sedna-input w-full text-xl"
 						placeholder="Enter your main concern about AI..."
 						required
+					/>
+				</div>
+				<div>
+					<label for="phone" class="block text-xl font-retro-bold text-sedna-navy mb-3">
+						📱 Phone Number
+					</label>
+					<input
+						id="phone"
+						type="tel"
+						bind:value={phone}
+						class="sedna-input w-full text-xl"
+						placeholder="Enter your phone number..."
+						required
+						autocomplete="tel"
+					/>
+				</div>
+				<div>
+					<label for="email" class="block text-xl font-retro-bold text-sedna-navy mb-3">
+						✉️ Email Address
+					</label>
+					<input
+						id="email"
+						type="email"
+						bind:value={email}
+						class="sedna-input w-full text-xl"
+						placeholder="Enter your email address..."
+						required
+						autocomplete="email"
 					/>
 				</div>
 				<div class="text-center pt-6">

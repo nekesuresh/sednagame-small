@@ -11,16 +11,21 @@ export const dbPromise = openDB(DB_NAME, DB_VERSION, {
   }
 });
 
-export async function saveUserInfo({ name, painPoint, occupation }: { name: string, painPoint: string, occupation: string }) {
+export async function saveUserInfo({ name, painPoint, occupation, phone, email }: { name: string, painPoint: string, occupation: string, phone: string, email: string }) {
   const db = await dbPromise;
-  await db.add('users', { name, painPoint, occupation, timestamp: Date.now(), raffleEntries: 1 });
+  await db.add('users', { name, painPoint, occupation, phone, email, timestamp: Date.now(), raffleEntries: 1 });
 }
 
 export async function getAllUsers() {
   const db = await dbPromise;
   const users = await db.getAll('users');
-  // Ensure all users have raffleEntries
-  return users.map(u => ({ ...u, raffleEntries: u.raffleEntries ?? 1 }));
+  // Ensure all users have raffleEntries, phone, and email
+  return users.map(u => ({
+    ...u,
+    raffleEntries: u.raffleEntries ?? 1,
+    phone: u.phone ?? '',
+    email: u.email ?? ''
+  }));
 }
 
 export async function updateUserField(id: number, field: 'name' | 'painPoint' | 'occupation', value: string) {

@@ -11,13 +11,14 @@
     "postcss": "postcss src/app.css -o static/app.css"
   },
   "dependencies": {
-    "@sveltejs/kit": "^1.29.0",
+    "@sveltejs/kit": "^2.22.2",
     "canvas-confetti": "^1.9.3",
     "idb": "^8.0.3",
     "svelte": "^5.0.0"
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^2.1.0",
+    "@sveltejs/adapter-netlify": "^5.0.2",
     "@sveltejs/vite-plugin-svelte": "^4.0.0-next.6",
     "autoprefixer": "^10.4.16",
     "postcss": "^8.4.32",
