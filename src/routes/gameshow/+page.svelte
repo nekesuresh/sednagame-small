@@ -60,22 +60,19 @@
 				const preloadedQuestionData = localStorage.getItem('sedna_preloaded_question');
 				if (preloadedQuestionData) {
 					currentQuestion = JSON.parse(preloadedQuestionData);
-					// Clear the flags since we've used them
 					localStorage.removeItem('sedna_first_question_preloaded');
 					localStorage.removeItem('sedna_preloaded_question');
 					isLoading = false;
-					// Do NOT preload next question yet
+					// Now that Q1 is shown, start preloading Q2
+					preloadNextQuestion();
 				} else {
-					// Only fall back to normal generation if no question data found
 					await generateNewQuestion();
 				}
 			} catch (error) {
 				console.error('Error using preloaded question:', error);
-				// Only fall back to normal generation if parsing fails
 				await generateNewQuestion();
 			}
 		} else {
-			// Only generate if there was no preloaded question at all
 			await generateNewQuestion();
 		}
 	});
@@ -87,13 +84,11 @@
 		answerResult = null;
 		userAnswer = null;
 
-		// Update Ollama status before generating
 		ollamaStatus = questionGenerator.getOllamaStatus();
 
 		try {
 			const userInfo = answerHandler.getUserInfo();
 			const difficulty = userInfo?.difficulty || 'medium';
-			// If we have a preloaded next question, use it
 			if (nextQuestion) {
 				currentQuestion = nextQuestion;
 				nextQuestion = null;
@@ -102,7 +97,6 @@
 			}
 		} catch (error) {
 			console.error('Error generating question:', error);
-			// Fallback to a simple question
 			currentQuestion = {
 				id: 'fallback',
 				statement: 'AI can help improve government services and efficiency.',
@@ -118,10 +112,8 @@
 		} finally {
 			isLoading = false;
 			isGeneratingQuestion = false;
-			// Only preload next question if this is not the first question (i.e., after user answers)
-			if (showAnswer !== false) {
-				preloadNextQuestion();
-			}
+			// After showing the new question, start preloading the next one
+			preloadNextQuestion();
 		}
 	}
 
