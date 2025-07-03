@@ -67,16 +67,16 @@
 					// Start preloading the next question
 					preloadNextQuestion();
 				} else {
-					// Fall back to normal generation if no question data found
+					// Only fall back to normal generation if no question data found
 					await generateNewQuestion();
 				}
 			} catch (error) {
 				console.error('Error using preloaded question:', error);
-				// Fall back to normal generation
+				// Only fall back to normal generation if parsing fails
 				await generateNewQuestion();
 			}
 		} else {
-			// Generate first question normally
+			// Only generate if there was no preloaded question at all
 			await generateNewQuestion();
 		}
 	});

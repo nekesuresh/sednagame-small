@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { answerHandler } from '$lib/utils/AnswerHandler';
 	import { questionGenerator } from '$lib/utils/QuestionGenerator';
+	import { saveUserInfo } from '$lib/utils/userdb';
 
 	let name = '';
 	let occupation = '';
@@ -57,6 +58,7 @@
 		isSubmitting = true;
 
 		try {
+			await saveUserInfo({ name: name.trim(), painPoint: aiConcern.trim(), occupation: occupation.trim() });
 			answerHandler.initializeUserInfo(name.trim(), occupation.trim(), aiConcern.trim(), difficulty as 'easy' | 'medium' | 'hard');
 			localStorage.removeItem('sedna_show_start_page');
 			goto('/sample');
