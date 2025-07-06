@@ -120,6 +120,7 @@ class QuestionGenerator {
       return null;
     }
 
+    const startTime = Date.now();
     try {
       const prompt = this.buildPrompt(sednaTip, difficulty);
       
@@ -144,9 +145,14 @@ class QuestionGenerator {
       }
 
       const data: OllamaResponse = await response.json();
+      const endTime = Date.now();
+      const durationSeconds = ((endTime - startTime) / 1000).toFixed(2);
+      console.log(`Successfully generated question with Ollama in ${durationSeconds} seconds`);
       return this.parseOllamaResponse(data.response, sednaTip, difficulty);
     } catch (error) {
-      console.error('Error generating question with Ollama:', error);
+      const endTime = Date.now();
+      const durationSeconds = ((endTime - startTime) / 1000).toFixed(2);
+      console.error(`Error generating question with Ollama after ${durationSeconds} seconds:`, error);
       return null;
     }
   }
