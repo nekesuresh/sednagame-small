@@ -105,7 +105,7 @@ class QuestionGenerator {
       const response = await fetch(`${this.ollamaUrl}/api/tags`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
-        signal: AbortSignal.timeout(60000) // 1 minute timeout
+        signal: AbortSignal.timeout(30000) // 30 second timeout
       });
       this.isOllamaAvailable = response.ok;
       console.log('Ollama availability check result:', response.ok, 'Status:', response.status);
@@ -131,12 +131,12 @@ class QuestionGenerator {
           prompt: prompt,
           stream: false,
           options: {
-            temperature: 0.7,
-            top_p: 0.9,
-            max_tokens: 500
+            temperature: 0.4,
+            top_p: 0.8,
+            max_tokens: 250
           }
         }),
-        signal: AbortSignal.timeout(60000) // 1 minute timeout
+        signal: AbortSignal.timeout(30000) // 30 second timeout
       });
 
       if (!response.ok) {
@@ -153,23 +153,20 @@ class QuestionGenerator {
 
   private buildPrompt(sednaTip: SednaTip, difficulty: Difficulty): string {
     const difficultyInstructions = {
-      easy: 'Use simple, clear language. Make it easy to decide if the statement is true or false.',
-      medium: 'Use moderate complexity and some technical terms. Challenge the user\'s understanding.',
-      hard: 'Use advanced technical language and complex AI concepts. Require deep understanding.'
+      easy: 'Simple language, easy to decide.',
+      medium: 'Moderate complexity, some technical terms.',
+      hard: 'Advanced technical language, complex concepts.'
     };
 
-    return `Create a Myth vs Fact question about AI in government/public sector, based on this case study: "${sednaTip.tip}".
+    return `Create a Myth vs Fact question about AI in government, based on: "${sednaTip.tip}".
 
-DIFFICULTY: ${difficulty.toUpperCase()}
-${difficultyInstructions[difficulty]}
+DIFFICULTY: ${difficulty.toUpperCase()} - ${difficultyInstructions[difficulty]}
 
-Format:
-STATEMENT: [A myth or fact statement about AI, focusing on a key lesson (e.g., bias, fairness, transparency, accountability, explainability, ethics, unintended consequences, etc.). Relate it to the case study.]
+STATEMENT: [Myth or fact about AI in government, related to the case study]
 IS_FACT: [true or false]
-EXPLANATION: [Briefly explain why this is a myth or fact. Do not mention Sedna or any company.]
+EXPLANATION: [Brief explanation, no company names]
 `;
-}
-
+  }
 
   private parseOllamaResponse(response: string, sednaTip: SednaTip, difficulty: Difficulty): Question | null {
     try {
