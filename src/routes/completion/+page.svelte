@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { answerHandler } from '$lib/utils/AnswerHandler';
+	import { usedQuestionIds } from '$lib/stores/usedQuestionIds';
 
 	let userInfo: any = null;
 
@@ -14,6 +15,7 @@
 
 	function handlePlayAgain() {
 		answerHandler.resetStats();
+		usedQuestionIds.set(new Set());
 		goto('/');
 	}
 

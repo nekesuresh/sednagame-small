@@ -8,6 +8,7 @@
 	import CaseStudyModal from './CaseStudyModal.svelte';
 	import StatsModal from './StatsModal.svelte';
 	import confetti from 'canvas-confetti';
+	import { usedQuestionIds } from '$lib/stores/usedQuestionIds';
 
 	let currentQuestion: Question | null = null;
 	let nextQuestion: Question | null = null;
@@ -21,6 +22,7 @@
 	let isPreloadingNext = false;
 	let ollamaStatus = false;
 	let showDifficultyModal = false;
+	let showCompletionButton = false;
 	let didYouKnowFacts = [
 		"Did you know? AI can write an entire book, but it might still struggle to tell you the difference between a banana and an apple in a photo.",
 		"Did you know? AI can predict the weather with impressive accuracy, but it still can't predict when your internet will cut out mid-stream.",
@@ -36,10 +38,37 @@
 	let currentFactIndex = Math.floor(Math.random() * didYouKnowFacts.length);
 	let factInterval: any = null;
 
+	// Used question IDs for repeat prevention
+	let usedIds: Set<string> = new Set();
+	usedQuestionIds.subscribe(ids => usedIds = ids)();
+
 	// Reactive statements to ensure stats update
 	$: currentScore = answerHandler.getScore();
 	$: currentAccuracy = answerHandler.getAccuracy();
 	$: currentDifficulty = answerHandler.getUserInfo()?.difficulty?.toUpperCase() || 'MEDIUM';
+	$: showCompletionButton = answerHandler.isGameComplete();
+
+	let animatedStatement = '';
+	let animationInterval: any = null;
+
+	function animateStatement(statement: string) {
+		if (animationInterval) clearInterval(animationInterval);
+		animatedStatement = '';
+		const words = statement.split(' ');
+		let i = 0;
+		animationInterval = setInterval(() => {
+			if (i < words.length) {
+				animatedStatement += (i === 0 ? '' : ' ') + words[i];
+				i++;
+			} else {
+				clearInterval(animationInterval);
+			}
+		}, 60); // 60ms per word
+	}
+
+	$: if (currentQuestion && !showAnswer) {
+		animateStatement(currentQuestion.statement);
+	}
 
 	onMount(async () => {
 		// Check if user is set up
@@ -60,6 +89,7 @@
 				const preloadedQuestionData = localStorage.getItem('sedna_preloaded_question');
 				if (preloadedQuestionData) {
 					currentQuestion = JSON.parse(preloadedQuestionData);
+					usedQuestionIds.update(ids => { ids.add(currentQuestion.id); return ids; });
 					localStorage.removeItem('sedna_first_question_preloaded');
 					localStorage.removeItem('sedna_preloaded_question');
 					isLoading = false;
@@ -83,9 +113,7 @@
 		showAnswer = false;
 		answerResult = null;
 		userAnswer = null;
-
 		ollamaStatus = questionGenerator.getOllamaStatus();
-
 		try {
 			const userInfo = answerHandler.getUserInfo();
 			const difficulty = userInfo?.difficulty || 'medium';
@@ -93,7 +121,24 @@
 				currentQuestion = nextQuestion;
 				nextQuestion = null;
 			} else {
-				currentQuestion = await questionGenerator.generateQuestionFromRandomTip(difficulty);
+				let attempts = 0;
+				let newQuestion: Question | null = null;
+				while (attempts < 10) {
+					newQuestion = await questionGenerator.generateQuestionFromRandomTip(difficulty);
+					console.log('Generated question ID:', newQuestion?.id);
+					console.log('Used IDs before:', Array.from(usedIds));
+					if (newQuestion && !usedIds.has(newQuestion.id)) {
+						break;
+					} else {
+						console.log('Repeat detected, skipping question with ID:', newQuestion?.id);
+					}
+					attempts++;
+				}
+				currentQuestion = newQuestion;
+			}
+			if (currentQuestion) {
+				usedQuestionIds.update(ids => { ids.add(currentQuestion.id); return ids; });
+				console.log('Used IDs after:', Array.from(usedIds));
 			}
 		} catch (error) {
 			console.error('Error generating question:', error);
@@ -112,7 +157,6 @@
 		} finally {
 			isLoading = false;
 			isGeneratingQuestion = false;
-			// After showing the new question, start preloading the next one
 			preloadNextQuestion();
 		}
 	}
@@ -134,10 +178,10 @@
 			});
 		}
 
-		// Check if game is complete
-		if (answerHandler.isGameComplete()) {
-			handleGameCompletion();
-		}
+		// Do NOT auto-navigate to completion. Only show the button.
+		// if (answerHandler.isGameComplete()) {
+		//   handleGameCompletion();
+		// }
 	}
 
 	function handleNextQuestion() {
@@ -155,6 +199,7 @@
 	function handleResetGame() {
 		if (confirm('Are you sure you want to reset ALL your stats and player profile? This will clear your score, accuracy, and require you to re-enter your information and choose your difficulty again.')) {
 			answerHandler.resetStats();
+			usedQuestionIds.set(new Set()); // Reset used questions
 			// Set flag to show start page
 			localStorage.setItem('sedna_show_start_page', 'true');
 			// Redirect to start page
@@ -188,14 +233,33 @@
 		goto('/completion');
 	}
 
+	function handleGoToCompletion() {
+		goto('/completion');
+	}
+
 	async function preloadNextQuestion() {
 		if (isPreloadingNext || nextQuestion) return;
-		
 		isPreloadingNext = true;
 		try {
 			const userInfo = answerHandler.getUserInfo();
 			const difficulty = userInfo?.difficulty || 'medium';
-			nextQuestion = await questionGenerator.generateQuestionFromRandomTip(difficulty);
+			let attempts = 0;
+			let newQuestion: Question | null = null;
+			while (attempts < 10) {
+				newQuestion = await questionGenerator.generateQuestionFromRandomTip(difficulty);
+				console.log('Preload - Generated question ID:', newQuestion?.id);
+				console.log('Preload - Used IDs before:', Array.from(usedIds));
+				if (newQuestion && !usedIds.has(newQuestion.id)) {
+					break;
+				} else {
+					console.log('Preload - Repeat detected, skipping question with ID:', newQuestion?.id);
+				}
+				attempts++;
+			}
+			nextQuestion = newQuestion;
+			if (nextQuestion) {
+				console.log('Preload - Used IDs after:', Array.from(usedIds));
+			}
 		} catch (error) {
 			console.error('Error preloading question:', error);
 		} finally {
@@ -280,8 +344,8 @@
 						</h2>
 					</div>
 					<div class="bg-sedna-light-grey border-2 border-sedna-cool-blue rounded-lg p-8 mb-8">
-						<p class="sedna-text text-xl md:text-2xl text-center leading-relaxed">
-							"{currentQuestion.statement}"
+						<p class="sedna-text text-xl md:text-2xl text-center leading-relaxed min-h-[3em]">
+							"{animatedStatement}"
 						</p>
 					</div>
 					{#if !showAnswer}
@@ -336,14 +400,24 @@
 								</div>
 							{/if}
 							<div class="flex flex-col md:flex-row items-center justify-center gap-6">
-								<button
-									class="sedna-btn sedna-btn-accent {(!isGeneratingQuestion && nextQuestion) ? 'pulse' : ''} text-2xl py-6 px-10"
-									on:click={handleNextQuestion}
-									disabled={isGeneratingQuestion || !nextQuestion}
-									title={!nextQuestion ? 'Please wait for question to finish generating' : ''}
-								>
-									{isGeneratingQuestion ? '🔄 LOADING...' : nextQuestion ? '🎯 NEXT QUESTION' : '⏳ GENERATING QUESTION'}
-								</button>
+								{#if showCompletionButton}
+									<button
+										class="sedna-btn text-3xl py-6 px-16 animate-pulse bg-gradient-to-r from-yellow-400 to-pink-500 text-white font-extrabold shadow-lg border-4 border-yellow-300 hover:scale-105 transition-transform duration-200"
+										on:click={handleGoToCompletion}
+										style="box-shadow: 0 0 20px 5px #ffe066, 0 0 40px 10px #ff6f91;"
+									>
+										🎉 See Your Results!
+									</button>
+								{:else}
+									<button
+										class="sedna-btn sedna-btn-accent {(!isGeneratingQuestion && nextQuestion) ? 'pulse' : ''} text-2xl py-6 px-10"
+										on:click={handleNextQuestion}
+										disabled={isGeneratingQuestion || !nextQuestion}
+										title={!nextQuestion ? 'Please wait for question to finish generating' : ''}
+									>
+										{isGeneratingQuestion ? '🔄 LOADING...' : nextQuestion ? '🎯 NEXT QUESTION' : '⏳ GENERATING QUESTION'}
+									</button>
+								{/if}
 								<button
 									class="sedna-btn sedna-btn-secondary text-2xl py-6 px-10"
 									on:click={handleResetGame}
@@ -366,6 +440,7 @@
 							{/if}
 						</div>
 					{/if}
+					<!-- Add End Game & See Score button -->
 				</div>
 			{/if}
 		</div>
@@ -446,7 +521,7 @@
 							<div class="flex justify-between items-center">
 								<div>
 									<div class="text-lg font-retro-bold">🔥 HARD</div>
-									<div class="text-sm">Advanced concepts, technical language</div>
+									<div class="text-sm">AI Champion: You're ready to help your organization lead with AI.</div>
 								</div>
 								<div class="text-2xl">30 pts</div>
 							</div>
@@ -455,5 +530,18 @@
 				</div>
 			</div>
 		</div>
+	</div>
+{/if}
+
+<!-- Progress Bar (insert after progress bar in StatsModal or main game area) -->
+{#if showCompletionButton}
+	<div class="flex justify-center mt-8">
+		<button
+			class="sedna-btn text-3xl py-6 px-16 animate-pulse bg-gradient-to-r from-yellow-400 to-pink-500 text-white font-extrabold shadow-lg border-4 border-yellow-300 hover:scale-105 transition-transform duration-200"
+			on:click={handleGoToCompletion}
+			style="box-shadow: 0 0 20px 5px #ffe066, 0 0 40px 10px #ff6f91;"
+		>
+			🎉 See Your Results!
+		</button>
 	</div>
 {/if} 

@@ -13,6 +13,8 @@
 	let questionPreloaded = false;
 	let phone = '';
 	let email = '';
+	let state = '';
+	let county = '';
 
 	const occupations = [
 		'Government Employee',
@@ -64,7 +66,7 @@
 		isSubmitting = true;
 
 		try {
-			await saveUserInfo({ name: name.trim(), painPoint: aiConcern.trim(), occupation: occupation.trim(), phone: phone.trim(), email: email.trim() });
+			await saveUserInfo({ name: name.trim(), painPoint: aiConcern.trim(), occupation: occupation.trim(), phone: phone.trim(), email: email.trim(), state: state.trim(), county: county.trim() });
 			answerHandler.initializeUserInfo(name.trim(), occupation.trim(), aiConcern.trim(), difficulty as 'easy' | 'medium' | 'hard');
 			localStorage.removeItem('sedna_show_start_page');
 			goto('/sample');
@@ -143,7 +145,7 @@
 							<div class="bg-white border-2 rounded-xl p-4 text-center transition-all duration-200 {difficulty === 'hard' ? 'border-sedna-bright-yellow bg-sedna-pale-blue-grey shadow-lg' : 'border-sedna-dark-slate-blue'} {difficulty ? 'opacity-60 cursor-not-allowed' : 'hover:shadow-lg hover:border-sedna-bright-yellow cursor-pointer'}">
 								<div class="text-3xl mb-2">🔥</div>
 								<div class="font-retro-bold text-lg text-sedna-dark-slate-blue">HARD</div>
-								<div class="text-sm text-sedna-steel-blue-tint">Advanced concepts</div>
+								<div class="text-sm text-sedna-steel-blue-tint">Challenging questions</div>
 								<div class="text-xs text-sedna-bright-yellow mt-1 font-bold">30 pts</div>
 							</div>
 						</label>
@@ -223,6 +225,78 @@
 						placeholder="Enter your email address..."
 						required
 						autocomplete="email"
+					/>
+					<p class="text-sm font-semibold text-sedna-steel-blue-tint mt-2">We won't spam – we will only use your email for giveaway and relevant info.</p>
+				</div>
+				<div>
+					<label for="state" class="block text-xl font-retro-bold text-sedna-navy mb-3">
+						🗺️ State
+					</label>
+					<select id="state" bind:value={state} class="sedna-input w-full text-xl" required>
+						<option value="" disabled selected>Select your state...</option>
+						<option value="AL">Alabama</option>
+						<option value="AK">Alaska</option>
+						<option value="AZ">Arizona</option>
+						<option value="AR">Arkansas</option>
+						<option value="CA">California</option>
+						<option value="CO">Colorado</option>
+						<option value="CT">Connecticut</option>
+						<option value="DE">Delaware</option>
+						<option value="FL">Florida</option>
+						<option value="GA">Georgia</option>
+						<option value="HI">Hawaii</option>
+						<option value="ID">Idaho</option>
+						<option value="IL">Illinois</option>
+						<option value="IN">Indiana</option>
+						<option value="IA">Iowa</option>
+						<option value="KS">Kansas</option>
+						<option value="KY">Kentucky</option>
+						<option value="LA">Louisiana</option>
+						<option value="ME">Maine</option>
+						<option value="MD">Maryland</option>
+						<option value="MA">Massachusetts</option>
+						<option value="MI">Michigan</option>
+						<option value="MN">Minnesota</option>
+						<option value="MS">Mississippi</option>
+						<option value="MO">Missouri</option>
+						<option value="MT">Montana</option>
+						<option value="NE">Nebraska</option>
+						<option value="NV">Nevada</option>
+						<option value="NH">New Hampshire</option>
+						<option value="NJ">New Jersey</option>
+						<option value="NM">New Mexico</option>
+						<option value="NY">New York</option>
+						<option value="NC">North Carolina</option>
+						<option value="ND">North Dakota</option>
+						<option value="OH">Ohio</option>
+						<option value="OK">Oklahoma</option>
+						<option value="OR">Oregon</option>
+						<option value="PA">Pennsylvania</option>
+						<option value="RI">Rhode Island</option>
+						<option value="SC">South Carolina</option>
+						<option value="SD">South Dakota</option>
+						<option value="TN">Tennessee</option>
+						<option value="TX">Texas</option>
+						<option value="UT">Utah</option>
+						<option value="VT">Vermont</option>
+						<option value="VA">Virginia</option>
+						<option value="WA">Washington</option>
+						<option value="WV">West Virginia</option>
+						<option value="WI">Wisconsin</option>
+						<option value="WY">Wyoming</option>
+					</select>
+				</div>
+				<div>
+					<label for="county" class="block text-xl font-retro-bold text-sedna-navy mb-3">
+						🏛️ County
+					</label>
+					<input
+						id="county"
+						type="text"
+						bind:value={county}
+						class="sedna-input w-full text-xl"
+						placeholder="Enter your county..."
+						required
 					/>
 				</div>
 				<div class="text-center pt-6">

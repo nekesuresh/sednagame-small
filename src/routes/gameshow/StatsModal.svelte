@@ -129,14 +129,12 @@
 				🏅 Your Level: {difficultyLevel}
 			</h3>
 			<div class="sedna-text space-y-2">
-				{#if difficultyLevel === 'Expert'}
-					<p>🎉 You're an AI expert! Outstanding knowledge and understanding.</p>
-				{:else if difficultyLevel === 'Advanced'}
-					<p>🌟 Excellent work! You have strong AI knowledge and are learning fast.</p>
-				{:else if difficultyLevel === 'Intermediate'}
-					<p>💪 Great progress! You're building solid AI understanding.</p>
+				{#if difficultyLevel === 'AI Champion'}
+					<p>🎉 You're ready to help your organization lead with AI.<br/>You think critically about AI's impact and possibilities, and you're eager to guide others through thoughtful adoption. You're ready to lead by example, whether by piloting a tool, sharing a success story, or simply encouraging your team to learn more.<br/>Sedna partners with AI Champions to turn ideas into action and build momentum for sustainable, responsible progress.</p>
+				{:else if difficultyLevel === 'AI Ready'}
+					<p>🌟 You have a solid foundation and are ready to take the next step.<br/>You have a solid grasp of AI fundamentals and are beginning to apply them in meaningful ways. You're ready to explore practical tools, experiment with intention, and help guide thoughtful next steps for your team.<br/>Sedna can support you in identifying meaningful use cases, experimenting safely, and learning what's working in similar environments.</p>
 				{:else}
-					<p>📚 Keep learning! Every question helps you understand AI better.</p>
+					<p>📚 You're building your understanding of AI and its potential.<br/>You're aware of AI's role in today's world and are curious about how it can help your organization. This is a great starting point and you're not alone. Many professionals are right here with you. You're ready to explore how AI can enhance your role and improve outcomes.<br/>Sedna is happy to be a thought partner as you begin your journey.</p>
 				{/if}
 			</div>
 		</div>

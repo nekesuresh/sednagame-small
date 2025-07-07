@@ -10,6 +10,7 @@ let selectedIds: number[] = [];
 let winner: any = null;
 let currentPage = 1;
 const pageSize = 10;
+let searchTerm = '';
 
 $: totalPages = Math.ceil(users.length / pageSize);
 $: pagedUsers = users.slice((currentPage - 1) * pageSize, currentPage * pageSize);
@@ -96,13 +97,37 @@ function goToPage(page: number) {
     currentPage = page;
   }
 }
+
+function handleSearch() {
+  if (!searchTerm.trim()) {
+    pagedUsers = users.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+    return;
+  }
+  const term = searchTerm.trim().toLowerCase();
+  pagedUsers = users.filter(u =>
+    (u.name && u.name.toLowerCase().includes(term)) ||
+    (u.email && u.email.toLowerCase().includes(term)) ||
+    (u.phone && u.phone.toLowerCase().includes(term)) ||
+    (u.occupation && u.occupation.toLowerCase().includes(term)) ||
+    (u.state && u.state.toLowerCase().includes(term)) ||
+    (u.county && u.county.toLowerCase().includes(term))
+  );
+}
+
+async function clearAllUsers() {
+  if (confirm('Are you sure you want to delete ALL users? This cannot be undone.')) {
+    await deleteUsersByIds(users.map(u => u.id));
+    selectedIds = [];
+    await fetchUsers();
+  }
+}
 </script>
 
 <svelte:head>
   <title>Admin - Sedna AI Gameshow</title>
 </svelte:head>
 
-<div class="min-h-screen flex flex-col items-center justify-center bg-sedna-dark-slate-blue p-4">
+<div class="min-h-screen flex items-center justify-center bg-sedna-dark-slate-blue p-4">
   {#if !authenticated}
     <div class="bg-white rounded-xl shadow-xl p-8 max-w-md w-full">
       <h2 class="text-2xl font-retro-bold text-sedna-orange mb-4">Admin Login</h2>
@@ -119,11 +144,14 @@ function goToPage(page: number) {
       <button class="sedna-btn sedna-btn-accent w-full" on:click={handleLogin}>Login</button>
     </div>
   {:else}
-    <div class="bg-white rounded-xl shadow-xl p-8 max-w-3xl w-full">
+    <div class="bg-white rounded-xl shadow-xl p-8 max-w-5xl w-full flex flex-col items-center">
       <h2 class="text-2xl font-retro-bold text-sedna-orange mb-4">User Data</h2>
       <div class="flex gap-4 mb-4">
         <button class="sedna-btn sedna-btn-accent" on:click={fetchUsers}>Refresh</button>
         <button class="sedna-btn sedna-btn-secondary" on:click={exportCSV}>Export as CSV</button>
+        <input type="text" class="sedna-input w-64 text-xl" placeholder="Search users..." bind:value={searchTerm} />
+        <button class="sedna-btn sedna-btn-accent" on:click={handleSearch}>Search</button>
+        <button class="sedna-btn sedna-btn-secondary" on:click={clearAllUsers}>Clear All</button>
       </div>
       {#if users.length === 0}
         <div class="text-sedna-steel-blue-tint">No user data found.</div>
@@ -131,6 +159,7 @@ function goToPage(page: number) {
         <div class="mb-4">
           <button class="sedna-btn sedna-btn-secondary" on:click={deleteSelected} disabled={selectedIds.length === 0}>Delete Selected</button>
         </div>
+        <div class="overflow-auto w-full" style="max-height: 60vh;">
         <table class="w-full text-left border-collapse">
           <thead>
             <tr>
@@ -140,6 +169,8 @@ function goToPage(page: number) {
               <th class="border-b-2 p-2">Email</th>
               <th class="border-b-2 p-2">Pain Point</th>
               <th class="border-b-2 p-2">Occupation</th>
+              <th class="border-b-2 p-2">State</th>
+              <th class="border-b-2 p-2">County</th>
               <th class="border-b-2 p-2">Timestamp</th>
               <th class="border-b-2 p-2">Raffle Entries</th>
               <th class="border-b-2 p-2">Actions</th>
@@ -156,6 +187,8 @@ function goToPage(page: number) {
                 <td class="border-b p-2">{user.email}</td>
                 <td class="border-b p-2">{user.painPoint}</td>
                 <td class="border-b p-2">{user.occupation}</td>
+                <td class="border-b p-2">{user.state}</td>
+                <td class="border-b p-2">{user.county}</td>
                 <td class="border-b p-2">{new Date(user.timestamp).toLocaleString()}</td>
                 <td class="border-b p-2">
                   <input type="number" min="1" class="w-16 border rounded px-2 py-1" value={user.raffleEntries} on:change={e => updateRaffleEntries(user.id, +e.target.value)}>
@@ -167,6 +200,7 @@ function goToPage(page: number) {
             {/each}
           </tbody>
         </table>
+        </div>
         <!-- Pagination controls -->
         {#if totalPages > 1}
         <div class="flex justify-center items-center gap-2 mt-4">

@@ -125,7 +125,7 @@ class AnswerHandler {
       `${randomEmoji} Excellent! You've got it right!`,
       `${randomEmoji} Perfect! That's exactly right!`,
       `${randomEmoji} Outstanding! You understand AI well!`,
-      `${randomEmoji} Brilliant! You're an AI expert!`
+      `${randomEmoji} Brilliant! You're an AI Champion!`
     ];
     
     const randomTemplate = feedbackTemplates[Math.floor(Math.random() * feedbackTemplates.length)];
@@ -200,11 +200,11 @@ class AnswerHandler {
     const score = this.getScore();
     
     if (accuracy >= 90) {
-      return "🎉 You're an AI expert! Outstanding performance!";
+      return "🎉 You're an AI Champion! You're ready to help your organization lead with AI.";
     } else if (accuracy >= 80) {
-      return "🌟 Excellent work! You really know your AI facts!";
+      return "🌟 Excellent work! You have a solid foundation and are ready to take the next step as an AI Ready professional.";
     } else if (accuracy >= 70) {
-      return "💪 Great job! You're learning fast!";
+      return "💪 Great job! You're building your understanding and are AI Aware.";
     } else if (accuracy >= 60) {
       return "👍 Good progress! Keep learning about AI!";
     } else if (accuracy >= 50) {
@@ -218,13 +218,11 @@ class AnswerHandler {
     const accuracy = this.getAccuracy();
     
     if (accuracy >= 85) {
-      return "Expert";
+      return "AI Champion";
     } else if (accuracy >= 70) {
-      return "Advanced";
-    } else if (accuracy >= 55) {
-      return "Intermediate";
+      return "AI Ready";
     } else {
-      return "Beginner";
+      return "AI Aware";
     }
   }
 
