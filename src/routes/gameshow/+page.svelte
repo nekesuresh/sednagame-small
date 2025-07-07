@@ -51,6 +51,11 @@
 	let animatedStatement = '';
 	let animationInterval: any = null;
 
+	let correctEasy = 0;
+	let correctMedium = 0;
+	let showUpgradePopup = false;
+	let upgradeTarget = '';
+
 	function animateStatement(statement: string) {
 		if (animationInterval) clearInterval(animationInterval);
 		animatedStatement = '';
@@ -161,6 +166,21 @@
 		}
 	}
 
+	function maybeShowUpgradePopup() {
+		const userInfo = answerHandler.getUserInfo();
+		if (!userInfo) return;
+		if (userInfo.difficulty === 'easy' && correctEasy >= 2) {
+			showUpgradePopup = true;
+			upgradeTarget = 'medium';
+		} else if (userInfo.difficulty === 'medium' && correctMedium >= 2) {
+			showUpgradePopup = true;
+			upgradeTarget = 'hard';
+		} else {
+			showUpgradePopup = false;
+			upgradeTarget = '';
+		}
+	}
+
 	function handleAnswer(answer: boolean) {
 		if (!currentQuestion || showAnswer) return;
 
@@ -169,6 +189,11 @@
 		answerResult = answerHandler.handleAnswer(currentQuestion, answer);
 
 		if (answerResult?.isCorrect) {
+			// Track correct answers by difficulty
+			const userInfo = answerHandler.getUserInfo();
+			if (userInfo?.difficulty === 'easy') correctEasy++;
+			if (userInfo?.difficulty === 'medium') correctMedium++;
+			maybeShowUpgradePopup();
 			// Trigger confetti burst
 			confetti({
 				particleCount: 60,
@@ -185,6 +210,7 @@
 	}
 
 	function handleNextQuestion() {
+		showUpgradePopup = false;
 		generateNewQuestion();
 	}
 
@@ -220,6 +246,7 @@
 	}
 
 	function handleDifficultyChange(newDifficulty: 'easy' | 'medium' | 'hard') {
+		showUpgradePopup = false;
 		answerHandler.updateUserInfo({ difficulty: newDifficulty });
 		showDifficultyModal = false;
 		nextQuestion = null;
@@ -283,6 +310,10 @@
 			factInterval = null;
 		}
 	}
+
+	function dismissUpgradePopup() {
+		showUpgradePopup = false;
+	}
 </script>
 
 <svelte:head>
@@ -293,7 +324,7 @@
 	<div class="crt-overlay pointer-events-none"></div>
 	<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16 lg:py-20">
 		<!-- Header with Stats -->
-		<div class="flex justify-center items-center mb-8">
+		<div class="flex flex-col items-center space-y-2 mb-8">
 			<div class="flex items-center space-x-4">
 				<button 
 					class="sedna-btn sedna-btn-secondary"
@@ -308,7 +339,7 @@
 					📊 STATS
 				</button>
 				<button 
-					class="sedna-btn sedna-btn-accent"
+					class="sedna-btn {showUpgradePopup ? 'ring-4 ring-sedna-muted-gold animate-pulse' : ''} sedna-btn-accent"
 					on:click={handleChangeDifficulty}
 				>
 					⚙️ DIFFICULTY
@@ -317,6 +348,13 @@
 					Level: {currentDifficulty}
 				</div>
 			</div>
+			{#if showUpgradePopup}
+				<div class="w-full flex justify-center mt-2">
+					<div class="bg-yellow-100 border border-sedna-muted-gold rounded-lg px-4 py-2 text-center text-sedna-dark-slate-blue text-lg font-semibold shadow">
+						🚀 You're doing so well! Why not try <span class="text-sedna-orange">{upgradeTarget.toUpperCase()}</span>?
+					</div>
+				</div>
+			{/if}
 		</div>
 		<!-- Main Game Area -->
 		<div class="max-w-4xl mx-auto">
@@ -327,7 +365,7 @@
 						Generating AI Question...
 					</h2>
 					<p class="sedna-text">
-						{ollamaStatus ? 'Using local AI model...' : 'Using pre-generated questions...'}
+						{ollamaStatus ? 'Using local AI model...' : 'Using local AI Model...'}
 					</p>
 					<div class="mt-8">
 						<h3 class="text-xl font-retro-bold text-sedna-orange mb-4">While you wait, here's a fun fact:</h3>

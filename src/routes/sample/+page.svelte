@@ -16,6 +16,7 @@ const sampleQuestion = {
 
 let questionReady = false;
 let interval: any;
+let showSampleCaseStudy = false;
 
 onMount(() => {
   // Poll for preloaded question flag
@@ -44,6 +45,9 @@ function handlePlayForReal() {
 <div class="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-sedna-cool-blue via-sedna-dark-blue to-sedna-navy p-4">
   <div class="max-w-4xl w-full bg-white rounded-xl shadow-xl p-8 flex flex-col gap-8">
     <h2 class="text-3xl font-retro-bold text-sedna-orange mb-2 text-center">How to Play</h2>
+    <div class="text-center text-sedna-steel-blue-tint text-base mb-4">
+      <strong>Note:</strong> This is just a sample question to show how the game works. In the real game, questions and tips are generated live!
+    </div>
     <div class="flex flex-col md:flex-row gap-8">
       <div class="flex-1 flex flex-col gap-6">
         <div class="bg-sedna-pale-blue-grey border-2 border-sedna-cool-blue rounded-lg p-6 relative">
@@ -85,9 +89,19 @@ function handlePlayForReal() {
                 <div class="font-bold text-sedna-orange mb-1">Explanation:</div>
                 <div class="text-gray-700">While AI can assist in threat detection, human analysts are still essential for context, decision-making, and handling complex scenarios that require human judgment.</div>
               </div>
-              <div class="bg-blue-50 p-3 rounded-lg">
-                <strong class="text-blue-800">💡 Sedna Tip:</strong>
-                <div class="text-blue-700 mt-1">AI can help, but not fully replace, human experts in cybersecurity.</div>
+              <div class="bg-sedna-light-grey border-2 border-sedna-orange rounded-lg p-6 mb-6">
+                <h4 class="text-xl font-retro-bold text-sedna-orange mb-3">
+                  💡 Sedna Did This:
+                </h4>
+                <p class="sedna-text mb-4">
+                  AI can help, but not fully replace, human experts in cybersecurity.
+                </p>
+                <button
+                  class="sedna-btn sedna-btn-accent"
+                  on:click={() => showSampleCaseStudy = true}
+                >
+                  📚 LEARN MORE
+                </button>
               </div>
               <div class="flex justify-center gap-4 mt-6">
                 <button class="sedna-btn sedna-btn-accent text-lg py-4 px-8 opacity-80 cursor-default">🎯 NEXT QUESTION</button>
@@ -133,4 +147,14 @@ function handlePlayForReal() {
       </div>
     </div>
   </div>
-</div> 
+</div>
+
+{#if showSampleCaseStudy}
+  <div class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+    <div class="bg-white rounded-xl shadow-xl p-8 max-w-lg w-full relative">
+      <button class="absolute top-2 right-4 text-3xl text-sedna-dark-grey hover:text-sedna-cool-blue" on:click={() => showSampleCaseStudy = false}>×</button>
+      <h3 class="text-2xl font-retro-bold text-sedna-orange mb-4">Case Study</h3>
+      <div class="text-sedna-dark-slate-blue text-lg">Sedna helped a national cybersecurity agency stop data leaks using AI, achieving zero malicious exfiltrations for three years.</div>
+    </div>
+  </div>
+{/if} 

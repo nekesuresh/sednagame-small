@@ -1,4 +1,5 @@
 import type { SednaTip } from '$lib/data/sednaTips';
+import { sednaTips } from '$lib/data/sednaTips';
 
 export type Difficulty = 'easy' | 'medium' | 'hard';
 
@@ -95,6 +96,7 @@ class QuestionGenerator {
   private isOllamaAvailable: boolean = false;
   // Store hashes of used fact statements to prevent repeats for both facts and negated myths
   private usedFactHashes: Set<string> = new Set();
+  private usedTipIds: Set<number> = new Set();
 
   constructor(ollamaUrl: string = 'http://localhost:11434') {
     this.ollamaUrl = ollamaUrl;
@@ -135,73 +137,30 @@ class QuestionGenerator {
     return 'It is not true that ' + statement.charAt(0).toLowerCase() + statement.slice(1);
   }
 
-  private ensureStatementIncludesAll(statement: string, combination: { topic: string, perspective: string, type: string }): string {
-    let s = statement.trim();
-    // Add topic if missing
-    if (!s.toLowerCase().includes(combination.topic.toLowerCase())) {
-      s += ` (topic: ${combination.topic})`;
-    }
-    // Add type if missing
-    if (!s.toLowerCase().includes(combination.type.toLowerCase())) {
-      s += ` (type: ${combination.type})`;
-    }
-    // Add perspective if missing
-    if (!s.toLowerCase().includes(combination.perspective.toLowerCase())) {
-      s = `From the perspective of a ${combination.perspective}, ${s}`;
-    }
-    return s;
+  private ensureStatementIncludesAll(statement: string, combination: {}): string {
+    // No-op, just return the statement
+    return statement.trim();
   }
 
-  private buildPrompt(sednaTip: SednaTip, difficulty: Difficulty, combination: { topic: string, perspective: string, type: string }, factOrMyth: 'FACT' | 'MYTH'): string {
+  private buildPrompt(sednaTip: SednaTip, difficulty: Difficulty, combination: {}, factOrMyth: 'FACT' | 'MYTH'): string {
+    let difficultyInstructions = '';
+    if (difficulty === 'easy') {
+      difficultyInstructions = `\n- Use simple, clear language.\n- Focus on basic, practical benefits or misconceptions.\n- Avoid technical jargon.`;
+    } else if (difficulty === 'medium') {
+      difficultyInstructions = `\n- Use moderately detailed language.\n- Include some real-world context or examples.\n- It's okay to use some technical terms, but keep it accessible.`;
+    } else if (difficulty === 'hard') {
+      difficultyInstructions = `\n- Use advanced, precise language.\n- Reference complex scenarios, edge cases, or nuanced impacts.\n- It's okay to use technical or policy-related terms.`;
+    }
     if (factOrMyth === 'FACT') {
-      return `Write a true and positive statement (a FACT) about AI in government, based on this case study: "${sednaTip.tip}"
-- The statement must be about the topic "${combination.topic}", from the perspective of a "${combination.perspective}", and should focus on the "${combination.type}" of AI in government.
-- Do NOT mention Sedna or the case study directly.
-- The statement must be true and positive, not a negation.
-- After the statement, write ANSWER: FACT on a new line.
-- Then, write an EXPLANATION (8-10 sentences) that supports the statement with real-world evidence.
-
-Example:
-STATEMENT: From the perspective of a ${combination.perspective}, AI can improve ${combination.topic} in government by enhancing ${combination.type}.
-ANSWER: FACT
-EXPLANATION: AI systems can automate repetitive tasks, allowing government employees to focus on more important work. For example, AI can process paperwork faster than humans, which saves time and money. Many governments have used AI to improve public services, such as transportation and healthcare. By using AI, agencies can make better decisions based on data. This leads to better outcomes for citizens. AI can also help detect fraud and errors, making government programs more reliable. In summary, AI is a valuable tool for making government work better.
-
-Your output must follow this format:
-STATEMENT: [your fact statement]
-ANSWER: FACT
-EXPLANATION: [your explanation]
-`;
+      return `Write a true and positive statement (a FACT) about AI in government, inspired by the following case study:\n"${sednaTip.tip}"\n- Do NOT quote or restate the tip directly. Instead, create a realistic scenario or example that illustrates the impact or lesson of the tip in a new way.\n- Do NOT mention Sedna or the case study directly.\n- The statement must be true and positive, not a negation.\n- After the statement, write ANSWER: FACT on a new line.\n- Then, write an EXPLANATION (8-10 sentences) that supports the statement with real-world evidence or plausible reasoning.${difficultyInstructions}\n\nYour output must follow this format:\nSTATEMENT: [your fact statement]\nANSWER: FACT\nEXPLANATION: [your explanation]\n`;
     } else {
-      return `Think of a true and positive statement (a FACT) about AI in government, based on this case study: "${sednaTip.tip}"
-- The statement must be about the topic "${combination.topic}", from the perspective of a "${combination.perspective}", and should focus on the "${combination.type}" of AI in government.
-- Do NOT mention Sedna or the case study directly.
-- Now, write a common misconception (a MYTH) by paraphrasing, twisting, or expressing a real-world doubt or misunderstanding about the fact. The myth should sound plausible and reflect what some people might actually believe, not just a direct negation.
-- After the statement, write ANSWER: MYTH on a new line.
-- Then, write an EXPLANATION (8-10 sentences) that explains why the statement is a myth and what the truth is, using real-world evidence.
-
-Example:
-STATEMENT: From the perspective of a ${combination.perspective}, some believe that introducing AI into government ${combination.type} will only complicate ${combination.topic} and not lead to real improvements.
-ANSWER: MYTH
-EXPLANATION: This is a myth because AI systems can automate repetitive tasks, allowing government employees to focus on more important work. For example, AI can process paperwork faster than humans, which saves time and money. Many governments have used AI to improve public services, such as transportation and healthcare. By using AI, agencies can make better decisions based on data. This leads to better outcomes for citizens. AI can also help detect fraud and errors, making government programs more reliable. In summary, AI is a valuable tool for making government work better.
-
-Your output must follow this format:
-STATEMENT: [your myth statement]
-ANSWER: MYTH
-EXPLANATION: [your explanation]
-`;
+      return `Think of a true and positive statement (a FACT) about AI in government, inspired by the following case study:\n"${sednaTip.tip}"\n- Do NOT quote or restate the tip directly. Instead, create a realistic scenario or example that illustrates the impact or lesson of the tip in a new way.\n- Do NOT mention Sedna or the case study directly.\n- Now, write a common misconception (a MYTH) by paraphrasing, twisting, or expressing a real-world doubt or misunderstanding about the fact. The myth should sound plausible and reflect what some people might actually believe, not just a direct negation.\n- After the statement, write ANSWER: MYTH on a new line.\n- Then, write an EXPLANATION (8-10 sentences) that explains why the statement is a myth and what the truth is, using real-world evidence or plausible reasoning.${difficultyInstructions}\n\nYour output must follow this format:\nSTATEMENT: [your myth statement]\nANSWER: MYTH\nEXPLANATION: [your explanation]\n`;
     }
   }
 
   private getRandomCombination() {
-    const topics = ['privacy', 'security', 'efficiency', 'bias', 'transparency', 'automation', 'decision-making', 'compliance', 'cost', 'accessibility'];
-    const perspectives = ['citizen', 'employee', 'manager', 'regulator', 'taxpayer', 'stakeholder'];
-    const questionTypes = ['capability', 'limitation', 'implementation', 'outcome', 'requirement'];
-    
-    return {
-      topic: topics[Math.floor(Math.random() * topics.length)],
-      perspective: perspectives[Math.floor(Math.random() * perspectives.length)],
-      type: questionTypes[Math.floor(Math.random() * questionTypes.length)]
-    };
+    // No longer need topics or types
+    return {};
   }
 
   private async generateQuestionWithOllama(sednaTip: SednaTip, difficulty: Difficulty): Promise<Question | null> {
@@ -552,10 +511,18 @@ EXPLANATION: [your explanation]
     if (!this.isOllamaAvailable) {
       await this.checkOllamaAvailability();
     }
-    
-    // Import here to avoid circular dependencies
-    const { getRandomTip } = await import('$lib/data/sednaTips');
-    const randomTip = getRandomTip();
+
+    // Track used tips so each is used once before repeating
+    if (this.usedTipIds.size >= sednaTips.length) {
+      console.log('All tips used, resetting usedTipIds.');
+      this.usedTipIds.clear();
+    }
+    // Get available tips
+    const availableTips = sednaTips.filter(tip => !this.usedTipIds.has(tip.id));
+    const randomTip = availableTips[Math.floor(Math.random() * availableTips.length)];
+    this.usedTipIds.add(randomTip.id);
+    console.log('Used tip IDs:', Array.from(this.usedTipIds));
+    console.log('Remaining tip IDs:', sednaTips.filter(tip => !this.usedTipIds.has(tip.id)).map(tip => tip.id));
     return this.generateQuestion(randomTip, difficulty);
   }
 
