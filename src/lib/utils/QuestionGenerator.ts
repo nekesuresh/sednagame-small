@@ -122,7 +122,9 @@ class QuestionGenerator {
 
     const startTime = Date.now();
     try {
-      const prompt = this.buildPrompt(sednaTip, difficulty, this.getRandomCombination());
+      // Randomly choose FACT or MYTH
+      const factOrMyth: 'FACT' | 'MYTH' = Math.random() < 0.5 ? 'FACT' : 'MYTH';
+      const prompt = this.buildPrompt(sednaTip, difficulty, this.getRandomCombination(), factOrMyth);
       
       const response = await fetch(`${this.ollamaUrl}/api/generate`, {
         method: 'POST',
@@ -149,7 +151,7 @@ class QuestionGenerator {
       const durationSeconds = ((endTime - startTime) / 1000).toFixed(2);
       console.log(`Successfully generated question with Ollama in ${durationSeconds} seconds`);
       console.log('Ollama response data:', data.response);
-      return this.parseOllamaResponse(data.response, sednaTip, difficulty);
+      return this.parseOllamaResponse(data.response, sednaTip, difficulty, factOrMyth);
     } catch (error) {
       const endTime = Date.now();
       const durationSeconds = ((endTime - startTime) / 1000).toFixed(2);
@@ -170,36 +172,40 @@ class QuestionGenerator {
     };
   }
 
-  private buildPrompt(sednaTip: SednaTip, difficulty: Difficulty, combination: { topic: string, perspective: string, type: string }): string {
+  private buildPrompt(sednaTip: SednaTip, difficulty: Difficulty, combination: { topic: string, perspective: string, type: string }, factOrMyth: 'FACT' | 'MYTH'): string {
     const difficultyInstructions = {
       easy: 'Simple language, easy to decide.',
       medium: 'Moderate complexity, some technical terms.',
       hard: 'Advanced technical language, complex concepts.'
     };
 
-    return `Write a single, clear Myth vs Fact statement about AI in government, based on this case study: "${sednaTip.tip}".
- Focus on the topic: ${combination.topic}, from the perspective of a ${combination.perspective}.
- The statement should be concise, self-contained, and sound like a quiz question.
- Do NOT mention that this is a myth/fact question, do NOT explain the perspective, and do NOT restate the instructions.
- After the statement, write "MYTH" or "FACT" on a new line to indicate the answer.
- Then, give a brief explanation (1-2 sentences) in plain English.
- Use ${difficultyInstructions[difficulty]}
+    if (factOrMyth === 'FACT') {
+      return `Write a FACT about AI, inspired by this case study: "${sednaTip.tip}". The statement must be about ${combination.topic}, from the perspective of a ${combination.perspective}. Do NOT mention Sedna or the case study. After the statement, write FACT on a new line. Then, give a positive explanation (8-10 sentences) showing how this is possible in real life.
 
-Format:
 STATEMENT: [your statement]
-ANSWER: [MYTH or FACT]
-EXPLANATION: [brief explanation]
+ANSWER: FACT
+EXPLANATION: [explain the fact in 8-10 lines and give real world examples]
 `;
+    } else {
+      return `Write a MYTH (a common misconception) about AI in government, based on this case study: "${sednaTip.tip}". The statement must be about ${combination.topic}, from the perspective of a ${combination.perspective}.
+IMPORTANT: Do NOT simply negate the fact or use phrases like 'is actually false' or 'is not true.' The myth should be a believable but incorrect idea that some people might think, but the case study proves it wrong. Do NOT mention Sedna or the case study. After the statement, write MYTH on a new line. Then, give an explanation (8-10 sentences) that debunks the myth using real-world evidence.
+
+STATEMENT: [your MYTH statement]
+ANSWER: MYTH
+EXPLANATION: [explain why the statement is wrong in 8-10 lines]
+`;
+    }
   }
 
-  private parseOllamaResponse(response: string, sednaTip: SednaTip, difficulty: Difficulty): Question | null {
+  private parseOllamaResponse(response: string, sednaTip: SednaTip, difficulty: Difficulty, factOrMyth?: 'FACT' | 'MYTH'): Question | null {
     try {
       const lines = response.split('\n').map(line => line.trim()).filter(line => line.length > 0);
       
       let statement = '';
-      let isFact = false;
+      let isFact: boolean | null = null;
       let explanation = '';
       let lastLabel = '';
+      let explanationLines: string[] = [];
       for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
         if (line.toLowerCase().startsWith('statement:')) {
@@ -211,7 +217,8 @@ EXPLANATION: [brief explanation]
           line.toLowerCase().startsWith('answer:')
         ) {
           const factValue = line.split(':')[1]?.trim().toLowerCase();
-          isFact = factValue === 'true' || factValue === 'yes' || factValue === 'fact';
+          if (factValue === 'true' || factValue === 'yes' || factValue === 'fact') isFact = true;
+          if (factValue === 'false' || factValue === 'no' || factValue === 'myth') isFact = false;
           lastLabel = 'is_fact';
         } else if (line.toLowerCase().startsWith('myth:')) {
           const mythContent = line.replace(/myth:/i, '').trim();
@@ -242,20 +249,64 @@ EXPLANATION: [brief explanation]
             }
           }
           lastLabel = 'fact';
-        } else if (line.toLowerCase().startsWith('explanation:')) {
-          explanation = line.replace(/explanation:/i, '').trim();
+        } else if (line.trim().toLowerCase() === 'fact' || line.trim().toLowerCase() === 'fact.') {
+          isFact = true;
+        } else if (line.trim().toLowerCase() === 'myth' || line.trim().toLowerCase() === 'myth.') {
+          isFact = false;
+        } else if (line.toLowerCase().startsWith('explanation')) {
+          // Robustly handle EXPLANATION label with any casing, extra spaces, or colon
+          const match = line.match(/explanation\s*:?(.*)/i);
+          if (match) {
+            const rest = match[1].trim();
+            if (rest) {
+              explanation = rest;
+            } else if (lines[i + 1]) {
+              explanation = lines[i + 1].trim();
+              i++;
+            }
+          }
           lastLabel = 'explanation';
+        } else if (lastLabel === 'explanation') {
+          // Collect multi-line explanations
+          explanationLines.push(line);
+        }
+      }
+      // If explanation is still empty, try to use collected lines after EXPLANATION
+      if (!explanation && explanationLines.length > 0) {
+        explanation = explanationLines.join(' ');
+      }
+
+      if (isFact === null && factOrMyth) {
+        // Fallback: use the prompt's intent
+        isFact = factOrMyth === 'FACT';
+      }
+
+      if (isFact === null) {
+        isFact = false;
+      }
+
+      // Validation: For MYTH, reject negated or duplicate statements
+      if (isFact === false) {
+        const lowerStatement = statement.toLowerCase();
+        const lowerTip = sednaTip.tip.toLowerCase();
+        if (
+          lowerStatement.includes('is actually false') ||
+          lowerStatement.includes('is not true') ||
+          lowerStatement === lowerTip ||
+          lowerStatement.replace(/\W/g, '') === lowerTip.replace(/\W/g, '')
+        ) {
+          console.warn('Rejected myth statement for being a negation or duplicate:', statement);
+          return null;
         }
       }
 
-      if (!statement && explanation) {
-        // If no statement, use the explanation as the statement
-        statement = explanation;
-      }
-
       if (!statement || !explanation) {
+        console.warn('Returning null from parseOllamaResponse: missing fields', { statement, explanation });
         return null;
       }
+
+      // Debug log for final parsed values
+      console.log('Final parsed Question:', { statement, isFact, explanation });
 
       return {
         id: `ollama-${Date.now()}`,
