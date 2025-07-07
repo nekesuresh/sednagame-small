@@ -84,10 +84,10 @@
 </svelte:head>
 
 <div class="sedna-section-bg min-h-screen flex items-center justify-center">
-	<div class="w-full max-w-5xl bg-white rounded-xl shadow-xl p-4 md:p-10 flex flex-col md:flex-row gap-8 h-[90vh]">
-		<div class="flex-1 flex flex-col justify-center overflow-auto">
-			<div class="text-center mb-8">
-				<h1 class="sedna-header mb-4">
+	<div class="w-full max-w-5xl bg-white rounded-xl shadow-xl p-2 sm:p-4 md:p-8 flex flex-col md:flex-row gap-4 md:gap-8 h-screen md:h-[90vh] min-h-0">
+		<div class="flex-1 flex flex-col justify-center min-w-0 overflow-y-auto py-4 md:py-0">
+			<div class="text-center mb-6 md:mb-8">
+				<h1 class="sedna-header mb-2 md:mb-4">
 					🎮 PLAYER SETUP
 				</h1>
 				<p class="sedna-subheader">
@@ -95,7 +95,7 @@
 				</p>
 			</div>
 			<!-- Left column: Difficulty, Name, Occupation, AI Concern -->
-			<form on:submit|preventDefault={handleSubmit} class="flex flex-col gap-6">
+			<form on:submit|preventDefault={handleSubmit} class="flex flex-col gap-4 md:gap-6">
 				<div>
 					<label class="block text-xl font-retro-bold text-sedna-navy mb-3">
 						🎯 Choose your difficulty level:
@@ -200,9 +200,9 @@
 				</div>
 			</form>
 		</div>
-		<div class="flex-1 flex flex-col justify-center overflow-auto">
+		<div class="flex-1 flex flex-col justify-center min-w-0 overflow-y-auto py-4 md:py-0">
 			<!-- Right column: Phone, Email, State, County, Submit -->
-			<form on:submit|preventDefault={handleSubmit} class="flex flex-col gap-6 h-full justify-between">
+			<form on:submit|preventDefault={handleSubmit} class="flex flex-col gap-4 md:gap-6 h-full justify-between min-h-0">
 				<div>
 					<label for="phone" class="block text-xl font-retro-bold text-sedna-navy mb-3">
 						📱 Phone Number
@@ -303,10 +303,10 @@
 						required
 					/>
 				</div>
-				<div class="text-center pt-6">
+				<div class="text-center pt-4 md:pt-6 sticky bottom-0 bg-white bg-opacity-90 z-10">
 					<button
 						type="submit"
-						class="sedna-btn sedna-btn-accent text-2xl py-6 px-12 w-full"
+						class="sedna-btn sedna-btn-accent text-2xl py-6 px-8 w-full"
 						disabled={isSubmitting}
 					>
 						{isSubmitting ? '🚀 SETTING UP...' : '🚀 START GAME'}
