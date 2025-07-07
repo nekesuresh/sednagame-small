@@ -83,19 +83,19 @@
 	<title>Setup - Sedna AI Gameshow</title>
 </svelte:head>
 
-<div class="sedna-section-bg min-h-screen">
-	<div class="max-w-2xl mx-auto py-12 md:py-16 lg:py-20">
-		<div class="text-center mb-12">
-			<h1 class="sedna-header mb-6">
-				🎮 PLAYER SETUP
-			</h1>
-			<p class="sedna-subheader">
-				Tell us about yourself to personalize your AI learning experience
-			</p>
-		</div>
-		<div class="sedna-card">
-			<form on:submit|preventDefault={handleSubmit} class="space-y-8">
-				<!-- Difficulty selection FIRST -->
+<div class="sedna-section-bg min-h-screen flex items-center justify-center">
+	<div class="w-full max-w-5xl bg-white rounded-xl shadow-xl p-4 md:p-10 flex flex-col md:flex-row gap-8 h-[90vh]">
+		<div class="flex-1 flex flex-col justify-center overflow-auto">
+			<div class="text-center mb-8">
+				<h1 class="sedna-header mb-4">
+					🎮 PLAYER SETUP
+				</h1>
+				<p class="sedna-subheader">
+					Tell us about yourself to personalize your AI learning experience
+				</p>
+			</div>
+			<!-- Left column: Difficulty, Name, Occupation, AI Concern -->
+			<form on:submit|preventDefault={handleSubmit} class="flex flex-col gap-6">
 				<div>
 					<label class="block text-xl font-retro-bold text-sedna-navy mb-3">
 						🎯 Choose your difficulty level:
@@ -158,7 +158,6 @@
 						</div>
 					{/if}
 				</div>
-				<!-- Player name input NEXT -->
 				<div>
 					<label for="name" class="block text-xl font-retro-bold text-sedna-navy mb-3">
 						👤 What's your name?
@@ -199,6 +198,11 @@
 						required
 					/>
 				</div>
+			</form>
+		</div>
+		<div class="flex-1 flex flex-col justify-center overflow-auto">
+			<!-- Right column: Phone, Email, State, County, Submit -->
+			<form on:submit|preventDefault={handleSubmit} class="flex flex-col gap-6 h-full justify-between">
 				<div>
 					<label for="phone" class="block text-xl font-retro-bold text-sedna-navy mb-3">
 						📱 Phone Number
@@ -302,7 +306,7 @@
 				<div class="text-center pt-6">
 					<button
 						type="submit"
-						class="sedna-btn sedna-btn-accent text-2xl py-6 px-12"
+						class="sedna-btn sedna-btn-accent text-2xl py-6 px-12 w-full"
 						disabled={isSubmitting}
 					>
 						{isSubmitting ? '🚀 SETTING UP...' : '🚀 START GAME'}

@@ -466,7 +466,7 @@
 							{#if isPreloadingNext}
 								<div class="text-center mt-4">
 									<p class="sedna-text text-sedna-dark-grey text-sm">
-										⚡ Preloading next question...
+										⚡ Crafting a new question just for you…
 									</p>
 								</div>
 							{:else if !nextQuestion && showAnswer}
