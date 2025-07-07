@@ -105,7 +105,7 @@ class QuestionGenerator {
       const response = await fetch(`${this.ollamaUrl}/api/tags`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
-        signal: AbortSignal.timeout(30000) // 30 second timeout
+        signal: AbortSignal.timeout(60000) // 30 second timeout
       });
       this.isOllamaAvailable = response.ok;
       console.log('Ollama availability check result:', response.ok, 'Status:', response.status);
@@ -122,13 +122,13 @@ class QuestionGenerator {
 
     const startTime = Date.now();
     try {
-      const prompt = this.buildPrompt(sednaTip, difficulty);
+      const prompt = this.buildPrompt(sednaTip, difficulty, this.getRandomCombination());
       
       const response = await fetch(`${this.ollamaUrl}/api/generate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'mistral:7b-instruct-v0.2-q4_K_M',
+          model: 'qwen:0.5b',
           prompt: prompt,
           stream: false,
           options: {
@@ -148,6 +148,7 @@ class QuestionGenerator {
       const endTime = Date.now();
       const durationSeconds = ((endTime - startTime) / 1000).toFixed(2);
       console.log(`Successfully generated question with Ollama in ${durationSeconds} seconds`);
+      console.log('Ollama response data:', data.response);
       return this.parseOllamaResponse(data.response, sednaTip, difficulty);
     } catch (error) {
       const endTime = Date.now();
@@ -157,20 +158,37 @@ class QuestionGenerator {
     }
   }
 
-  private buildPrompt(sednaTip: SednaTip, difficulty: Difficulty): string {
+  private getRandomCombination() {
+    const topics = ['privacy', 'security', 'efficiency', 'bias', 'transparency', 'automation', 'decision-making', 'compliance', 'cost', 'accessibility'];
+    const perspectives = ['citizen', 'employee', 'manager', 'regulator', 'taxpayer', 'stakeholder'];
+    const questionTypes = ['capability', 'limitation', 'implementation', 'outcome', 'requirement'];
+    
+    return {
+      topic: topics[Math.floor(Math.random() * topics.length)],
+      perspective: perspectives[Math.floor(Math.random() * perspectives.length)],
+      type: questionTypes[Math.floor(Math.random() * questionTypes.length)]
+    };
+  }
+
+  private buildPrompt(sednaTip: SednaTip, difficulty: Difficulty, combination: { topic: string, perspective: string, type: string }): string {
     const difficultyInstructions = {
       easy: 'Simple language, easy to decide.',
       medium: 'Moderate complexity, some technical terms.',
       hard: 'Advanced technical language, complex concepts.'
     };
 
-    return `Create a Myth vs Fact question about AI in government, based on: "${sednaTip.tip}".
+    return `Write a single, clear Myth vs Fact statement about AI in government, based on this case study: "${sednaTip.tip}".
+ Focus on the topic: ${combination.topic}, from the perspective of a ${combination.perspective}.
+ The statement should be concise, self-contained, and sound like a quiz question.
+ Do NOT mention that this is a myth/fact question, do NOT explain the perspective, and do NOT restate the instructions.
+ After the statement, write "MYTH" or "FACT" on a new line to indicate the answer.
+ Then, give a brief explanation (1-2 sentences) in plain English.
+ Use ${difficultyInstructions[difficulty]}
 
-DIFFICULTY: ${difficulty.toUpperCase()} - ${difficultyInstructions[difficulty]}
-
-STATEMENT: [Myth or fact about AI in government, related to the case study]
-IS_FACT: [true or false]
-EXPLANATION: [Brief explanation, no company names]
+Format:
+STATEMENT: [your statement]
+ANSWER: [MYTH or FACT]
+EXPLANATION: [brief explanation]
 `;
   }
 
@@ -181,16 +199,58 @@ EXPLANATION: [Brief explanation, no company names]
       let statement = '';
       let isFact = false;
       let explanation = '';
-
-      for (const line of lines) {
-        if (line.startsWith('STATEMENT:')) {
-          statement = line.replace('STATEMENT:', '').trim();
-        } else if (line.startsWith('IS_FACT:')) {
-          const factValue = line.replace('IS_FACT:', '').trim().toLowerCase();
-          isFact = factValue === 'true';
-        } else if (line.startsWith('EXPLANATION:')) {
-          explanation = line.replace('EXPLANATION:', '').trim();
+      let lastLabel = '';
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        if (line.toLowerCase().startsWith('statement:')) {
+          statement = line.replace(/statement:/i, '').trim();
+          lastLabel = 'statement';
+        } else if (
+          line.toLowerCase().startsWith('is_fact:') ||
+          line.toLowerCase().startsWith('is fact:') ||
+          line.toLowerCase().startsWith('answer:')
+        ) {
+          const factValue = line.split(':')[1]?.trim().toLowerCase();
+          isFact = factValue === 'true' || factValue === 'yes' || factValue === 'fact';
+          lastLabel = 'is_fact';
+        } else if (line.toLowerCase().startsWith('myth:')) {
+          const mythContent = line.replace(/myth:/i, '').trim();
+          if (mythContent) {
+            statement = mythContent;
+          } else if (lines[i + 1]) {
+            statement = lines[i + 1].trim();
+            i++;
+          }
+          isFact = false;
+          lastLabel = 'myth';
+        } else if (line.toLowerCase().startsWith('fact:')) {
+          const factContent = line.replace(/fact:/i, '').trim();
+          if (!statement) {
+            if (factContent) {
+              statement = factContent;
+            } else if (lines[i + 1]) {
+              statement = lines[i + 1].trim();
+              i++;
+            }
+            isFact = true;
+          } else if (!explanation) {
+            if (factContent) {
+              explanation = factContent;
+            } else if (lines[i + 1]) {
+              explanation = lines[i + 1].trim();
+              i++;
+            }
+          }
+          lastLabel = 'fact';
+        } else if (line.toLowerCase().startsWith('explanation:')) {
+          explanation = line.replace(/explanation:/i, '').trim();
+          lastLabel = 'explanation';
         }
+      }
+
+      if (!statement && explanation) {
+        // If no statement, use the explanation as the statement
+        statement = explanation;
       }
 
       if (!statement || !explanation) {
