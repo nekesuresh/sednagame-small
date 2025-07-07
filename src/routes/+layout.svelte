@@ -23,6 +23,6 @@
 	});
 </script>
 
-<div class="min-h-screen bg-gradient-to-br from-retro-slate-darkest via-retro-slate-darker to-retro-slate-dark">
+<div class="min-h-screen bg-gradient-to-br from-retro-slate-darkest via-retro-slate-darker to-retro-slate-dark overflow-y-auto scrollbar-thin scrollbar-thumb-sedna-bright-yellow scrollbar-track-retro-slate-darkest">
 	<slot />
 </div> 
