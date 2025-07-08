@@ -46,7 +46,7 @@
 	$: currentScore = answerHandler.getScore();
 	$: currentAccuracy = answerHandler.getAccuracy();
 	$: currentDifficulty = answerHandler.getUserInfo()?.difficulty?.toUpperCase() || 'MEDIUM';
-	$: showCompletionButton = answerHandler.isGameComplete();
+	$: showCompletionButton = answerHandler.getProgress() >= 100;
 
 	let animatedStatement = '';
 	let animationInterval: any = null;
@@ -223,7 +223,10 @@
 	}
 
 	function handleNextQuestion() {
-		if (showCompletionButton) {
+		// If the game is complete, never generate a new question
+		const progress = answerHandler.getProgress();
+		const isComplete = progress >= 100;
+		if (isComplete) {
 			handleGoToCompletion();
 			return;
 		}
@@ -412,8 +415,8 @@
 		<!-- Main Game Area -->
 		<div class="max-w-4xl mx-auto">
 			<div class="mb-6 text-center">
-				<div class="text-sm text-white opacity-80 font-normal">
-					⚡ <span class="font-bold">These questions are AI-generated on the spot!</span> Sometimes the AI might make mistakes or generate imperfect questions—thanks for your understanding.
+				<div class="text-lg text-white opacity-80 font-normal">
+					⚡ These questions are AI-generated on the spot! Sometimes the AI might make mistakes or generate imperfect questions — thanks for your understanding.
 				</div>
 			</div>
 			{#if isLoading}
@@ -496,7 +499,7 @@
 								</div>
 							{/if}
 							<div class="flex flex-col md:flex-row items-center justify-center gap-6">
-								{#if showCompletionButton}
+								{#if showCompletionButton && showAnswer}
 									<button
 										class="sedna-btn text-3xl py-6 px-16 animate-pulse bg-gradient-to-r from-yellow-400 to-pink-500 text-white font-extrabold shadow-lg border-4 border-yellow-300 hover:scale-105 transition-transform duration-200"
 										on:click={handleGoToCompletion}
@@ -508,7 +511,7 @@
 									<button
 										class="sedna-btn sedna-btn-accent {(!isGeneratingQuestion && nextQuestion) ? 'pulse' : ''} text-2xl py-6 px-10"
 										on:click={handleNextQuestion}
-										disabled={isGeneratingQuestion || !nextQuestion}
+										disabled={isGeneratingQuestion || !nextQuestion || showCompletionButton}
 										title={!nextQuestion ? 'Please wait for question to finish generating' : ''}
 									>
 										{isGeneratingQuestion ? '🔄 LOADING...' : nextQuestion ? '🎯 NEXT QUESTION' : '⏳ GENERATING QUESTION'}
@@ -617,7 +620,7 @@
 							<div class="flex justify-between items-center">
 								<div>
 									<div class="text-lg font-retro-bold">🔥 HARD</div>
-									<div class="text-sm">AI Champion: You're ready to help your organization lead with AI.</div>
+									<div class="text-sm">Challenging questions, advanced AI concepts</div>
 								</div>
 								<div class="text-2xl">30 pts</div>
 							</div>
