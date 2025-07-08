@@ -24,6 +24,8 @@
 	$: difficultyLevel = answerHandler.getDifficultyLevel();
 	$: userInfo = answerHandler.getUserInfo();
 	$: progress = answerHandler.getProgress();
+	$: cappedProgress = Math.min(progress, 100);
+	$: cappedScore = Math.min(stats.score, 100);
 </script>
 
 <svelte:window on:keydown={handleKeydown} />
@@ -98,16 +100,16 @@
 				<div>
 					<div class="flex justify-between mb-2">
 						<span class="sedna-text">Score Progress</span>
-						<span class="sedna-text">{stats.score} / 100</span>
+						<span class="sedna-text">{cappedScore} / 100</span>
 					</div>
 					<div class="w-full bg-sedna-dark-slate-blue rounded-full h-4 border-2 border-sedna-cool-blue overflow-hidden">
 						<div 
 							class="bg-gradient-to-r from-sedna-bright-yellow to-sedna-muted-gold h-full rounded-full transition-all duration-500 ease-out" 
-							style="width: {progress}%"
+							style="width: {cappedProgress}%"
 						></div>
 					</div>
 					<div class="text-center mt-2">
-						<span class="sedna-text text-sm">{progress}% Complete</span>
+						<span class="sedna-text text-sm">{cappedProgress}% Complete</span>
 					</div>
 				</div>
 			</div>

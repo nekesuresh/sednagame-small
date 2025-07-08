@@ -407,6 +407,11 @@
 		</div>
 		<!-- Main Game Area -->
 		<div class="max-w-4xl mx-auto">
+			<div class="mb-6 text-center">
+				<div class="text-sm text-white opacity-80 font-normal">
+					⚡ <span class="font-bold">These questions are AI-generated on the spot!</span> Sometimes the AI might make mistakes or generate imperfect questions—thanks for your understanding.
+				</div>
+			</div>
 			{#if isLoading}
 				<div class="sedna-card text-center py-16">
 					<div class="text-6xl mb-6">🤖</div>
