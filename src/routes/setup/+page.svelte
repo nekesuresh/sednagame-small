@@ -58,7 +58,7 @@
 	}
 
 	async function handleSubmit() {
-		if (!name.trim() || !title.trim() || !organization.trim() || !aiConcern.trim() || !difficulty || !phone.trim() || !email.trim()) {
+		if (!name.trim() || !title.trim() || !organization.trim() || !aiConcern.trim() || !difficulty || !phone.trim() || !email.trim() || !state.trim() || !county.trim()) {
 			alert('Please fill in all fields');
 			return;
 		}
