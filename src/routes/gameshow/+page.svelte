@@ -58,6 +58,8 @@
 	let upgradePreloading = false;
 	let upgradePreloadedQuestion: Question | null = null;
 	let upgradeCancelled = false;
+	let showCongratsPopup = false;
+	let hasShownCongrats = false;
 
 	function animateStatement(statement: string) {
 		if (animationInterval) clearInterval(animationInterval);
@@ -370,6 +372,15 @@
 	function dismissUpgradePopup() {
 		showUpgradeModal = false;
 	}
+
+	$: if (!hasShownCongrats && answerHandler.getProgress() >= 100 && showAnswer) {
+		showCongratsPopup = true;
+		hasShownCongrats = true;
+	}
+
+	function dismissCongratsPopup() {
+		showCongratsPopup = false;
+	}
 </script>
 
 <svelte:head>
@@ -499,6 +510,16 @@
 								</div>
 							{/if}
 							<div class="flex flex-col md:flex-row items-center justify-center gap-6">
+								{#if showCongratsPopup}
+									<div class="fixed inset-0 flex items-center justify-center z-50">
+										<div class="bg-gradient-to-br from-yellow-200 via-pink-200 to-blue-200 border-4 border-yellow-400 rounded-2xl shadow-2xl p-8 max-w-md w-full text-center animate-bounce-in">
+											<h2 class="text-4xl font-extrabold text-sedna-orange mb-4 drop-shadow-lg">🎉 Congratulations! 🎉</h2>
+											<p class="text-xl text-sedna-cool-blue font-bold mb-6">You've reached 100 points!</p>
+											<p class="text-lg text-sedna-dark-slate-blue mb-6">Press <span class="font-bold">Next</span> to finish the game.</p>
+											<button class="sedna-btn sedna-btn-accent text-xl py-3 px-8" on:click={dismissCongratsPopup}>OK</button>
+										</div>
+									</div>
+								{/if}
 								{#if showCompletionButton && showAnswer}
 									<button
 										class="sedna-btn text-3xl py-6 px-16 animate-pulse bg-gradient-to-r from-yellow-400 to-pink-500 text-white font-extrabold shadow-lg border-4 border-yellow-300 hover:scale-105 transition-transform duration-200"
@@ -665,3 +686,15 @@
 		</button>
 	</div>
 {/if} 
+
+<style>
+@keyframes bounce-in {
+  0% { transform: scale(0.7); opacity: 0; }
+  60% { transform: scale(1.1); opacity: 1; }
+  80% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+.animate-bounce-in {
+  animation: bounce-in 0.7s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+</style> 
