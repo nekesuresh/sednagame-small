@@ -5,6 +5,7 @@
 	import { saveUserInfo } from '$lib/utils/userdb';
 
 	let name = '';
+	let title = '';
 	let occupation = '';
 	let aiConcern = '';
 	let difficulty: 'easy' | 'medium' | 'hard' | '' = '';
@@ -58,7 +59,7 @@
 	}
 
 	async function handleSubmit() {
-		if (!name.trim() || !occupation.trim() || !aiConcern.trim() || !difficulty || !phone.trim() || !email.trim()) {
+		if (!name.trim() || !title.trim() || !occupation.trim() || !aiConcern.trim() || !difficulty || !phone.trim() || !email.trim()) {
 			alert('Please fill in all fields');
 			return;
 		}
@@ -66,7 +67,7 @@
 		isSubmitting = true;
 
 		try {
-			await saveUserInfo({ name: name.trim(), painPoint: aiConcern.trim(), occupation: occupation.trim(), phone: phone.trim(), email: email.trim(), state: state.trim(), county: county.trim() });
+			await saveUserInfo({ name: name.trim(), title: title.trim(), painPoint: aiConcern.trim(), occupation: occupation.trim(), phone: phone.trim(), email: email.trim(), state: state.trim(), county: county.trim() });
 			answerHandler.initializeUserInfo(name.trim(), occupation.trim(), aiConcern.trim(), difficulty as 'easy' | 'medium' | 'hard');
 			localStorage.removeItem('sedna_show_start_page');
 			goto('/sample');
@@ -83,19 +84,19 @@
 	<title>Setup - Sedna AI Gameshow</title>
 </svelte:head>
 
-<div class="sedna-section-bg min-h-screen flex items-center justify-center">
-	<div class="w-full max-w-5xl bg-white rounded-xl shadow-xl p-2 sm:p-4 md:p-8 flex flex-col md:flex-row gap-4 md:gap-8 h-screen md:h-[90vh] min-h-0">
-		<div class="flex-1 flex flex-col justify-center min-w-0 overflow-y-auto py-4 md:py-0">
-			<div class="text-center mb-6 md:mb-8">
-				<h1 class="sedna-header mb-2 md:mb-4">
-					🎮 PLAYER SETUP
-				</h1>
-				<p class="sedna-subheader">
-					Tell us about yourself to personalize your AI learning experience
-				</p>
-			</div>
-			<!-- Left column: Difficulty, Name, Occupation, AI Concern -->
-			<form on:submit|preventDefault={handleSubmit} class="flex flex-col gap-4 md:gap-6">
+<div class="sedna-section-bg min-h-screen">
+	<div class="max-w-2xl mx-auto py-12 md:py-16 lg:py-20">
+		<div class="text-center mb-12">
+			<h1 class="sedna-header mb-6">
+				🎮 PLAYER SETUP
+			</h1>
+			<p class="sedna-subheader">
+				Tell us about yourself to personalize your AI learning experience
+			</p>
+		</div>
+		<div class="sedna-card">
+			<form on:submit|preventDefault={handleSubmit} class="space-y-8">
+				<!-- Difficulty selection FIRST -->
 				<div>
 					<label class="block text-xl font-retro-bold text-sedna-navy mb-3">
 						🎯 Choose your difficulty level:
@@ -158,6 +159,7 @@
 						</div>
 					{/if}
 				</div>
+				<!-- Player name input NEXT -->
 				<div>
 					<label for="name" class="block text-xl font-retro-bold text-sedna-navy mb-3">
 						👤 What's your name?
@@ -170,6 +172,19 @@
 						placeholder="Enter your name..."
 						required
 						autocomplete="name"
+					/>
+				</div>
+				<div>
+					<label for="title" class="block text-xl font-retro-bold text-sedna-navy mb-3">
+						🏷️ What's your title?
+					</label>
+					<input
+						id="title"
+						type="text"
+						bind:value={title}
+						class="sedna-input w-full text-xl"
+						placeholder="Enter your title (e.g., Analyst, Director, etc.)..."
+						required
 					/>
 				</div>
 				<div>
@@ -198,11 +213,6 @@
 						required
 					/>
 				</div>
-			</form>
-		</div>
-		<div class="flex-1 flex flex-col justify-center min-w-0 overflow-y-auto py-4 md:py-0">
-			<!-- Right column: Phone, Email, State, County, Submit -->
-			<form on:submit|preventDefault={handleSubmit} class="flex flex-col gap-4 md:gap-6 h-full justify-between min-h-0">
 				<div>
 					<label for="phone" class="block text-xl font-retro-bold text-sedna-navy mb-3">
 						📱 Phone Number
@@ -216,6 +226,7 @@
 						required
 						autocomplete="tel"
 					/>
+					<p class="text-sm font-semibold text-sedna-steel-blue-tint mt-2">We won't spam – we will only use your phone number for giveaway and relevant info.</p>
 				</div>
 				<div>
 					<label for="email" class="block text-xl font-retro-bold text-sedna-navy mb-3">
@@ -303,10 +314,10 @@
 						required
 					/>
 				</div>
-				<div class="text-center pt-4 md:pt-6 sticky bottom-0 bg-white bg-opacity-90 z-10">
+				<div class="text-center pt-6">
 					<button
 						type="submit"
-						class="sedna-btn sedna-btn-accent text-2xl py-6 px-8 w-full"
+						class="sedna-btn sedna-btn-accent text-2xl py-6 px-12"
 						disabled={isSubmitting}
 					>
 						{isSubmitting ? '🚀 SETTING UP...' : '🚀 START GAME'}

@@ -81,7 +81,7 @@ class AnswerHandler {
       }
       
       // Calculate progress based on total score (100 points to complete)
-      this.userInfo.progress = Math.min(100, this.userInfo.score);
+      this.userInfo.progress = this.userInfo.score;
       
       this.saveUserInfo();
     }

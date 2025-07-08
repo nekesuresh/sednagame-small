@@ -23,6 +23,12 @@
 	});
 </script>
 
-<div class="min-h-screen bg-gradient-to-br from-retro-slate-darkest via-retro-slate-darker to-retro-slate-dark overflow-y-auto scrollbar-thin scrollbar-thumb-sedna-bright-yellow scrollbar-track-retro-slate-darkest">
+<div class="min-h-screen bg-gradient-to-br from-retro-slate-darkest via-retro-slate-darker to-retro-slate-dark">
+	<header class="w-full flex justify-center items-center py-6">
+		<picture>
+			<source srcset="/sedna-logos/sedna1.png" media="(prefers-color-scheme: light)" />
+			<img src="/sedna-logos/sedna2.jpeg" alt="Sedna Consulting Group Logo" class="h-16 md:h-20 drop-shadow-lg" style="max-width: 90vw; object-fit: contain;" />
+		</picture>
+	</header>
 	<slot />
 </div> 
