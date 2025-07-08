@@ -79,7 +79,8 @@
 			<div class="sedna-card border-2 border-sedna-bright-yellow bg-gradient-to-r from-sedna-bright-yellow to-sedna-muted-gold mb-8">
 				<div class="text-6xl mb-4">🎁</div>
 				<h2 class="text-3xl md:text-4xl font-retro-bold text-white mb-4">
-					Please Go Collect Your Swag!!!!
+					You’re entered into the AirPod Raffle — Spin the wheel for a chance at bonus entries!
+
 				</h2>
 				<p class="text-white text-xl font-sedna-bold text-center">
 					Winner will be announced 12:00pm EST 7/19/2025

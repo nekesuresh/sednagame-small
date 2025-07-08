@@ -53,8 +53,11 @@
 
 	let correctEasy = 0;
 	let correctMedium = 0;
-	let showUpgradePopup = false;
-	let upgradeTarget = '';
+	let showUpgradeModal = false;
+	let upgradeTarget: 'medium' | 'hard' = 'medium';
+	let upgradePreloading = false;
+	let upgradePreloadedQuestion: Question | null = null;
+	let upgradeCancelled = false;
 
 	function animateStatement(statement: string) {
 		if (animationInterval) clearInterval(animationInterval);
@@ -166,18 +169,28 @@
 		}
 	}
 
-	function maybeShowUpgradePopup() {
+	async function maybeShowUpgradeModal() {
 		const userInfo = answerHandler.getUserInfo();
 		if (!userInfo) return;
-		if (userInfo.difficulty === 'easy' && correctEasy >= 2) {
-			showUpgradePopup = true;
-			upgradeTarget = 'medium';
-		} else if (userInfo.difficulty === 'medium' && correctMedium >= 2) {
-			showUpgradePopup = true;
-			upgradeTarget = 'hard';
-		} else {
-			showUpgradePopup = false;
-			upgradeTarget = '';
+		if ((userInfo.difficulty === 'easy' && correctEasy >= 2) || (userInfo.difficulty === 'medium' && correctMedium >= 2)) {
+			showUpgradeModal = true;
+			upgradeTarget = userInfo.difficulty === 'easy' ? 'medium' : 'hard';
+			upgradePreloading = true;
+			upgradePreloadedQuestion = null;
+			upgradeCancelled = false;
+			// Preload the next question at the higher difficulty
+			let attempts = 0;
+			let newQuestion: Question | null = null;
+			const difficulty = upgradeTarget;
+			while (attempts < 10) {
+				newQuestion = await questionGenerator.generateQuestionFromRandomTip(difficulty);
+				if (newQuestion && !usedIds.has(newQuestion.id)) {
+					break;
+				}
+				attempts++;
+			}
+			upgradePreloadedQuestion = newQuestion;
+			upgradePreloading = false;
 		}
 	}
 
@@ -193,7 +206,7 @@
 			const userInfo = answerHandler.getUserInfo();
 			if (userInfo?.difficulty === 'easy') correctEasy++;
 			if (userInfo?.difficulty === 'medium') correctMedium++;
-			maybeShowUpgradePopup();
+			maybeShowUpgradeModal();
 			// Trigger confetti burst
 			confetti({
 				particleCount: 60,
@@ -210,7 +223,43 @@
 	}
 
 	function handleNextQuestion() {
-		showUpgradePopup = false;
+		if (showUpgradeModal) {
+			// If modal is open and user chose to stay, generate question at current difficulty
+			showUpgradeModal = false;
+			upgradeCancelled = false;
+			generateNewQuestion();
+			return;
+		}
+		generateNewQuestion();
+	}
+
+	function handleUpgradeConfirm() {
+		// User accepts upgrade, set difficulty and show preloaded question
+		answerHandler.updateUserInfo({ difficulty: upgradeTarget });
+		showUpgradeModal = false;
+		upgradeCancelled = false;
+		correctEasy = upgradeTarget === 'medium' ? 0 : correctEasy;
+		correctMedium = upgradeTarget === 'hard' ? 0 : correctMedium;
+		if (upgradePreloadedQuestion) {
+			currentQuestion = upgradePreloadedQuestion;
+			nextQuestion = null;
+			showAnswer = false;
+			answerResult = null;
+			userAnswer = null;
+			isLoading = false;
+			isGeneratingQuestion = false;
+			usedQuestionIds.update(ids => { ids.add(currentQuestion.id); return ids; });
+			preloadNextQuestion();
+		} else {
+			generateNewQuestion();
+		}
+	}
+
+	function handleUpgradeCancel() {
+		// User wants to stay on current difficulty
+		showUpgradeModal = false;
+		upgradeCancelled = true;
+		// Generate next question at current difficulty
 		generateNewQuestion();
 	}
 
@@ -246,7 +295,7 @@
 	}
 
 	function handleDifficultyChange(newDifficulty: 'easy' | 'medium' | 'hard') {
-		showUpgradePopup = false;
+		showUpgradeModal = false;
 		answerHandler.updateUserInfo({ difficulty: newDifficulty });
 		showDifficultyModal = false;
 		nextQuestion = null;
@@ -312,7 +361,7 @@
 	}
 
 	function dismissUpgradePopup() {
-		showUpgradePopup = false;
+		showUpgradeModal = false;
 	}
 </script>
 
@@ -339,7 +388,7 @@
 					📊 STATS
 				</button>
 				<button 
-					class="sedna-btn {showUpgradePopup ? 'ring-4 ring-sedna-muted-gold animate-pulse' : ''} sedna-btn-accent"
+					class="sedna-btn {showUpgradeModal ? 'ring-4 ring-sedna-muted-gold animate-pulse' : ''} sedna-btn-accent"
 					on:click={handleChangeDifficulty}
 				>
 					⚙️ DIFFICULTY
@@ -348,7 +397,7 @@
 					Level: {currentDifficulty}
 				</div>
 			</div>
-			{#if showUpgradePopup}
+			{#if showUpgradeModal}
 				<div class="w-full flex justify-center mt-2">
 					<div class="bg-yellow-100 border border-sedna-muted-gold rounded-lg px-4 py-2 text-center text-sedna-dark-slate-blue text-lg font-semibold shadow">
 						🚀 You're doing so well! Why not try <span class="text-sedna-orange">{upgradeTarget.toUpperCase()}</span>?
@@ -466,7 +515,7 @@
 							{#if isPreloadingNext}
 								<div class="text-center mt-4">
 									<p class="sedna-text text-sedna-dark-grey text-sm">
-										⚡ Crafting a new question just for you…
+										🤖 The AI is brainstorming your next question…
 									</p>
 								</div>
 							{:else if !nextQuestion && showAnswer}
@@ -567,6 +616,27 @@
 					</div>
 				</div>
 			</div>
+		</div>
+	</div>
+{/if}
+
+{#if showUpgradeModal}
+	<div class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+		<div class="bg-white rounded-xl shadow-xl p-8 max-w-lg w-full relative">
+			<button class="absolute top-2 right-4 text-3xl text-sedna-dark-grey hover:text-sedna-cool-blue" on:click={handleUpgradeCancel}>×</button>
+			<h3 class="text-2xl font-retro-bold text-sedna-orange mb-4">{upgradeTarget === 'medium' ? 'Level Up: Medium!' : 'Level Up: Hard!'}</h3>
+			<div class="text-sedna-dark-slate-blue text-lg mb-4">You're doing so well! Changing to <span class="font-bold">{upgradeTarget.toUpperCase()}</span> for more challenge and points.</div>
+			<div class="flex flex-col gap-4">
+				<button class="sedna-btn sedna-btn-secondary text-lg py-3 px-6" on:click={handleUpgradeCancel}>Stay on {upgradeTarget === 'medium' ? 'Easy' : 'Medium'}</button>
+				<button class="sedna-btn sedna-btn-accent text-lg py-3 px-6" on:click={handleUpgradeConfirm} disabled={upgradePreloading}>
+					{upgradePreloading ? '🔄 Generating next question...' : `Go to ${upgradeTarget.charAt(0).toUpperCase() + upgradeTarget.slice(1)}`}
+				</button>
+			</div>
+			{#if upgradePreloading}
+				<div class="text-center mt-4">
+					<p class="sedna-text text-sedna-dark-grey text-sm">⚡ Generating next level question…</p>
+				</div>
+			{/if}
 		</div>
 	</div>
 {/if}

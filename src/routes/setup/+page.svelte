@@ -189,14 +189,14 @@
 				</div>
 				<div>
 					<label for="occupation" class="block text-xl font-retro-bold text-sedna-navy mb-3">
-						💼 What's your occupation?
+						💼 What's your organization?
 					</label>
 					<input
 						id="occupation"
 						type="text"
 						bind:value={occupation}
 						class="sedna-input w-full text-xl"
-						placeholder="Enter your occupation..."
+						placeholder="Enter your organization..."
 						required
 					/>
 				</div>
