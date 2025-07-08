@@ -53,7 +53,7 @@
 			<!-- Full Case Study -->
 			<div class="bg-sedna-light-grey border-2 border-sedna-cool-blue rounded-lg p-6">
 				<h3 class="text-xl font-retro-bold text-sedna-cool-blue mb-3">
-					📖 Full Case Study:
+					📖 Illustrative initiatives:
 				</h3>
 				<div class="sedna-text text-lg leading-relaxed">
 					{answerResult.caseStudy}

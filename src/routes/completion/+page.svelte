@@ -82,7 +82,7 @@
 					Please Go Collect Your Swag!!!!
 				</h2>
 				<p class="text-white text-xl font-sedna-bold text-center">
-					You've earned it! Head to the Sedna booth to claim your rewards.
+					Winner will be announced 12:00pm EST 7/19/2025
 				</p>
 			</div>
 
