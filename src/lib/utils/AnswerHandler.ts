@@ -10,7 +10,7 @@ export interface AnswerResult {
 
 export interface UserInfo {
   name: string;
-  occupation: string;
+  organization: string;
   aiConcern: string;
   difficulty: 'easy' | 'medium' | 'hard';
   score: number;
@@ -55,10 +55,10 @@ class AnswerHandler {
     this.saveUserInfo();
   }
 
-  public initializeUserInfo(name: string, occupation: string, aiConcern: string, difficulty: 'easy' | 'medium' | 'hard' = 'medium'): void {
+  public initializeUserInfo(name: string, organization: string, aiConcern: string, difficulty: 'easy' | 'medium' | 'hard' = 'medium'): void {
     this.userInfo = {
       name,
-      occupation,
+      organization,
       aiConcern,
       difficulty,
       score: 0,
@@ -181,7 +181,7 @@ class AnswerHandler {
       this.userInfo.progress = 0;
       // Reset player profile to empty/default values
       this.userInfo.name = '';
-      this.userInfo.occupation = '';
+      this.userInfo.organization = '';
       this.userInfo.aiConcern = '';
       this.saveUserInfo();
     }

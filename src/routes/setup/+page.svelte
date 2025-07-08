@@ -6,7 +6,7 @@
 
 	let name = '';
 	let title = '';
-	let occupation = '';
+	let organization = '';
 	let aiConcern = '';
 	let difficulty: 'easy' | 'medium' | 'hard' | '' = '';
 	let isSubmitting = false;
@@ -17,14 +17,13 @@
 	let state = '';
 	let county = '';
 
-	const occupations = [
-		'Government Employee',
-		'IT Professional',
-		'Manager/Executive',
-		'Student',
-		'Consultant',
-		'Healthcare Worker',
-		'Educator',
+	const organizations = [
+		'Government Agency',
+		'IT Company',
+		'Consulting Firm',
+		'Healthcare Organization',
+		'Educational Institution',
+		'Nonprofit',
 		'Other'
 	];
 
@@ -59,7 +58,7 @@
 	}
 
 	async function handleSubmit() {
-		if (!name.trim() || !title.trim() || !occupation.trim() || !aiConcern.trim() || !difficulty || !phone.trim() || !email.trim()) {
+		if (!name.trim() || !title.trim() || !organization.trim() || !aiConcern.trim() || !difficulty || !phone.trim() || !email.trim()) {
 			alert('Please fill in all fields');
 			return;
 		}
@@ -67,8 +66,8 @@
 		isSubmitting = true;
 
 		try {
-			await saveUserInfo({ name: name.trim(), title: title.trim(), painPoint: aiConcern.trim(), occupation: occupation.trim(), phone: phone.trim(), email: email.trim(), state: state.trim(), county: county.trim() });
-			answerHandler.initializeUserInfo(name.trim(), occupation.trim(), aiConcern.trim(), difficulty as 'easy' | 'medium' | 'hard');
+			await saveUserInfo({ name: name.trim(), title: title.trim(), painPoint: aiConcern.trim(), organization: organization.trim(), phone: phone.trim(), email: email.trim(), state: state.trim(), county: county.trim() });
+			answerHandler.initializeUserInfo(name.trim(), organization.trim(), aiConcern.trim(), difficulty as 'easy' | 'medium' | 'hard');
 			localStorage.removeItem('sedna_show_start_page');
 			goto('/sample');
 		} catch (error) {
@@ -188,13 +187,13 @@
 					/>
 				</div>
 				<div>
-					<label for="occupation" class="block text-xl font-retro-bold text-sedna-navy mb-3">
-						💼 What's your organization?
+					<label for="organization" class="block text-xl font-retro-bold text-sedna-navy mb-3">
+						🏢 What's your organization?
 					</label>
 					<input
-						id="occupation"
+						id="organization"
 						type="text"
-						bind:value={occupation}
+						bind:value={organization}
 						class="sedna-input w-full text-xl"
 						placeholder="Enter your organization..."
 						required

@@ -223,6 +223,10 @@
 	}
 
 	function handleNextQuestion() {
+		if (showCompletionButton) {
+			handleGoToCompletion();
+			return;
+		}
 		if (showUpgradeModal) {
 			// If modal is open and user chose to stay, generate question at current difficulty
 			showUpgradeModal = false;

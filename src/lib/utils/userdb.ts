@@ -11,9 +11,9 @@ export const dbPromise = openDB(DB_NAME, DB_VERSION, {
   }
 });
 
-export async function saveUserInfo({ name, painPoint, occupation, phone, email, state, county }: { name: string, painPoint: string, occupation: string, phone: string, email: string, state: string, county: string }) {
+export async function saveUserInfo({ name, painPoint, organization, phone, email, state, county }: { name: string, painPoint: string, organization: string, phone: string, email: string, state: string, county: string }) {
   const db = await dbPromise;
-  await db.add('users', { name, painPoint, occupation, phone, email, state, county, timestamp: Date.now(), raffleEntries: 1 });
+  await db.add('users', { name, painPoint, organization, phone, email, state, county, timestamp: Date.now(), raffleEntries: 1 });
 }
 
 export async function getAllUsers() {
@@ -30,7 +30,7 @@ export async function getAllUsers() {
   }));
 }
 
-export async function updateUserField(id: number, field: 'name' | 'painPoint' | 'occupation', value: string) {
+export async function updateUserField(id: number, field: 'name' | 'painPoint' | 'organization', value: string) {
   const db = await dbPromise;
   const user = await db.get('users', id);
   if (user) {
