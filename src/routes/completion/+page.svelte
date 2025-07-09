@@ -22,6 +22,17 @@
 	function handleBackToHome() {
 		goto('/');
 	}
+
+	const levelDescriptions = {
+		"AI Champion": "🎉 You're an AI Champion! You're ready to help your organization lead with AI.",
+		"AI Ready": "🌟 Excellent work! You have a solid foundation and are ready to take the next step as an AI Ready professional.",
+		"AI Aware": "💪 Great job! You're building your understanding and are AI Aware."
+	};
+
+	function getLevelDescription() {
+		const level = answerHandler.getDifficultyLevel();
+		return levelDescriptions[level] || answerHandler.getEncouragement();
+	}
 </script>
 
 <svelte:head>
@@ -70,7 +81,7 @@
 						🌟 Your Performance Level: {answerHandler.getDifficultyLevel()}
 					</h3>
 					<p class="sedna-text">
-						{answerHandler.getEncouragement()}
+						{getLevelDescription()}
 					</p>
 				</div>
 			</div>
