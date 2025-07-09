@@ -421,18 +421,16 @@ class QuestionGenerator {
         console.log('Defaulting to myth (false)');
       }
 
-      // Validation: For MYTH, reject negated or duplicate statements
+      // Validation: For MYTH, reject only duplicate statements (not negations)
       if (isFact === false) {
         const lowerStatement = statement.toLowerCase();
         const lowerTip = sednaTip.tip.toLowerCase();
         if (
-          lowerStatement.includes('is actually false') ||
-          lowerStatement.includes('is not true') ||
           lowerStatement === lowerTip ||
           lowerStatement.replace(/\W/g, '') === lowerTip.replace(/\W/g, '')
         ) {
-          console.warn('Rejected myth statement for being a negation or duplicate:', statement, {
-            reason: 'negation or duplicate',
+          console.warn('Rejected myth statement for being a duplicate:', statement, {
+            reason: 'duplicate',
             lowerStatement,
             lowerTip
           });

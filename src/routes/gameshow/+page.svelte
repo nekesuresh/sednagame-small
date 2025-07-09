@@ -60,6 +60,7 @@
 	let upgradeCancelled = false;
 	let showCongratsPopup = false;
 	let hasShownCongrats = false;
+	let upgradeLoading = false;
 
 	function animateStatement(statement: string) {
 		if (animationInterval) clearInterval(animationInterval);
@@ -249,27 +250,21 @@
 		upgradeCancelled = false;
 		correctEasy = upgradeTarget === 'medium' ? 0 : correctEasy;
 		correctMedium = upgradeTarget === 'hard' ? 0 : correctMedium;
-		if (upgradePreloadedQuestion) {
-			currentQuestion = upgradePreloadedQuestion;
-			nextQuestion = null;
-			showAnswer = false;
-			answerResult = null;
-			userAnswer = null;
-			isLoading = false;
-			isGeneratingQuestion = false;
-			usedQuestionIds.update(ids => { ids.add(currentQuestion.id); return ids; });
-			preloadNextQuestion();
-		} else {
-			generateNewQuestion();
-		}
+		upgradeLoading = true;
+		// Force update of currentDifficulty
+		currentDifficulty = answerHandler.getUserInfo()?.difficulty?.toUpperCase() || 'MEDIUM';
+		generateNewQuestion().then(() => {
+			upgradeLoading = false;
+			// Ensure currentDifficulty is up to date after question loads
+			currentDifficulty = answerHandler.getUserInfo()?.difficulty?.toUpperCase() || 'MEDIUM';
+		});
 	}
 
 	function handleUpgradeCancel() {
 		// User wants to stay on current difficulty
 		showUpgradeModal = false;
 		upgradeCancelled = true;
-		// Generate next question at current difficulty
-		generateNewQuestion();
+		// Do NOT call generateNewQuestion here; let handleNextQuestion handle it
 	}
 
 	function handleShowCaseStudy() {
@@ -371,6 +366,28 @@
 
 	function dismissUpgradePopup() {
 		showUpgradeModal = false;
+	}
+
+	function handleUpgradeClose() {
+		showUpgradeModal = false;
+		if (upgradePreloadedQuestion) {
+			currentQuestion = upgradePreloadedQuestion;
+			nextQuestion = null;
+			showAnswer = false;
+			answerResult = null;
+			userAnswer = null;
+			isLoading = false;
+			isGeneratingQuestion = false;
+			usedQuestionIds.update(ids => { ids.add(currentQuestion.id); return ids; });
+			preloadNextQuestion();
+		} else {
+			isLoading = true;
+			isGeneratingQuestion = true;
+			generateNewQuestion().then(() => {
+				isLoading = false;
+				isGeneratingQuestion = false;
+			});
+		}
 	}
 
 	$: if (!hasShownCongrats && answerHandler.getProgress() >= 100 && showAnswer) {
@@ -656,20 +673,15 @@
 {#if showUpgradeModal}
 	<div class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
 		<div class="bg-white rounded-xl shadow-xl p-8 max-w-lg w-full relative">
-			<button class="absolute top-2 right-4 text-3xl text-sedna-dark-grey hover:text-sedna-cool-blue" on:click={handleUpgradeCancel}>×</button>
+			<button class="absolute top-2 right-4 text-3xl text-sedna-dark-grey hover:text-sedna-cool-blue" on:click={handleUpgradeClose}>×</button>
 			<h3 class="text-2xl font-retro-bold text-sedna-orange mb-4">{upgradeTarget === 'medium' ? 'Level Up: Medium!' : 'Level Up: Hard!'}</h3>
 			<div class="text-sedna-dark-slate-blue text-lg mb-4">You're doing so well! Changing to <span class="font-bold">{upgradeTarget.toUpperCase()}</span> for more challenge and points.</div>
 			<div class="flex flex-col gap-4">
 				<button class="sedna-btn sedna-btn-secondary text-lg py-3 px-6" on:click={handleUpgradeCancel}>Stay on {upgradeTarget === 'medium' ? 'Easy' : 'Medium'}</button>
-				<button class="sedna-btn sedna-btn-accent text-lg py-3 px-6" on:click={handleUpgradeConfirm} disabled={upgradePreloading}>
-					{upgradePreloading ? '🔄 Generating next question...' : `Go to ${upgradeTarget.charAt(0).toUpperCase() + upgradeTarget.slice(1)}`}
+				<button class="sedna-btn sedna-btn-accent text-lg py-3 px-6 flex items-center justify-center gap-2" on:click={handleUpgradeConfirm} disabled={upgradeLoading}>
+					{upgradeLoading ? '🔄 Generating next question...' : `Go to ${upgradeTarget.charAt(0).toUpperCase() + upgradeTarget.slice(1)}`}
 				</button>
 			</div>
-			{#if upgradePreloading}
-				<div class="text-center mt-4">
-					<p class="sedna-text text-sedna-dark-grey text-sm">⚡ Generating next level question…</p>
-				</div>
-			{/if}
 		</div>
 	</div>
 {/if}
