@@ -17,7 +17,7 @@ onMount(() => {
 </script>
 
 <svelte:head>
-  <title>Preparing Question - Sedna AI Gameshow</title>
+  <title>Preparing Question - AI or A-Lie</title>
 </svelte:head>
 
 <div class="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-sedna-cool-blue via-sedna-dark-blue to-sedna-navy p-4">

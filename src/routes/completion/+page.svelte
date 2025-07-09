@@ -45,7 +45,7 @@
 					🏆 Congratulations, {userInfo?.name || 'Champion'}!
 				</h2>
 				<p class="sedna-text text-xl mb-6">
-					You've successfully completed the Sedna AI Gameshow and demonstrated your understanding of AI in government and public sector applications!
+					You've successfully completed AI or A-Lie and demonstrated your understanding of AI in government and public sector applications!
 				</p>
 				
 				<!-- Final Stats -->

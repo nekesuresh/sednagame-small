@@ -174,10 +174,10 @@ html, body {
 	<div class="header-content">
 		<div class="text-8xl mb-6">🎮</div>
 		<h1 class="text-5xl md:text-7xl font-retro-bold text-sedna-orange mb-4">
-			SEDNA AI GAMESHOW
+			AI or A-Lie
 		</h1>
 		<p class="text-2xl md:text-3xl font-retro text-sedna-dark-blue mb-8">
-			Test Your AI Knowledge!
+			Come test your knowledge in Sedna's AI-powered game!
 		</p>
 		<button class="start-button" on:click={handleStart}>
 			Start Game
@@ -186,7 +186,7 @@ html, body {
 </div>
 
 <svelte:head>
-	<title>AI or A-Lie - Sedna AI Gameshow</title>
+	<title>AI or A-Lie</title>
 </svelte:head>
 
 <div class="min-h-screen bg-gradient-to-br from-sedna-cool-blue via-sedna-dark-blue to-sedna-navy flex items-center justify-center p-4">
