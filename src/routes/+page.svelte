@@ -171,8 +171,8 @@ html, body {
 			</div>
 		{/each}
 	</div>
-	<div class="min-h-screen bg-gradient-to-br from-sedna-cool-blue via-sedna-dark-blue to-sedna-navy flex items-center justify-center p-4" style="position:relative; z-index:2;">
-		<div class="max-w-4xl mx-auto text-center">
+	<div class="min-h-screen bg-gradient-to-br from-sedna-cool-blue via-sedna-dark-blue to-sedna-navy flex items-start justify-center p-4" style="position:relative; z-index:2;">
+		<div class="max-w-4xl mx-auto text-center mt-12">
 			<!-- Logo/Header -->
 			<div class="text-center mb-12">
 				<h1 class="text-5xl md:text-7xl font-retro-bold text-sedna-orange mb-4 drop-shadow-lg">
