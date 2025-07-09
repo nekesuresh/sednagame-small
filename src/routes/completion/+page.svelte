@@ -94,7 +94,7 @@
 
 				</h2>
 				<p class="text-white text-xl font-sedna-bold text-center">
-					Winner will be announced 12:00pm EST 7/19/2025
+					Winner will be announced soon. Stay tuned!
 				</p>
 			</div>
 
