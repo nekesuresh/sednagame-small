@@ -151,7 +151,6 @@ async function clearAllUsers() {
         <button class="sedna-btn sedna-btn-secondary" on:click={exportCSV}>Export as CSV</button>
         <input type="text" class="sedna-input w-64 text-xl" placeholder="Search users..." bind:value={searchTerm} />
         <button class="sedna-btn sedna-btn-accent" on:click={handleSearch}>Search</button>
-        <button class="sedna-btn sedna-btn-secondary" on:click={clearAllUsers}>Clear All</button>
       </div>
       {#if users.length === 0}
         <div class="text-sedna-steel-blue-tint">No user data found.</div>
