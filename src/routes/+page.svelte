@@ -182,8 +182,7 @@ html, body {
 					Come test your knowledge in Sedna's AI-powered game!
 				</p>
 				<p class="text-base md:text-lg text-sedna-steel-blue-tint italic mb-8">
-					Questions and answers are AI-generated on the spot, based on real Sedna success stories.
-				</p>
+					Questions and answers are AI-generated on the spot!
 			</div>
 
 			<!-- Game Description -->
