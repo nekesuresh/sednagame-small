@@ -16,6 +16,12 @@
   }
 }
 
+html, body, #svelte {
+  height: 100%;
+  min-height: 100vh;
+  overflow-y: auto;
+}
+
 @layer components {
   .sedna-btn {
     @apply bg-sedna-bright-yellow text-[#39424d] font-sedna-bold py-4 px-8 rounded-lg border-2 border-sedna-bright-yellow shadow hover:bg-sedna-muted-gold hover:border-sedna-muted-gold transition-all duration-200 active:scale-95 focus:outline-none focus:ring-4 focus:ring-sedna-muted-gold focus:ring-opacity-50;
