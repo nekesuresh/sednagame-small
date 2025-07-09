@@ -250,6 +250,8 @@ class QuestionGenerator {
           if (mythQuestion) {
             // Post-process to ensure all elements are present
             mythQuestion.statement = this.ensureStatementIncludesAll(mythQuestion.statement, combination);
+            // Enforce 'always will' phrasing for myths
+            mythQuestion.statement = mythQuestion.statement.replace(/\bcan\b/gi, 'always will');
             const mythHash = this.stringHash(mythQuestion.statement);
             if (!this.usedFactHashes.has(mythHash)) {
               this.usedFactHashes.add(mythHash);
