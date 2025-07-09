@@ -83,18 +83,18 @@
 	<title>Setup - AI or A-Lie</title>
 </svelte:head>
 
-<div class="sedna-section-bg min-h-screen overflow-y-auto">
-	<div class="max-w-2xl mx-auto py-12 md:py-16 lg:py-20">
-		<div class="text-center mb-12">
-			<h1 class="sedna-header mb-6">
+<div class="sedna-section-bg min-h-screen overflow-y-auto flex items-center justify-center">
+	<div class="w-full max-w-lg mx-auto py-8">
+		<div class="text-center mb-8">
+			<h1 class="sedna-header mb-4">
 				🎮 PLAYER SETUP
 			</h1>
 			<p class="sedna-subheader">
 				Tell us about yourself to personalize your AI learning experience
 			</p>
 		</div>
-		<div class="sedna-card">
-			<form on:submit|preventDefault={handleSubmit} class="space-y-8">
+		<div class="sedna-card p-6">
+			<form on:submit|preventDefault={handleSubmit} class="space-y-5">
 				<!-- Difficulty selection FIRST -->
 				<div>
 					<label class="block text-xl font-retro-bold text-sedna-navy mb-3">
