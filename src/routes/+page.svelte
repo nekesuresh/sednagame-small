@@ -171,87 +171,71 @@ html, body {
 			</div>
 		{/each}
 	</div>
-	<div class="header-content">
-		<div class="text-8xl mb-6">🎮</div>
-		<h1 class="text-5xl md:text-7xl font-retro-bold text-sedna-orange mb-4">
-			AI or A-Lie
-		</h1>
-		<p class="text-2xl md:text-3xl font-retro text-sedna-dark-blue mb-8">
-			Come test your knowledge in Sedna's AI-powered game!
-		</p>
-		<button class="start-button" on:click={handleStart}>
-			Start Game
-		</button>
-	</div>
-</div>
+	<!-- Remove the .header-content block and its children, keep only the second title/description section -->
+	<div class="min-h-screen bg-gradient-to-br from-sedna-cool-blue via-sedna-dark-blue to-sedna-navy flex items-center justify-center p-4">
+		<div class="max-w-4xl mx-auto text-center">
+			<!-- Logo/Header -->
+			<div class="text-center mb-12">
+				<h1 class="sedna-header mb-6">
+					🎮 AI or A-Lie
+				</h1>
+				<p class="sedna-subheader">
+					Come test your knowledge in Sedna's AI-powered game!
+				</p>
+			</div>
 
-<svelte:head>
-	<title>AI or A-Lie</title>
-</svelte:head>
-
-<div class="min-h-screen bg-gradient-to-br from-sedna-cool-blue via-sedna-dark-blue to-sedna-navy flex items-center justify-center p-4">
-	<div class="max-w-4xl mx-auto text-center">
-		<!-- Logo/Header -->
-		<div class="text-center mb-12">
-			<h1 class="sedna-header mb-6">
-				🎮 AI or A-Lie
-			</h1>
-			<p class="sedna-subheader">
-				Come test your knowledge in Sedna's AI-powered game!
-			</p>
-		</div>
-
-		<!-- Game Description -->
-		<div class="sedna-card mb-12">
-			<div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-				<div class="text-center">
-					<div class="text-4xl mb-4">🤖</div>
-					<h3 class="text-xl font-retro-bold text-sedna-cool-blue mb-2">
-						AI Myths vs Facts
-					</h3>
-					<p class="sedna-text">
-						Separate AI fiction from reality with our interactive quiz
-					</p>
-				</div>
-				<div class="text-center">
-					<div class="text-4xl mb-4">🏆</div>
-					<h3 class="text-xl font-retro-bold text-sedna-cool-blue mb-2">
-						Earn Points
-					</h3>
-					<p class="sedna-text">
-						Score points and track your progress as you learn
-					</p>
-				</div>
-				<div class="text-center">
-					<div class="text-4xl mb-4">💡</div>
-					<h3 class="text-xl font-retro-bold text-sedna-cool-blue mb-2">
-						Learn from Sedna
-					</h3>
-					<p class="sedna-text">
-						Discover real AI success stories from government projects
-					</p>
+			<!-- Game Description -->
+			<div class="sedna-card mb-12">
+				<div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+					<div class="text-center">
+						<div class="text-4xl mb-4">🤖</div>
+						<h3 class="text-xl font-retro-bold text-sedna-cool-blue mb-2">
+							AI Myths vs Facts
+						</h3>
+						<p class="sedna-text">
+							Separate AI fiction from reality with our interactive quiz
+						</p>
+					</div>
+					<div class="text-center">
+						<div class="text-4xl mb-4">🏆</div>
+						<h3 class="text-xl font-retro-bold text-sedna-cool-blue mb-2">
+							Earn Points
+						</h3>
+						<p class="sedna-text">
+							Score points and track your progress as you learn
+						</p>
+					</div>
+					<div class="text-center">
+						<div class="text-4xl mb-4">💡</div>
+						<h3 class="text-xl font-retro-bold text-sedna-cool-blue mb-2">
+							Learn from Sedna
+						</h3>
+						<p class="sedna-text">
+							Discover real AI success stories from government projects
+						</p>
+					</div>
 				</div>
 			</div>
-		</div>
 
-		<!-- Start Button -->
-		<div class="mb-8">
-			<button
-				on:click={handleStart}
-				class="sedna-btn sedna-btn-accent text-4xl md:text-5xl py-8 px-16 rounded-2xl shadow-2xl transform hover:scale-105 transition-all duration-300"
-			>
-				🎯 START GAME
-			</button>
-		</div>
+			<!-- Start Button -->
+			<div class="mb-8">
+				<button
+					on:click={handleStart}
+					class="sedna-btn sedna-btn-accent text-4xl md:text-5xl py-8 px-16 rounded-2xl shadow-2xl transform hover:scale-105 transition-all duration-300"
+				>
+					🎯 START GAME
+				</button>
+			</div>
 
-		<!-- Footer -->
-		<div class="text-center">
-			<p class="sedna-text text-sedna-dark-grey">
-				Powered by <span class="sedna-highlight">Sedna Consulting Group</span>
-			</p>
-			<p class="sedna-text text-sedna-dark-grey text-sm mt-2">
-				Offline AI-powered learning experience
-			</p>
+			<!-- Footer -->
+			<div class="text-center">
+				<p class="sedna-text text-sedna-dark-grey">
+					Powered by <span class="sedna-highlight">Sedna Consulting Group</span>
+				</p>
+				<p class="sedna-text text-sedna-dark-grey text-sm mt-2">
+					Offline AI-powered learning experience
+				</p>
+			</div>
 		</div>
 	</div>
 </div> 
