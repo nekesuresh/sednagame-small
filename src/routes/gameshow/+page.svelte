@@ -384,7 +384,7 @@
 </script>
 
 <svelte:head>
-	<title>Gameshow - Sedna AI Gameshow</title>
+	<title>AI or A-Lie - Sedna AI Gameshow</title>
 </svelte:head>
 
 <div class="sedna-section-bg min-h-screen relative">

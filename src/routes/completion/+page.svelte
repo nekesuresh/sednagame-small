@@ -25,7 +25,7 @@
 </script>
 
 <svelte:head>
-	<title>AI Ready! - Sedna AI Gameshow</title>
+	<title>Game Complete - AI or A-Lie</title>
 </svelte:head>
 
 <div class="sedna-section-bg min-h-screen">

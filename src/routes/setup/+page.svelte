@@ -80,7 +80,7 @@
 </script>
 
 <svelte:head>
-	<title>Setup - Sedna AI Gameshow</title>
+	<title>Setup - AI or A-Lie</title>
 </svelte:head>
 
 <div class="sedna-section-bg min-h-screen">

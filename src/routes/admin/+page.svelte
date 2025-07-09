@@ -124,7 +124,7 @@ async function clearAllUsers() {
 </script>
 
 <svelte:head>
-  <title>Admin - Sedna AI Gameshow</title>
+  <title>Admin - AI or A-Lie</title>
 </svelte:head>
 
 <div class="min-h-screen flex items-center justify-center bg-sedna-dark-slate-blue p-4">
