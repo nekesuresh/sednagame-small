@@ -86,7 +86,7 @@
 <div class="sedna-section-bg min-h-screen overflow-y-auto flex items-center justify-center">
 	<div class="w-full max-w-lg mx-auto py-8">
 		<div class="text-center mb-8">
-			<h1 class="sedna-header mb-4 flex items-center justify-center gap-3">
+			<h1 class="sedna-header mb-4 flex items-center justify-center gap-3 whitespace-nowrap text-3xl md:text-4xl lg:text-5xl">
 				<span>🎮</span>
 				<span>PLAYER SETUP</span>
 			</h1>
