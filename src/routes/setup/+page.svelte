@@ -87,7 +87,7 @@
 	<div class="w-full max-w-lg mx-auto py-8">
 		<div class="text-center mb-8">
 			<h1 class="sedna-header mb-4">
-				🎮 PLAYER SETUP - SEDNA
+				🎮 PLAYER SETUP
 			</h1>
 			<p class="sedna-subheader">
 				Tell us about yourself to personalize your AI learning experience
