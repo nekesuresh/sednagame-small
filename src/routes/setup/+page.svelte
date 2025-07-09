@@ -83,7 +83,7 @@
 	<title>Setup - AI or A-Lie</title>
 </svelte:head>
 
-<div class="sedna-section-bg min-h-screen">
+<div class="sedna-section-bg min-h-screen overflow-y-auto">
 	<div class="max-w-2xl mx-auto py-12 md:py-16 lg:py-20">
 		<div class="text-center mb-12">
 			<h1 class="sedna-header mb-6">
