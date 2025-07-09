@@ -24,9 +24,9 @@
 	}
 
 	const levelDescriptions = {
-		"AI Champion": "🎉 You're an AI Champion! You're ready to help your organization lead with AI.",
-		"AI Ready": "🌟 Excellent work! You have a solid foundation and are ready to take the next step as an AI Ready professional.",
-		"AI Aware": "💪 Great job! You're building your understanding and are AI Aware."
+		"AI Champion": `You’re ready to help your organization lead with AI.\nYou think critically about AI's impact and possibilities, and you're eager to guide others through thoughtful adoption. You're ready to lead by example, whether by piloting a tool, sharing a success story, or simply encouraging your team to learn more.\nSedna partners with AI Champions to turn ideas into action and build momentum for sustainable, responsible progress.`,
+		"AI Ready": `You have a solid foundation and are ready to take the next step.\nYou have a solid grasp of AI fundamentals and are beginning to apply them in meaningful ways. You’re ready to explore practical tools, experiment with intention, and help guide thoughtful next steps for your team.\nSedna can support you in identifying meaningful use cases, experimenting safely, and learning what’s working in similar environments.`,
+		"AI Aware": `You're building your understanding of AI and its potential.\nYou’re aware of AI’s role in today’s world and are curious about how it can help your organization. This is a great starting point and you're not alone. Many professionals are right here with you. You're ready to explore how AI can enhance your role and improve outcomes.\nSedna is happy to be a thought partner as you begin your journey.`
 	};
 
 	function getLevelDescription() {
