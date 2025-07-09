@@ -178,8 +178,11 @@ html, body {
 				<h1 class="text-5xl md:text-7xl font-retro-bold text-sedna-orange mb-4 drop-shadow-lg">
 					🎮 AI or A-Lie
 				</h1>
-				<p class="text-2xl md:text-3xl font-retro text-sedna-light-grey mb-8">
+				<p class="text-2xl md:text-3xl font-retro text-sedna-light-grey mb-4">
 					Come test your knowledge in Sedna's AI-powered game!
+				</p>
+				<p class="text-base md:text-lg text-sedna-steel-blue-tint italic mb-8">
+					Questions and answers are AI-generated on the spot, based on real Sedna success stories.
 				</p>
 			</div>
 
