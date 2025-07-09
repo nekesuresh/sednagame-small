@@ -83,26 +83,8 @@
 	<title>Setup - AI or A-Lie</title>
 </svelte:head>
 
-<div class="page-container">
-	<div class="matrix-rain pointer-events-none">
-		{#each columns as col}
-			<div
-				class="matrix-col"
-				style="left: {col.x}px; top: 0; height: 100vh;"
-			>
-				{#each col.trail as char, j}
-					<span
-						class="matrix-char"
-						style="
-							color: {col.color};
-							opacity: {Math.max(0.1, 1 - (col.trail.length - j) / col.trail.length)};
-							transform: translateY({col.y - (col.trail.length - j) * fontSize}px);"
-					>{char}</span>
-				{/each}
-			</div>
-		{/each}
-	</div>
-	<div class="header-content">
+<div class="sedna-section-bg min-h-screen overflow-y-auto flex items-center justify-center">
+	<div class="w-full max-w-lg mx-auto py-8">
 		<div class="text-center mb-8">
 			<h1 class="sedna-header mb-4 flex items-center justify-center gap-3 whitespace-nowrap text-3xl md:text-4xl lg:text-5xl">
 				<span>🎮</span>
@@ -112,276 +94,236 @@
 				Tell us about yourself to personalize your AI learning experience
 			</p>
 		</div>
-		<div class="w-full max-w-lg mx-auto">
-			<div class="sedna-card p-6">
-				<form on:submit|preventDefault={handleSubmit} class="space-y-5">
-					<!-- Difficulty selection FIRST -->
-					<div>
-						<label class="block text-xl font-retro-bold text-sedna-navy mb-3">
-							🎯 Choose your difficulty level:
-						</label>
-						<p class="text-sm text-sedna-steel-blue-tint mb-4 text-center">
-							💡 Don't worry, you can change this later in the game!
-						</p>
-						<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-							<label class="block {difficulty ? 'cursor-not-allowed' : 'cursor-pointer'}">
-								<input
-									type="radio"
-									bind:group={difficulty}
-									value="easy"
-									class="sr-only"
-									disabled={difficulty}
-								/>
-								<div class="bg-white border-2 rounded-xl p-4 text-center transition-all duration-200 {difficulty === 'easy' ? 'border-sedna-bright-yellow bg-sedna-pale-blue-grey shadow-lg' : 'border-sedna-dark-slate-blue'} {difficulty ? 'opacity-60 cursor-not-allowed' : 'hover:shadow-lg hover:border-sedna-bright-yellow cursor-pointer'}">
-									<div class="text-3xl mb-2">🌱</div>
-									<div class="font-retro-bold text-lg text-sedna-dark-slate-blue">EASY</div>
-									<div class="text-sm text-sedna-steel-blue-tint">Basic concepts</div>
-									<div class="text-xs text-sedna-bright-yellow mt-1 font-bold">10 pts</div>
-								</div>
-							</label>
-							<label class="block {difficulty ? 'cursor-not-allowed' : 'cursor-pointer'}">
-								<input
-									type="radio"
-									bind:group={difficulty}
-									value="medium"
-									class="sr-only"
-									disabled={difficulty}
-								/>
-								<div class="bg-white border-2 rounded-xl p-4 text-center transition-all duration-200 {difficulty === 'medium' ? 'border-sedna-bright-yellow bg-sedna-pale-blue-grey shadow-lg' : 'border-sedna-dark-slate-blue'} {difficulty ? 'opacity-60 cursor-not-allowed' : 'hover:shadow-lg hover:border-sedna-bright-yellow cursor-pointer'}">
-									<div class="text-3xl mb-2">🎯</div>
-									<div class="font-retro-bold text-lg text-sedna-dark-slate-blue">MEDIUM</div>
-									<div class="text-sm text-sedna-steel-blue-tint">Moderate complexity</div>
-									<div class="text-xs text-sedna-bright-yellow mt-1 font-bold">20 pts</div>
-								</div>
-							</label>
-							<label class="block {difficulty ? 'cursor-not-allowed' : 'cursor-pointer'}">
-								<input
-									type="radio"
-									bind:group={difficulty}
-									value="hard"
-									class="sr-only"
-									disabled={difficulty}
-								/>
-								<div class="bg-white border-2 rounded-xl p-4 text-center transition-all duration-200 {difficulty === 'hard' ? 'border-sedna-bright-yellow bg-sedna-pale-blue-grey shadow-lg' : 'border-sedna-dark-slate-blue'} {difficulty ? 'opacity-60 cursor-not-allowed' : 'hover:shadow-lg hover:border-sedna-bright-yellow cursor-pointer'}">
-									<div class="text-3xl mb-2">🔥</div>
-									<div class="font-retro-bold text-lg text-sedna-dark-slate-blue">HARD</div>
-									<div class="text-sm text-sedna-steel-blue-tint">Challenging questions</div>
-									<div class="text-xs text-sedna-bright-yellow mt-1 font-bold">30 pts</div>
-								</div>
-							</label>
-						</div>
-						{#if isPreloading}
-							<div class="mt-2 text-center">
-								<p class="sedna-text text-sedna-dark-grey text-sm">
-									⚡ Generating your first question for this difficulty...
-								</p>
+		<div class="sedna-card p-6">
+			<form on:submit|preventDefault={handleSubmit} class="space-y-5">
+				<!-- Difficulty selection FIRST -->
+				<div>
+					<label class="block text-xl font-retro-bold text-sedna-navy mb-3">
+						🎯 Choose your difficulty level:
+					</label>
+					<p class="text-sm text-sedna-steel-blue-tint mb-4 text-center">
+						💡 Don't worry, you can change this later in the game!
+					</p>
+					<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+						<label class="block {difficulty ? 'cursor-not-allowed' : 'cursor-pointer'}">
+							<input
+								type="radio"
+								bind:group={difficulty}
+								value="easy"
+								class="sr-only"
+								disabled={difficulty}
+							/>
+							<div class="bg-white border-2 rounded-xl p-4 text-center transition-all duration-200 {difficulty === 'easy' ? 'border-sedna-bright-yellow bg-sedna-pale-blue-grey shadow-lg' : 'border-sedna-dark-slate-blue'} {difficulty ? 'opacity-60 cursor-not-allowed' : 'hover:shadow-lg hover:border-sedna-bright-yellow cursor-pointer'}">
+								<div class="text-3xl mb-2">🌱</div>
+								<div class="font-retro-bold text-lg text-sedna-dark-slate-blue">EASY</div>
+								<div class="text-sm text-sedna-steel-blue-tint">Basic concepts</div>
+								<div class="text-xs text-sedna-bright-yellow mt-1 font-bold">10 pts</div>
 							</div>
-						{/if}
-					</div>
-					<!-- Player name input NEXT -->
-					<div>
-						<label for="name" class="block text-xl font-retro-bold text-sedna-navy mb-3">
-							👤 What's your name?
 						</label>
-						<input
-							id="name"
-							type="text"
-							bind:value={name}
-							class="sedna-input w-full text-xl"
-							placeholder="Enter your name..."
-							required
-							autocomplete="name"
-						/>
-					</div>
-					<div>
-						<label for="title" class="block text-xl font-retro-bold text-sedna-navy mb-3">
-							🏷️ What's your title?
+						<label class="block {difficulty ? 'cursor-not-allowed' : 'cursor-pointer'}">
+							<input
+								type="radio"
+								bind:group={difficulty}
+								value="medium"
+								class="sr-only"
+								disabled={difficulty}
+							/>
+							<div class="bg-white border-2 rounded-xl p-4 text-center transition-all duration-200 {difficulty === 'medium' ? 'border-sedna-bright-yellow bg-sedna-pale-blue-grey shadow-lg' : 'border-sedna-dark-slate-blue'} {difficulty ? 'opacity-60 cursor-not-allowed' : 'hover:shadow-lg hover:border-sedna-bright-yellow cursor-pointer'}">
+								<div class="text-3xl mb-2">🎯</div>
+								<div class="font-retro-bold text-lg text-sedna-dark-slate-blue">MEDIUM</div>
+								<div class="text-sm text-sedna-steel-blue-tint">Moderate complexity</div>
+								<div class="text-xs text-sedna-bright-yellow mt-1 font-bold">20 pts</div>
+							</div>
 						</label>
-						<input
-							id="title"
-							type="text"
-							bind:value={title}
-							class="sedna-input w-full text-xl"
-							placeholder="Enter your title (e.g., Analyst, Director, etc.)..."
-							required
-						/>
-					</div>
-					<div>
-						<label for="organization" class="block text-xl font-retro-bold text-sedna-navy mb-3">
-							🏢 What's your organization?
+						<label class="block {difficulty ? 'cursor-not-allowed' : 'cursor-pointer'}">
+							<input
+								type="radio"
+								bind:group={difficulty}
+								value="hard"
+								class="sr-only"
+								disabled={difficulty}
+							/>
+							<div class="bg-white border-2 rounded-xl p-4 text-center transition-all duration-200 {difficulty === 'hard' ? 'border-sedna-bright-yellow bg-sedna-pale-blue-grey shadow-lg' : 'border-sedna-dark-slate-blue'} {difficulty ? 'opacity-60 cursor-not-allowed' : 'hover:shadow-lg hover:border-sedna-bright-yellow cursor-pointer'}">
+								<div class="text-3xl mb-2">🔥</div>
+								<div class="font-retro-bold text-lg text-sedna-dark-slate-blue">HARD</div>
+								<div class="text-sm text-sedna-steel-blue-tint">Challenging questions</div>
+								<div class="text-xs text-sedna-bright-yellow mt-1 font-bold">30 pts</div>
+							</div>
 						</label>
-						<input
-							id="organization"
-							type="text"
-							bind:value={organization}
-							class="sedna-input w-full text-xl"
-							placeholder="Enter your organization..."
-							required
-						/>
 					</div>
-					<div>
-						<label for="aiConcern" class="block text-xl font-retro-bold text-sedna-navy mb-3">
-							🤔 What's your biggest concern about AI?
-						</label>
-						<input
-							id="aiConcern"
-							type="text"
-							bind:value={aiConcern}
-							class="sedna-input w-full text-xl"
-							placeholder="Enter your main concern about AI..."
-							required
-						/>
-					</div>
-					<div>
-						<label for="phone" class="block text-xl font-retro-bold text-sedna-navy mb-3">
-							�� Phone Number
-						</label>
-						<input
-							id="phone"
-							type="tel"
-							bind:value={phone}
-							class="sedna-input w-full text-xl"
-							placeholder="Enter your phone number..."
-							required
-							autocomplete="tel"
-						/>
-						<p class="text-sm font-semibold text-sedna-steel-blue-tint mt-2">We won't spam – we will only use your phone number for giveaway and relevant info.</p>
-					</div>
-					<div>
-						<label for="email" class="block text-xl font-retro-bold text-sedna-navy mb-3">
-							✉️ Email Address
-						</label>
-						<input
-							id="email"
-							type="email"
-							bind:value={email}
-							class="sedna-input w-full text-xl"
-							placeholder="Enter your email address..."
-							required
-							autocomplete="email"
-						/>
-						<p class="text-sm font-semibold text-sedna-steel-blue-tint mt-2">We won't spam – we will only use your email for giveaway and relevant info.</p>
-					</div>
-					<div>
-						<label for="state" class="block text-xl font-retro-bold text-sedna-navy mb-3">
-							🗺️ State
-						</label>
-						<select id="state" bind:value={state} class="sedna-input w-full text-xl" required>
-							<option value="" disabled selected>Select your state...</option>
-							<option value="AL">Alabama</option>
-							<option value="AK">Alaska</option>
-							<option value="AZ">Arizona</option>
-							<option value="AR">Arkansas</option>
-							<option value="CA">California</option>
-							<option value="CO">Colorado</option>
-							<option value="CT">Connecticut</option>
-							<option value="DE">Delaware</option>
-							<option value="FL">Florida</option>
-							<option value="GA">Georgia</option>
-							<option value="HI">Hawaii</option>
-							<option value="ID">Idaho</option>
-							<option value="IL">Illinois</option>
-							<option value="IN">Indiana</option>
-							<option value="IA">Iowa</option>
-							<option value="KS">Kansas</option>
-							<option value="KY">Kentucky</option>
-							<option value="LA">Louisiana</option>
-							<option value="ME">Maine</option>
-							<option value="MD">Maryland</option>
-							<option value="MA">Massachusetts</option>
-							<option value="MI">Michigan</option>
-							<option value="MN">Minnesota</option>
-							<option value="MS">Mississippi</option>
-							<option value="MO">Missouri</option>
-							<option value="MT">Montana</option>
-							<option value="NE">Nebraska</option>
-							<option value="NV">Nevada</option>
-							<option value="NH">New Hampshire</option>
-							<option value="NJ">New Jersey</option>
-							<option value="NM">New Mexico</option>
-							<option value="NY">New York</option>
-							<option value="NC">North Carolina</option>
-							<option value="ND">North Dakota</option>
-							<option value="OH">Ohio</option>
-							<option value="OK">Oklahoma</option>
-							<option value="OR">Oregon</option>
-							<option value="PA">Pennsylvania</option>
-							<option value="RI">Rhode Island</option>
-							<option value="SC">South Carolina</option>
-							<option value="SD">South Dakota</option>
-							<option value="TN">Tennessee</option>
-							<option value="TX">Texas</option>
-							<option value="UT">Utah</option>
-							<option value="VT">Vermont</option>
-							<option value="VA">Virginia</option>
-							<option value="WA">Washington</option>
-							<option value="WV">West Virginia</option>
-							<option value="WI">Wisconsin</option>
-							<option value="WY">Wyoming</option>
-						</select>
-					</div>
-					<div>
-						<label for="county" class="block text-xl font-retro-bold text-sedna-navy mb-3">
-							🏛️ County
-						</label>
-						<input
-							id="county"
-							type="text"
-							bind:value={county}
-							class="sedna-input w-full text-xl"
-							placeholder="Enter your county..."
-							required
-						/>
-					</div>
-					<div class="text-center pt-6">
-						<button
-							type="submit"
-							class="sedna-btn sedna-btn-accent text-2xl py-6 px-12"
-							disabled={isSubmitting}
-						>
-							{isSubmitting ? '🚀 SETTING UP...' : '🚀 START GAME'}
-						</button>
-					</div>
-				</form>
-			</div>
+					{#if isPreloading}
+						<div class="mt-2 text-center">
+							<p class="sedna-text text-sedna-dark-grey text-sm">
+								⚡ Generating your first question for this difficulty...
+							</p>
+						</div>
+					{/if}
+				</div>
+				<!-- Player name input NEXT -->
+				<div>
+					<label for="name" class="block text-xl font-retro-bold text-sedna-navy mb-3">
+						👤 What's your name?
+					</label>
+					<input
+						id="name"
+						type="text"
+						bind:value={name}
+						class="sedna-input w-full text-xl"
+						placeholder="Enter your name..."
+						required
+						autocomplete="name"
+					/>
+				</div>
+				<div>
+					<label for="title" class="block text-xl font-retro-bold text-sedna-navy mb-3">
+						🏷️ What's your title?
+					</label>
+					<input
+						id="title"
+						type="text"
+						bind:value={title}
+						class="sedna-input w-full text-xl"
+						placeholder="Enter your title (e.g., Analyst, Director, etc.)..."
+						required
+					/>
+				</div>
+				<div>
+					<label for="organization" class="block text-xl font-retro-bold text-sedna-navy mb-3">
+						🏢 What's your organization?
+					</label>
+					<input
+						id="organization"
+						type="text"
+						bind:value={organization}
+						class="sedna-input w-full text-xl"
+						placeholder="Enter your organization..."
+						required
+					/>
+				</div>
+				<div>
+					<label for="aiConcern" class="block text-xl font-retro-bold text-sedna-navy mb-3">
+						🤔 What's your biggest concern about AI?
+					</label>
+					<input
+						id="aiConcern"
+						type="text"
+						bind:value={aiConcern}
+						class="sedna-input w-full text-xl"
+						placeholder="Enter your main concern about AI..."
+						required
+					/>
+				</div>
+				<div>
+					<label for="phone" class="block text-xl font-retro-bold text-sedna-navy mb-3">
+						📱 Phone Number
+					</label>
+					<input
+						id="phone"
+						type="tel"
+						bind:value={phone}
+						class="sedna-input w-full text-xl"
+						placeholder="Enter your phone number..."
+						required
+						autocomplete="tel"
+					/>
+					<p class="text-sm font-semibold text-sedna-steel-blue-tint mt-2">We won't spam – we will only use your phone number for giveaway and relevant info.</p>
+				</div>
+				<div>
+					<label for="email" class="block text-xl font-retro-bold text-sedna-navy mb-3">
+						✉️ Email Address
+					</label>
+					<input
+						id="email"
+						type="email"
+						bind:value={email}
+						class="sedna-input w-full text-xl"
+						placeholder="Enter your email address..."
+						required
+						autocomplete="email"
+					/>
+					<p class="text-sm font-semibold text-sedna-steel-blue-tint mt-2">We won't spam – we will only use your email for giveaway and relevant info.</p>
+				</div>
+				<div>
+					<label for="state" class="block text-xl font-retro-bold text-sedna-navy mb-3">
+						🗺️ State
+					</label>
+					<select id="state" bind:value={state} class="sedna-input w-full text-xl" required>
+						<option value="" disabled selected>Select your state...</option>
+						<option value="AL">Alabama</option>
+						<option value="AK">Alaska</option>
+						<option value="AZ">Arizona</option>
+						<option value="AR">Arkansas</option>
+						<option value="CA">California</option>
+						<option value="CO">Colorado</option>
+						<option value="CT">Connecticut</option>
+						<option value="DE">Delaware</option>
+						<option value="FL">Florida</option>
+						<option value="GA">Georgia</option>
+						<option value="HI">Hawaii</option>
+						<option value="ID">Idaho</option>
+						<option value="IL">Illinois</option>
+						<option value="IN">Indiana</option>
+						<option value="IA">Iowa</option>
+						<option value="KS">Kansas</option>
+						<option value="KY">Kentucky</option>
+						<option value="LA">Louisiana</option>
+						<option value="ME">Maine</option>
+						<option value="MD">Maryland</option>
+						<option value="MA">Massachusetts</option>
+						<option value="MI">Michigan</option>
+						<option value="MN">Minnesota</option>
+						<option value="MS">Mississippi</option>
+						<option value="MO">Missouri</option>
+						<option value="MT">Montana</option>
+						<option value="NE">Nebraska</option>
+						<option value="NV">Nevada</option>
+						<option value="NH">New Hampshire</option>
+						<option value="NJ">New Jersey</option>
+						<option value="NM">New Mexico</option>
+						<option value="NY">New York</option>
+						<option value="NC">North Carolina</option>
+						<option value="ND">North Dakota</option>
+						<option value="OH">Ohio</option>
+						<option value="OK">Oklahoma</option>
+						<option value="OR">Oregon</option>
+						<option value="PA">Pennsylvania</option>
+						<option value="RI">Rhode Island</option>
+						<option value="SC">South Carolina</option>
+						<option value="SD">South Dakota</option>
+						<option value="TN">Tennessee</option>
+						<option value="TX">Texas</option>
+						<option value="UT">Utah</option>
+						<option value="VT">Vermont</option>
+						<option value="VA">Virginia</option>
+						<option value="WA">Washington</option>
+						<option value="WV">West Virginia</option>
+						<option value="WI">Wisconsin</option>
+						<option value="WY">Wyoming</option>
+					</select>
+				</div>
+				<div>
+					<label for="county" class="block text-xl font-retro-bold text-sedna-navy mb-3">
+						🏛️ County
+					</label>
+					<input
+						id="county"
+						type="text"
+						bind:value={county}
+						class="sedna-input w-full text-xl"
+						placeholder="Enter your county..."
+						required
+					/>
+				</div>
+				<div class="text-center pt-6">
+					<button
+						type="submit"
+						class="sedna-btn sedna-btn-accent text-2xl py-6 px-12"
+						disabled={isSubmitting}
+					>
+						{isSubmitting ? '🚀 SETTING UP...' : '🚀 START GAME'}
+					</button>
+				</div>
+			</form>
 		</div>
 	</div>
-</div>
-
-<style>
-.page-container {
-  position: relative;
-  background: transparent;
-  min-height: 100vh;
-  width: 100vw;
-  overflow: hidden;
-}
-.matrix-rain {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  pointer-events: none;
-  z-index: 1;
-}
-.matrix-col {
-  position: absolute;
-  top: 0;
-  will-change: transform;
-}
-.matrix-char {
-  font-family: 'Courier New', monospace;
-  font-size: 28px;
-  opacity: 0.8;
-  user-select: none;
-  display: block;
-  text-shadow: 0 0 8px rgba(0,0,0,0.18);
-}
-.header-content {
-  position: relative;
-  z-index: 3;
-  text-align: center;
-  margin-top: 8vh;
-}
-</style> 
+</div> 

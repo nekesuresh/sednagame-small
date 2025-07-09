@@ -152,7 +152,7 @@ html, body {
 </style>
 
 <div class="page-container">
-	<div class="matrix-rain">
+	<div class="matrix-rain" style="z-index:0; pointer-events:none;">
 		{#each columns as col}
 			<div
 				class="matrix-col"
@@ -166,20 +166,19 @@ html, body {
 							opacity: {Math.max(0.1, 1 - (col.trail.length - j) / col.trail.length)};
 							transform: translateY({col.y - (col.trail.length - j) * fontSize}px);
 						"
-						>{char}</span>
+					>{char}</span>
 				{/each}
 			</div>
 		{/each}
 	</div>
-	<!-- Remove the .header-content block and its children, keep only the second title/description section -->
-	<div class="min-h-screen bg-gradient-to-br from-sedna-cool-blue via-sedna-dark-blue to-sedna-navy flex items-center justify-center p-4">
+	<div class="min-h-screen bg-gradient-to-br from-sedna-cool-blue via-sedna-dark-blue to-sedna-navy flex items-center justify-center p-4" style="position:relative; z-index:2;">
 		<div class="max-w-4xl mx-auto text-center">
 			<!-- Logo/Header -->
 			<div class="text-center mb-12">
-				<h1 class="sedna-header mb-6">
+				<h1 class="text-5xl md:text-7xl font-retro-bold text-sedna-orange mb-4 drop-shadow-lg">
 					🎮 AI or A-Lie
 				</h1>
-				<p class="sedna-subheader">
+				<p class="text-2xl md:text-3xl font-retro text-sedna-light-grey mb-8">
 					Come test your knowledge in Sedna's AI-powered game!
 				</p>
 			</div>
