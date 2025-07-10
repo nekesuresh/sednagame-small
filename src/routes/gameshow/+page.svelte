@@ -308,11 +308,11 @@
 		// User wants to stay on current difficulty
 		showUpgradeModal = false;
 		upgradeCancelled = true;
-		// Change difficulty level to the upgrade target
-		answerHandler.updateUserInfo({ difficulty: upgradeTarget });
-		// Reset counters for the new difficulty
-		if (upgradeTarget === 'medium') correctEasy = 0;
-		if (upgradeTarget === 'hard') correctMedium = 0;
+		// Do NOT change difficulty level - user wants to stay on current difficulty
+		// Reset counters for the current difficulty
+		const userInfo = answerHandler.getUserInfo();
+		if (userInfo?.difficulty === 'easy') correctEasy = 0;
+		if (userInfo?.difficulty === 'medium') correctMedium = 0;
 		// Force update of currentDifficulty
 		currentDifficulty = answerHandler.getUserInfo()?.difficulty?.toUpperCase() || 'MEDIUM';
 		// Do NOT call generateNewQuestion here; let handleNextQuestion handle it
