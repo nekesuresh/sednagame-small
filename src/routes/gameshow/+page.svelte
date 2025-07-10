@@ -86,6 +86,8 @@
 	let hasShownCongrats = false;
 	let upgradeLoading = false;
 	let showEndGameConfirmModal = false;
+	let showScrollPopup = false;
+	let hasShownScrollPopup = false;
 
 	function animateStatement(statement: string) {
 		if (animationInterval) clearInterval(animationInterval);
@@ -141,6 +143,18 @@
 		} else {
 			await generateNewQuestion();
 		}
+
+		// Check for scroll popup after content loads
+		setTimeout(() => {
+			checkForScrollPopup();
+		}, 1000);
+
+		// Listen for window resize events (zoom changes)
+		window.addEventListener('resize', () => {
+			setTimeout(() => {
+				checkForScrollPopup();
+			}, 500);
+		});
 	});
 
 	async function generateNewQuestion() {
@@ -455,6 +469,25 @@
 	function dismissCongratsPopup() {
 		showCongratsPopup = false;
 	}
+
+	function checkForScrollPopup() {
+		// Check if page has scroll bars (content is taller than viewport)
+		const hasScrollBars = document.documentElement.scrollHeight > document.documentElement.clientHeight;
+		
+		if (hasScrollBars && !hasShownScrollPopup) {
+			showScrollPopup = true;
+			hasShownScrollPopup = true;
+			
+			// Auto-hide after 5 seconds
+			setTimeout(() => {
+				showScrollPopup = false;
+			}, 5000);
+		}
+	}
+
+	function dismissScrollPopup() {
+		showScrollPopup = false;
+	}
 </script>
 
 <svelte:head>
@@ -599,6 +632,16 @@
 											<p class="text-xl text-sedna-cool-blue font-bold mb-6">You've reached 100 points!</p>
 											<p class="text-lg text-sedna-dark-slate-blue mb-6">Press <span class="font-bold">Next</span> to finish the game.</p>
 											<button class="sedna-btn sedna-btn-accent text-xl py-3 px-8" on:click={dismissCongratsPopup}>OK</button>
+										</div>
+									</div>
+								{/if}
+								{#if showScrollPopup}
+									<div class="fixed top-4 right-4 z-50">
+										<div class="bg-gradient-to-br from-sedna-bright-yellow to-sedna-muted-gold border-4 border-sedna-orange rounded-2xl shadow-2xl p-6 max-w-sm text-center animate-bounce-in">
+											<div class="text-4xl mb-3">📜</div>
+											<h3 class="text-xl font-extrabold text-white mb-2 drop-shadow-lg">Scroll Down!</h3>
+											<p class="text-white font-bold mb-4">Continue the game below</p>
+											<button class="sedna-btn sedna-btn-secondary text-sm py-2 px-4" on:click={dismissScrollPopup}>Got it!</button>
 										</div>
 									</div>
 								{/if}
