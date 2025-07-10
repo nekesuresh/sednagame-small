@@ -141,6 +141,13 @@
 			</div>
 		</div>
 
+		<!-- Scroll Hint -->
+		<div class="text-center mb-4">
+			<p class="text-sm text-sedna-steel-blue-tint italic">
+				📜 Scroll down if needed to continue your AI learning journey! 🚀
+			</p>
+		</div>
+
 		<!-- Action Buttons -->
 		<div class="flex justify-center space-x-4">
 			<button
