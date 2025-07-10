@@ -78,10 +78,15 @@ html, body, #svelte {
   
   .sedna-modal {
     @apply fixed inset-0 bg-sedna-dark-slate-blue bg-opacity-80 flex items-center justify-center z-50;
+    padding: 1rem;
   }
   
   .sedna-modal-content {
-    @apply bg-white border-2 border-sedna-pale-blue-grey rounded-xl p-8 max-w-2xl mx-4 shadow-lg;
+    @apply bg-white border-2 border-sedna-pale-blue-grey rounded-xl p-4 md:p-8 shadow-lg;
+    max-width: min(90vw, 42rem);
+    max-height: 90vh;
+    overflow-y: auto;
+    margin: 1rem;
   }
   
   .sedna-input {
