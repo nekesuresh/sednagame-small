@@ -144,7 +144,7 @@
 		<!-- Scroll Hint -->
 		<div class="text-center mb-4">
 			<p class="text-sm text-sedna-steel-blue-tint italic">
-				📜 Scroll down if needed to continue your AI learning journey! 🚀
+				📜 Scroll down if needed to find the continue game button and continue your AI learning journey! 🚀
 			</p>
 		</div>
 
