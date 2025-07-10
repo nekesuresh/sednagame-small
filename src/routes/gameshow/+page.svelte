@@ -181,6 +181,9 @@
 			upgradePreloading = true;
 			upgradePreloadedQuestion = null;
 			upgradeCancelled = false;
+			// Reset counters when modal is shown
+			if (userInfo.difficulty === 'easy') correctEasy = 0;
+			if (userInfo.difficulty === 'medium') correctMedium = 0;
 			// Preload the next question at the higher difficulty
 			let attempts = 0;
 			let newQuestion: Question | null = null;
@@ -238,6 +241,22 @@
 			showUpgradeModal = false;
 			upgradeCancelled = false;
 			generateNewQuestion();
+			return;
+		}
+		// Check if we have a preloaded upgrade question (user closed the modal)
+		if (upgradePreloadedQuestion && !upgradeCancelled) {
+			// Use the preloaded upgrade question
+			currentQuestion = upgradePreloadedQuestion;
+			nextQuestion = null;
+			showAnswer = false;
+			answerResult = null;
+			userAnswer = null;
+			isLoading = false;
+			isGeneratingQuestion = false;
+			usedQuestionIds.update(ids => { ids.add(currentQuestion.id); return ids; });
+			// Clear the preloaded question and preload the next one
+			upgradePreloadedQuestion = null;
+			preloadNextQuestion();
 			return;
 		}
 		generateNewQuestion();
@@ -371,24 +390,9 @@
 
 	function handleUpgradeClose() {
 		showUpgradeModal = false;
-		if (upgradePreloadedQuestion) {
-			currentQuestion = upgradePreloadedQuestion;
-			nextQuestion = null;
-			showAnswer = false;
-			answerResult = null;
-			userAnswer = null;
-			isLoading = false;
-			isGeneratingQuestion = false;
-			usedQuestionIds.update(ids => { ids.add(currentQuestion.id); return ids; });
-			preloadNextQuestion();
-		} else {
-			isLoading = true;
-			isGeneratingQuestion = true;
-			generateNewQuestion().then(() => {
-				isLoading = false;
-				isGeneratingQuestion = false;
-			});
-		}
+		// Don't change anything - just close the modal
+		// User stays on current page with current answer
+		// When they press Next Question, it will use the preloaded question
 	}
 
 	$: if (!hasShownCongrats && answerHandler.getProgress() >= 100 && showAnswer) {
@@ -682,9 +686,12 @@
 {#if showUpgradeModal}
 	<div class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
 		<div class="bg-white rounded-xl shadow-xl p-8 max-w-lg w-full relative">
-			<button class="absolute top-2 right-4 text-3xl text-sedna-dark-grey hover:text-sedna-cool-blue" on:click={handleUpgradeClose}>×</button>
+			<button class="absolute top-2 right-4 text-3xl text-sedna-dark-grey hover:text-sedna-cool-blue" on:click={handleUpgradeClose} title="X out to stay on this page. The next question will be more challenging.">×</button>
 			<h3 class="text-2xl font-retro-bold text-sedna-orange mb-4">{upgradeTarget === 'medium' ? 'Level Up: Medium!' : 'Level Up: Hard!'}</h3>
-			<div class="text-sedna-dark-slate-blue text-lg mb-4">You're doing so well! Changing to <span class="font-bold">{upgradeTarget.toUpperCase()}</span> for more challenge and points.</div>
+			<div class="text-sedna-dark-slate-blue text-lg mb-4">
+				You're doing so well! Changing to <span class="font-bold">{upgradeTarget.toUpperCase()}</span> for more challenge and points.<br/>
+				<span class="text-sedna-cool-blue text-base">If you X out, you'll stay on this page and the next question will be more challenging.</span>
+			</div>
 			<div class="flex flex-col gap-4">
 				<button class="sedna-btn sedna-btn-secondary text-lg py-3 px-6" on:click={handleUpgradeCancel}>Stay on {upgradeTarget === 'medium' ? 'Easy' : 'Medium'}</button>
 				<button class="sedna-btn sedna-btn-accent text-lg py-3 px-6 flex items-center justify-center gap-2" on:click={handleUpgradeConfirm} disabled={upgradeLoading}>
