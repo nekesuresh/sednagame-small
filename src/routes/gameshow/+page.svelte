@@ -61,6 +61,7 @@
 	let showCongratsPopup = false;
 	let hasShownCongrats = false;
 	let upgradeLoading = false;
+	let showEndGameConfirmModal = false;
 
 	function animateStatement(statement: string) {
 		if (animationInterval) clearInterval(animationInterval);
@@ -337,6 +338,19 @@
 		goto('/completion');
 	}
 
+	function handleEndGameClick() {
+		showEndGameConfirmModal = true;
+	}
+
+	function handleEndGameConfirm() {
+		showEndGameConfirmModal = false;
+		handleGoToCompletion();
+	}
+
+	function handleEndGameCancel() {
+		showEndGameConfirmModal = false;
+	}
+
 	async function preloadNextQuestion() {
 		if (isPreloadingNext || nextQuestion) return;
 		isPreloadingNext = true;
@@ -430,7 +444,7 @@
 				<!-- New End Game & See Score button -->
 				<button 
 					class="sedna-btn sedna-btn-accent"
-					on:click={handleGoToCompletion}
+					on:click={handleEndGameClick}
 					title="End the game now and see your score and stats."
 				>
 					🏁 End Game & See Score
@@ -697,6 +711,19 @@
 				<button class="sedna-btn sedna-btn-accent text-lg py-3 px-6 flex items-center justify-center gap-2" on:click={handleUpgradeConfirm} disabled={upgradeLoading}>
 					{upgradeLoading ? '🔄 Generating next question...' : `Go to ${upgradeTarget.charAt(0).toUpperCase() + upgradeTarget.slice(1)}`}
 				</button>
+			</div>
+		</div>
+	</div>
+{/if}
+
+{#if showEndGameConfirmModal}
+	<div class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+		<div class="bg-white rounded-xl shadow-xl p-8 max-w-md w-full text-center">
+			<h3 class="text-2xl font-retro-bold text-sedna-orange mb-4">Are you sure you want to end the game and see your score?</h3>
+			<p class="text-lg text-sedna-dark-slate-blue mb-6">This action cannot be undone.</p>
+			<div class="flex justify-center gap-4">
+				<button class="sedna-btn sedna-btn-secondary text-lg py-3 px-6" on:click={handleEndGameCancel}>Cancel</button>
+				<button class="sedna-btn sedna-btn-accent text-lg py-3 px-6" on:click={handleEndGameConfirm}>Yes, End Game</button>
 			</div>
 		</div>
 	</div>
