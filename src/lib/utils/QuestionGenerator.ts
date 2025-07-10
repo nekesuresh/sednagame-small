@@ -295,8 +295,15 @@ class QuestionGenerator {
       let inExplanationSection = false;
       
       for (let i = 0; i < lines.length; i++) {
-        const line = lines[i];
-        console.log(`Processing line ${i}: "${line}"`);
+        let line = lines[i];
+        // Normalize bold and heading labels with flexible spaces
+        line = line.replace(/^\*\*\s*(.+?)\s*:\s*\*\*/i, '$1:'); // ** LABEL : **
+        line = line.replace(/^##\s*(.+?)\s*:?\s*$/i, '$1:'); // ## LABEL   or ## LABEL:
+        line = line.replace(/^\*\s*(.+?)\s*:\s*\*/i, '$1:'); // * LABEL : *
+        // Remove extra colons (e.g., 'STATEMENT::')
+        line = line.replace(/:{2,}/, ':');
+        // Remove extra spaces before/after colon in label
+        line = line.replace(/^([a-zA-Z ]+)\s*:\s*/, (m, p1) => p1.trim().toLowerCase() + ':');
         
         if (line.toLowerCase().startsWith('statement:')) {
           statement = line.replace(/statement:/i, '').trim();
@@ -309,14 +316,11 @@ class QuestionGenerator {
           line.toLowerCase().startsWith('answer:')
         ) {
           const factValue = line.split(':')[1]?.trim().toLowerCase();
-          // Accept a variety of values for isFact
-          // Accept 'fact', 'true', 'yes' as true; 'myth', 'false', 'no' as false
           if (['true', 'yes', 'fact'].includes(factValue)) {
             isFact = true;
           } else if (['false', 'no', 'myth'].includes(factValue)) {
             isFact = false;
           } else {
-            // If the value is not recognized, log and skip
             console.warn('Ambiguous IS_FACT value, skipping:', factValue);
           }
           lastLabel = 'is_fact';
@@ -379,7 +383,6 @@ class QuestionGenerator {
           inExplanationSection = true;
           console.log('Found explanation start:', explanation);
         } else if (inExplanationSection || lastLabel === 'explanation') {
-          // Collect multi-line explanations
           explanationLines.push(line);
           console.log('Added to explanation lines:', line);
         }
