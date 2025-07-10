@@ -116,7 +116,7 @@
 			<!-- Scroll Hint -->
 			<div class="text-center mt-4 pt-4 border-t border-sedna-pale-blue-grey">
 				<p class="text-sm text-sedna-steel-blue-tint italic">
-					📜 Scroll down if needed to find the continue game button and keep learning! 🚀
+					📜 Scroll down if needed to find the continue game button and keep learning!
 				</p>
 			</div>
 		</div>
