@@ -110,7 +110,7 @@ class QuestionGenerator {
       const response = await fetch(`${this.ollamaUrl}/api/tags`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
-        signal: AbortSignal.timeout(60000) // 30 second timeout
+        signal: AbortSignal.timeout(30000) // 30 second timeout
       });
       this.isOllamaAvailable = response.ok;
       console.log('Ollama availability check result:', response.ok, 'Status:', response.status);
@@ -165,7 +165,7 @@ class QuestionGenerator {
   }
 
   private async generateQuestionWithOllama(sednaTip: SednaTip, difficulty: Difficulty): Promise<Question | null> {
-    const maxAttempts = 2;
+    const maxAttempts = 1;
     let attempt = 0;
     let question: Question | null = null;
     let lastResponse: string | null = null;
