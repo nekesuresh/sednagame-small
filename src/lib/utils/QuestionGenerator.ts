@@ -164,7 +164,7 @@ class QuestionGenerator {
   }
 
   private async generateQuestionWithOllama(sednaTip: SednaTip, difficulty: Difficulty): Promise<Question | null> {
-    const maxAttempts = 4;
+    const maxAttempts = 2;
     let attempt = 0;
     let question: Question | null = null;
     let lastResponse: string | null = null;
