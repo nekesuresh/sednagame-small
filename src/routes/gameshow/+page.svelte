@@ -564,7 +564,7 @@
 										</div>
 									</div>
 								{/if}
-								{#if showCompletionButton && showAnswer}
+								{#if showCompletionButton}
 									<button
 										class="sedna-btn text-3xl py-6 px-16 animate-pulse bg-gradient-to-r from-yellow-400 to-pink-500 text-white font-extrabold shadow-lg border-4 border-yellow-300 hover:scale-105 transition-transform duration-200"
 										on:click={handleGoToCompletion}
@@ -576,7 +576,7 @@
 									<button
 										class="sedna-btn sedna-btn-accent {(!isGeneratingQuestion && nextQuestion) ? 'pulse' : ''} text-2xl py-6 px-10"
 										on:click={handleNextQuestion}
-										disabled={isGeneratingQuestion || !nextQuestion || showCompletionButton}
+										disabled={isGeneratingQuestion || !nextQuestion}
 										title={!nextQuestion ? 'Please wait for question to finish generating' : ''}
 									>
 										{isGeneratingQuestion ? '🔄 LOADING...' : nextQuestion ? '🎯 NEXT QUESTION' : '⏳ GENERATING QUESTION'}
@@ -728,19 +728,6 @@
 		</div>
 	</div>
 {/if}
-
-<!-- Progress Bar (insert after progress bar in StatsModal or main game area) -->
-{#if showCompletionButton}
-	<div class="flex justify-center mt-8">
-		<button
-			class="sedna-btn text-3xl py-6 px-16 animate-pulse bg-gradient-to-r from-yellow-400 to-pink-500 text-white font-extrabold shadow-lg border-4 border-yellow-300 hover:scale-105 transition-transform duration-200"
-			on:click={handleGoToCompletion}
-			style="box-shadow: 0 0 20px 5px #ffe066, 0 0 40px 10px #ff6f91;"
-		>
-			🎉 See Your Results!
-		</button>
-	</div>
-{/if} 
 
 <style>
 @keyframes bounce-in {
