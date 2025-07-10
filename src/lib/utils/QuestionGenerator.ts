@@ -97,6 +97,7 @@ class QuestionGenerator {
   // Store hashes of used fact statements to prevent repeats for both facts and negated myths
   private usedFactHashes: Set<string> = new Set();
   private usedTipIds: Set<number> = new Set();
+  private recentQuestionTypes: ('FACT' | 'MYTH')[] = [];
 
   constructor(ollamaUrl: string = 'http://localhost:11434') {
     this.ollamaUrl = ollamaUrl;
@@ -169,8 +170,19 @@ class QuestionGenerator {
     let question: Question | null = null;
     let lastResponse: string | null = null;
     let lastTriedType: 'FACT' | 'MYTH' = 'FACT';
-    // Randomly choose fact or myth
-    const chooseMyth = Math.random() < 0.5;
+    
+    // Check if we need to force variety (if last 2 were facts, force myth)
+    let chooseMyth: boolean;
+    if (this.recentQuestionTypes.length >= 2 && 
+        this.recentQuestionTypes[this.recentQuestionTypes.length - 1] === 'FACT' &&
+        this.recentQuestionTypes[this.recentQuestionTypes.length - 2] === 'FACT') {
+      chooseMyth = true;
+      console.log('Forcing MYTH generation due to 2 consecutive FACTS');
+    } else {
+      // Randomly choose fact or myth
+      chooseMyth = Math.random() < 0.5;
+    }
+    
     const combination = this.getRandomCombination();
     if (!chooseMyth) {
       // FACT branch
@@ -265,6 +277,15 @@ class QuestionGenerator {
     }
     if (!question) {
       console.warn(`Ollama failed to generate a valid question after ${maxAttempts} attempts. Last response:`, lastResponse);
+    } else {
+      // Track the question type for variety enforcement
+      const questionType = question.isFact ? 'FACT' : 'MYTH';
+      this.recentQuestionTypes.push(questionType);
+      // Keep only the last 3 types to avoid memory buildup
+      if (this.recentQuestionTypes.length > 3) {
+        this.recentQuestionTypes.shift();
+      }
+      console.log('Recent question types:', this.recentQuestionTypes);
     }
     return question;
   }
