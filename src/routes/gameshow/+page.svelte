@@ -597,7 +597,7 @@
 										<div class="bg-gradient-to-br from-yellow-200 via-pink-200 to-blue-200 border-4 border-yellow-400 rounded-2xl shadow-2xl p-8 max-w-md w-full text-center animate-bounce-in">
 											<h2 class="text-4xl font-extrabold text-sedna-orange mb-4 drop-shadow-lg">🎉 Congratulations! 🎉</h2>
 											<p class="text-xl text-sedna-cool-blue font-bold mb-6">You've reached 100 points!</p>
-											<p class="text-lg text-sedna-dark-slate-blue mb-6">Press <span class="font-bold">"See Your Results"</span> to finish the game.</p>
+											<p class="text-lg text-sedna-dark-slate-blue mb-6">Press <span class="font-bold">Next</span> to finish the game.</p>
 											<button class="sedna-btn sedna-btn-accent text-xl py-3 px-8" on:click={dismissCongratsPopup}>OK</button>
 										</div>
 									</div>
