@@ -171,7 +171,7 @@ class QuestionGenerator {
     let lastResponse: string | null = null;
     let lastTriedType: 'FACT' | 'MYTH' = 'FACT';
     
-    // Check if we need to force variety (if last 2 were facts, force myth)
+    // Check if we need to force variety (if last 2 were facts, force myth; if last 2 were myths, force fact)
     let chooseMyth: boolean;
     console.log('Recent question types before generation:', this.recentQuestionTypes);
     if (this.recentQuestionTypes.length >= 2 && 
@@ -179,6 +179,11 @@ class QuestionGenerator {
         this.recentQuestionTypes[this.recentQuestionTypes.length - 2] === 'FACT') {
       chooseMyth = true;
       console.log('VARIETY ENFORCEMENT: Forcing MYTH generation due to 2 consecutive FACTS');
+    } else if (this.recentQuestionTypes.length >= 2 && 
+               this.recentQuestionTypes[this.recentQuestionTypes.length - 1] === 'MYTH' &&
+               this.recentQuestionTypes[this.recentQuestionTypes.length - 2] === 'MYTH') {
+      chooseMyth = false;
+      console.log('VARIETY ENFORCEMENT: Forcing FACT generation due to 2 consecutive MYTHS');
     } else {
       // Randomly choose fact or myth
       chooseMyth = Math.random() < 0.5;
