@@ -284,6 +284,13 @@
 		// User wants to stay on current difficulty
 		showUpgradeModal = false;
 		upgradeCancelled = true;
+		// Change difficulty level to the upgrade target
+		answerHandler.updateUserInfo({ difficulty: upgradeTarget });
+		// Reset counters for the new difficulty
+		if (upgradeTarget === 'medium') correctEasy = 0;
+		if (upgradeTarget === 'hard') correctMedium = 0;
+		// Force update of currentDifficulty
+		currentDifficulty = answerHandler.getUserInfo()?.difficulty?.toUpperCase() || 'MEDIUM';
 		// Do NOT call generateNewQuestion here; let handleNextQuestion handle it
 	}
 
@@ -404,9 +411,16 @@
 
 	function handleUpgradeClose() {
 		showUpgradeModal = false;
-		// Don't change anything - just close the modal
+		// Change difficulty level to the upgrade target
+		answerHandler.updateUserInfo({ difficulty: upgradeTarget });
+		// Reset counters for the new difficulty
+		if (upgradeTarget === 'medium') correctEasy = 0;
+		if (upgradeTarget === 'hard') correctMedium = 0;
+		// Force update of currentDifficulty
+		currentDifficulty = answerHandler.getUserInfo()?.difficulty?.toUpperCase() || 'MEDIUM';
+		// Don't change anything else - just close the modal
 		// User stays on current page with current answer
-		// When they press Next Question, it will use the preloaded question
+		// When they press Next Question, it will use the preloaded question at the new difficulty
 	}
 
 	$: if (!hasShownCongrats && answerHandler.getProgress() >= 100 && showAnswer) {
