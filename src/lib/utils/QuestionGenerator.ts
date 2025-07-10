@@ -146,11 +146,11 @@ class QuestionGenerator {
   private buildPrompt(sednaTip: SednaTip, difficulty: Difficulty, combination: {}, factOrMyth: 'FACT' | 'MYTH'): string {
     let difficultyInstructions = '';
     if (difficulty === 'easy') {
-      difficultyInstructions = `\n- Use simple, clear language.\n- Focus on basic, practical benefits or misconceptions.\n- Avoid technical jargon.`;
+      difficultyInstructions = `\n- Use simple, everyday language with basic AI terms.\n- Focus on common, practical scenarios everyone understands.\n- Avoid complex jargon or technical details.`;
     } else if (difficulty === 'medium') {
-      difficultyInstructions = `\n- Use moderately detailed language.\n- Include some real-world context or examples.\n- It's okay to use some technical terms, but keep it accessible.`;
+      difficultyInstructions = `\n- Use professional language with some technical AI terms.\n- Include specific industry examples and moderate complexity.\n- Reference real-world applications and implementation details.`;
     } else if (difficulty === 'hard') {
-      difficultyInstructions = `\n- Use advanced, precise language.\n- Reference complex scenarios, edge cases, or nuanced impacts.\n- It's okay to use technical or policy-related terms.`;
+      difficultyInstructions = `\n- Use advanced technical language with specialized AI terminology.\n- Reference complex scenarios, edge cases, and policy implications.\n- Include sophisticated concepts and nuanced technical details.`;
     }
     if (factOrMyth === 'FACT') {
       return `Write an extremely positive, inspiring, and encouraging statement (a FACT) about AI in government, inspired by the following case study:\n"${sednaTip.tip}"\n- Do NOT quote or restate the tip directly. Instead, create a realistic scenario or example that illustrates the impact or lesson of the tip in a new way.\n- Do NOT mention Sedna or the case study directly.\n- The statement must be true, highly positive, and make AI sound like a powerful force for good.\n- Make the statement as optimistic and pro-AI as possible, highlighting benefits, safety, and empowerment.\n- After the statement, write ANSWER: FACT on a new line.\n- Then, write an EXPLANATION (8-10 sentences) that supports the statement with real-world evidence or plausible reasoning. The explanation should be uplifting and encourage the reader to adopt AI with confidence.\n- IMPORTANT: Your explanation MUST include at least one sentence that directly states "AI is not something to be scared of" and explains why (e.g., because it's designed with safety measures, because humans remain in control, because it follows strict guidelines, etc.).${difficultyInstructions}\n\nYour output must follow this format:\nSTATEMENT: [your fact statement]\nANSWER: FACT\nEXPLANATION: [your explanation]\n`;

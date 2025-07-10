@@ -215,11 +215,11 @@ class AnswerHandler {
   }
 
   public getDifficultyLevel(): string {
-    const difficulty = this.userInfo?.difficulty || 'medium';
+    const accuracy = this.getAccuracy();
     
-    if (difficulty === 'hard') {
+    if (accuracy >= 85) {
       return "AI Champion";
-    } else if (difficulty === 'medium') {
+    } else if (accuracy >= 70) {
       return "AI Ready";
     } else {
       return "AI Aware";
