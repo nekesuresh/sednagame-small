@@ -314,6 +314,7 @@
 	}
 
 	function handleGoToCompletion() {
+		localStorage.setItem('sedna_end_game_pressed', 'true');
 		goto('/completion');
 	}
 
@@ -421,6 +422,14 @@
 					on:click={handleShowStats}
 				>
 					📊 STATS
+				</button>
+				<!-- New End Game & See Score button -->
+				<button 
+					class="sedna-btn sedna-btn-accent"
+					on:click={handleGoToCompletion}
+					title="End the game now and see your score and stats."
+				>
+					🏁 End Game & See Score
 				</button>
 				<button 
 					class="sedna-btn {showUpgradeModal ? 'ring-4 ring-sedna-muted-gold animate-pulse' : ''} sedna-btn-accent"

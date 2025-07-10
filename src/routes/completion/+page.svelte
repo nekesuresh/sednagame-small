@@ -8,8 +8,12 @@
 
 	onMount(() => {
 		userInfo = answerHandler.getUserInfo();
-		if (!userInfo || answerHandler.getScore() < 100) {
+		const endGamePressed = localStorage.getItem('sedna_end_game_pressed') === 'true';
+		if (!userInfo || (answerHandler.getScore() < 100 && !endGamePressed)) {
 			goto('/');
+		} else if (endGamePressed) {
+			// Clear the flag so user can't revisit freely
+			localStorage.removeItem('sedna_end_game_pressed');
 		}
 	});
 
