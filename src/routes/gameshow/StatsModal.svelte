@@ -113,6 +113,12 @@
 					</div>
 				</div>
 			</div>
+			<!-- Scroll Hint -->
+			<div class="text-center mt-4 pt-4 border-t border-sedna-pale-blue-grey">
+				<p class="text-sm text-sedna-steel-blue-tint italic">
+					📜 Scroll down if needed to find the continue game button and keep learning! 🚀
+				</p>
+			</div>
 		</div>
 
 		<!-- Encouragement -->
@@ -139,13 +145,6 @@
 					<p>📚 You're building your understanding of AI and its potential.<br/>You're aware of AI's role in today's world and are curious about how it can help your organization. This is a great starting point and you're not alone. Many professionals are right here with you. You're ready to explore how AI can enhance your role and improve outcomes.<br/>Sedna is happy to be a thought partner as you begin your journey.</p>
 				{/if}
 			</div>
-		</div>
-
-		<!-- Scroll Hint -->
-		<div class="text-center mb-4">
-			<p class="text-sm text-sedna-steel-blue-tint italic">
-				📜 Scroll down if needed to find the continue game button and keep learning! 🚀
-			</p>
 		</div>
 
 		<!-- Action Buttons -->
