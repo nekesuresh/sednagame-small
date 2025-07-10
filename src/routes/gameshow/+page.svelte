@@ -46,7 +46,31 @@
 	$: currentScore = answerHandler.getScore();
 	$: currentAccuracy = answerHandler.getAccuracy();
 	$: currentDifficulty = answerHandler.getUserInfo()?.difficulty?.toUpperCase() || 'MEDIUM';
-	$: showCompletionButton = answerHandler.getProgress() >= 100;
+	$: userInfo = answerHandler.getUserInfo();
+	$: showCompletionButton = (() => {
+		if (!userInfo || !currentQuestion || !showAnswer || !answerResult?.isCorrect) {
+			return false;
+		}
+		
+		// Get the score for the current question
+		const questionScore = answerHandler.calculateScore(currentQuestion);
+		const scoreAfterThisQuestion = currentScore + questionScore;
+		
+		// Check if this question would complete the game
+		const difficulty = userInfo.difficulty;
+		let completionThreshold = 100; // default
+		
+		if (difficulty === 'hard') {
+			completionThreshold = 70;
+		} else if (difficulty === 'medium') {
+			completionThreshold = 80;
+		} else if (difficulty === 'easy') {
+			completionThreshold = 90;
+		}
+		
+		// Show button only if this question would complete the game AND it was answered correctly
+		return scoreAfterThisQuestion >= completionThreshold && answerResult.isCorrect;
+	})();
 
 	let animatedStatement = '';
 	let animationInterval: any = null;

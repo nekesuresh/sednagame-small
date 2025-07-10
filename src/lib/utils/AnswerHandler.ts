@@ -97,7 +97,7 @@ class AnswerHandler {
     };
   }
 
-  private calculateScore(question: Question): number {
+  public calculateScore(question: Question): number {
     // Base score based on difficulty
     const difficultyScores = {
       easy: 10,
