@@ -1,5 +1,5 @@
 import type { SednaTip } from '$lib/data/sednaTips';
-import { sednaTips } from '$lib/data/sednaTips';
+import { sednaTips, getTipById } from '$lib/data/sednaTips';
 
 export type Difficulty = 'easy' | 'medium' | 'hard';
 
@@ -18,76 +18,118 @@ export interface OllamaResponse {
 }
 
 // Pre-generated questions as fallback when Ollama is not available
-const fallbackQuestions: Omit<Question, 'sednaTip'>[] = [
+const fallbackQuestions: (Omit<Question, 'sednaTip'> & { tipId: number })[] = [
   {
     id: 'fallback-1',
-    statement: 'AI can completely replace human cybersecurity analysts in detecting threats.',
-    isFact: false,
-    explanation: 'While AI can assist in threat detection, human analysts are still essential for context, decision-making, and handling complex scenarios that require human judgment.',
-    difficulty: 'medium'
-  },
-  {
-    id: 'fallback-2',
     statement: 'AI-powered chatbots can provide 98% accurate multilingual support.',
     isFact: true,
     explanation: 'Modern AI chatbots, like those built by Sedna, can achieve high accuracy in language detection and provide effective multilingual support with proper training and implementation.',
-    difficulty: 'easy'
+    difficulty: 'easy',
+    tipId: 1
   },
   {
-    id: 'fallback-3',
-    statement: 'AI traffic systems can adjust signals in real-time based on actual conditions.',
-    isFact: true,
-    explanation: 'AI-driven adaptive traffic signal systems use sensors and real-time data to dynamically adjust traffic lights, improving flow and safety.',
-    difficulty: 'easy'
-  },
-  {
-    id: 'fallback-4',
-    statement: 'AI hiring tools always eliminate bias in the recruitment process.',
-    isFact: false,
-    explanation: 'While AI can help reduce bias, it can also perpetuate existing biases if not properly designed and monitored. Ethical AI implementation requires ongoing oversight.',
-    difficulty: 'medium'
-  },
-  {
-    id: 'fallback-5',
-    statement: 'AI can predict traffic congestion and optimize transit routes.',
-    isFact: true,
-    explanation: 'AI systems analyze multiple data sources including cameras, ridership data, and weather to predict congestion and optimize transit routes in real-time.',
-    difficulty: 'medium'
-  },
-  {
-    id: 'fallback-6',
+    id: 'fallback-2',
     statement: 'AI systems can process government permits and licenses automatically.',
     isFact: true,
     explanation: 'GenAI-powered automation systems can read, validate, and process permit requests while maintaining compliance with privacy laws and regulations.',
-    difficulty: 'easy'
+    difficulty: 'easy',
+    tipId: 11
   },
   {
-    id: 'fallback-7',
+    id: 'fallback-3',
     statement: 'AI can completely eliminate the need for human oversight in government services.',
     isFact: false,
     explanation: 'While AI can automate many tasks, human oversight remains crucial for complex decisions, ethical considerations, and handling edge cases.',
-    difficulty: 'easy'
+    difficulty: 'easy',
+    tipId: 17
   },
   {
-    id: 'fallback-8',
+    id: 'fallback-4',
     statement: 'AI can help prevent insider threats by monitoring data access patterns.',
     isFact: true,
     explanation: 'AI-driven cybersecurity systems use anomaly detection to identify unusual data access patterns that may indicate insider threats.',
-    difficulty: 'medium'
+    difficulty: 'medium',
+    tipId: 4
   },
   {
-    id: 'fallback-9',
-    statement: 'AI systems can achieve zero data exfiltrations for extended periods.',
+    id: 'fallback-5',
+    statement: 'AI can help predict which public infrastructure, like bridges or roads, needs maintenance before problems occur.',
     isFact: true,
-    explanation: 'With proper implementation of AI-driven security tools, organizations can achieve zero malicious exfiltrations, as demonstrated by Sedna\'s work with cybersecurity agencies.',
-    difficulty: 'hard'
+    explanation: 'Predictive maintenance tools powered by AI analyze sensor and usage data to forecast infrastructure failures before they happen.',
+    difficulty: 'medium',
+    tipId: 2
   },
   {
-    id: 'fallback-10',
+    id: 'fallback-6',
     statement: 'AI can automatically generate unbiased policies and regulations.',
     isFact: false,
     explanation: 'While AI can assist in policy development, human judgment and ethical oversight are essential to ensure fairness and avoid unintended biases.',
-    difficulty: 'hard'
+    difficulty: 'hard',
+    tipId: 18
+  },
+  {
+    id: 'fallback-7',
+    statement: 'AI can help governments automate routine administrative tasks, freeing up staff for more complex work.',
+    isFact: true,
+    explanation: 'From processing forms to scheduling services, AI handles repetitive tasks efficiently, allowing staff to focus on strategic decision-making.',
+    difficulty: 'easy',
+    tipId: 3
+  },
+  {
+    id: 'fallback-8',
+    statement: 'AI is only useful for private sector businesses and has little impact on public services.',
+    isFact: false,
+    explanation: 'AI is transforming public services by improving efficiency, decision-making, and citizen engagement across all levels of government.',
+    difficulty: 'easy',
+    tipId: 13
+  },
+  {
+    id: 'fallback-9',
+    statement: 'AI-powered chatbots and virtual assistants are being used by government agencies to handle citizen inquiries.',
+    isFact: true,
+    explanation: 'Governments use AI chatbots to provide 24/7 support, answer common questions, and reduce wait times for citizen services.',
+    difficulty: 'easy',
+    tipId: 1
+  },
+  {
+    id: 'fallback-10',
+    statement: 'AI cannot be used to detect or prevent fraud in government programs.',
+    isFact: false,
+    explanation: 'AI excels at analyzing large datasets to detect anomalies and flag suspicious patterns that signal potential fraud.',
+    difficulty: 'medium',
+    tipId: 10
+  },
+  {
+    id: 'fallback-11',
+    statement: 'AI systems are already being used to improve the accuracy and speed of government budgeting and resource allocation.',
+    isFact: true,
+    explanation: 'AI-powered analytics enable more precise forecasting and dynamic allocation of funds based on real-time data trends.',
+    difficulty: 'medium',
+    tipId: 12
+  },
+  {
+    id: 'fallback-12',
+    statement: 'AI can help governments analyze large amounts of data to make smarter policy decisions.',
+    isFact: true,
+    explanation: 'AI processes complex datasets quickly, providing actionable insights that support evidence-based policymaking.',
+    difficulty: 'medium',
+    tipId: 21
+  },
+  {
+    id: 'fallback-13',
+    statement: 'AI has no impact on improving citizen satisfaction with government services.',
+    isFact: false,
+    explanation: 'By streamlining services and enabling faster responses, AI boosts transparency and satisfaction in citizen interactions.',
+    difficulty: 'easy',
+    tipId: 20
+  },
+  {
+    id: 'fallback-14',
+    statement: 'AI is not capable of supporting emergency response or disaster management in the public sector.',
+    isFact: false,
+    explanation: 'AI assists in real-time data analysis, resource deployment, and crisis prediction, enhancing public sector disaster response efforts.',
+    difficulty: 'medium',
+    tipId: 5
   }
 ];
 
@@ -202,7 +244,7 @@ class QuestionGenerator {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              model: 'gemma:2b',
+              model: 'gemma:2bx',
               prompt: prompt,
               stream: false,
               options: {
@@ -519,19 +561,25 @@ class QuestionGenerator {
       console.log('Using fallback questions - Ollama not available or no sedna tip');
     }
 
-    // Fallback to pre-generated questions filtered by difficulty
-    const difficultyQuestions = fallbackQuestions.filter(q => q.difficulty === difficulty);
-    const fallbackQuestion = difficultyQuestions.length > 0 
-      ? difficultyQuestions[Math.floor(Math.random() * difficultyQuestions.length)]
-      : fallbackQuestions[Math.floor(Math.random() * fallbackQuestions.length)]; // fallback to any question if none match difficulty
+    // Fallback to pre-generated questions (random selection regardless of difficulty)
+    const fallbackQuestion = fallbackQuestions[Math.floor(Math.random() * fallbackQuestions.length)];
+    
+    // If fallback question has a tipId, use that tip; otherwise use the provided sednaTip
+    const questionTip = fallbackQuestion.tipId 
+      ? getTipById(fallbackQuestion.tipId) || sednaTip || {
+          id: 0,
+          tip: "AI can enhance government services and improve efficiency when properly implemented.",
+          caseStudy: "Sedna Consulting Group has helped numerous government agencies implement AI solutions that improve service delivery, reduce costs, and enhance citizen satisfaction."
+        }
+      : sednaTip || {
+          id: 0,
+          tip: "AI can enhance government services and improve efficiency when properly implemented.",
+          caseStudy: "Sedna Consulting Group has helped numerous government agencies implement AI solutions that improve service delivery, reduce costs, and enhance citizen satisfaction."
+        };
     
     return {
       ...fallbackQuestion,
-      sednaTip: sednaTip || {
-        id: 0,
-        tip: "AI can enhance government services and improve efficiency when properly implemented.",
-        caseStudy: "Sedna Consulting Group has helped numerous government agencies implement AI solutions that improve service delivery, reduce costs, and enhance citizen satisfaction."
-      }
+      sednaTip: questionTip
     };
   }
 
