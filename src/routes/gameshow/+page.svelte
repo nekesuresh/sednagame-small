@@ -699,7 +699,7 @@
 									<div class="text-lg font-retro-bold">🌱 EASY</div>
 									<div class="text-sm">Basic AI concepts, simple language</div>
 								</div>
-								<div class="text-2xl">10 pts</div>
+								<div class="text-2xl">20 pts</div>
 							</div>
 						</button>
 						
@@ -712,7 +712,7 @@
 									<div class="text-lg font-retro-bold">🎯 MEDIUM</div>
 									<div class="text-sm">Moderate complexity, some technical terms</div>
 								</div>
-								<div class="text-2xl">20 pts</div>
+								<div class="text-2xl">25 pts</div>
 							</div>
 						</button>
 						

@@ -117,7 +117,7 @@
 								<div class="text-3xl mb-2">🌱</div>
 								<div class="font-retro-bold text-lg text-sedna-dark-slate-blue">EASY</div>
 								<div class="text-sm text-sedna-steel-blue-tint">Basic concepts</div>
-								<div class="text-xs text-sedna-bright-yellow mt-1 font-bold">10 pts</div>
+								<div class="text-xs text-sedna-bright-yellow mt-1 font-bold">20 pts</div>
 							</div>
 						</label>
 						<label class="block {difficulty ? 'cursor-not-allowed' : 'cursor-pointer'}">
@@ -132,7 +132,7 @@
 								<div class="text-3xl mb-2">🎯</div>
 								<div class="font-retro-bold text-lg text-sedna-dark-slate-blue">MEDIUM</div>
 								<div class="text-sm text-sedna-steel-blue-tint">Moderate complexity</div>
-								<div class="text-xs text-sedna-bright-yellow mt-1 font-bold">20 pts</div>
+								<div class="text-xs text-sedna-bright-yellow mt-1 font-bold">25 pts</div>
 							</div>
 						</label>
 						<label class="block {difficulty ? 'cursor-not-allowed' : 'cursor-pointer'}">

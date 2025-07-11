@@ -100,12 +100,12 @@ class AnswerHandler {
   public calculateScore(question: Question): number {
     // Base score based on difficulty
     const difficultyScores = {
-      easy: 10,
-      medium: 20,
+      easy: 20,
+      medium: 25,
       hard: 30
     };
     
-    return difficultyScores[question.difficulty] || 10;
+    return difficultyScores[question.difficulty] || 20;
   }
 
   private generateFeedback(question: Question, isCorrect: boolean): string {
