@@ -563,7 +563,7 @@
 										disabled={isGeneratingQuestion || (!nextQuestion && !hasShownCongrats)}
 										title={!nextQuestion && !hasShownCongrats ? 'Please wait for question to finish generating' : ''}
 									>
-										{isGeneratingQuestion ? '🔄 LOADING...' : (hasShownCongrats ? '🏁 GO TO COMPLETION' : (nextQuestion ? '🎯 NEXT QUESTION' : '⏳ GENERATING QUESTION'))}
+										{isGeneratingQuestion ? '🔄 LOADING...' : (hasShownCongrats ? '🏁 SEE YOUR RESULTS' : (nextQuestion ? '🎯 NEXT QUESTION' : '⏳ GENERATING QUESTION'))}
 									</button>
 								<button
 									class="sedna-btn sedna-btn-secondary text-2xl py-6 px-10"
