@@ -47,30 +47,7 @@
 	$: currentAccuracy = answerHandler.getAccuracy();
 	$: currentDifficulty = answerHandler.getUserInfo()?.difficulty?.toUpperCase() || 'MEDIUM';
 	$: userInfo = answerHandler.getUserInfo();
-	$: showCompletionButton = (() => {
-		if (!userInfo || !currentQuestion || !showAnswer || !answerResult?.isCorrect) {
-			return false;
-		}
-		
-		// Get the score for the current question
-		const questionScore = answerHandler.calculateScore(currentQuestion);
-		const scoreAfterThisQuestion = currentScore + questionScore;
-		
-		// Check if this question would complete the game
-		const difficulty = userInfo.difficulty;
-		let completionThreshold = 100; // default
-		
-		if (difficulty === 'hard') {
-			completionThreshold = 70;
-		} else if (difficulty === 'medium') {
-			completionThreshold = 80;
-		} else if (difficulty === 'easy') {
-			completionThreshold = 90;
-		}
-		
-		// Show button only if this question would complete the game AND it was answered correctly
-		return scoreAfterThisQuestion >= completionThreshold && answerResult.isCorrect;
-	})();
+	// Remove showCompletionButton logic and the 'See Your Results' button
 
 	let animatedStatement = '';
 	let animationInterval: any = null;
@@ -602,16 +579,7 @@
 										</div>
 									</div>
 								{/if}
-								{#if showCompletionButton}
-									<button
-										class="sedna-btn text-3xl py-6 px-16 animate-pulse bg-gradient-to-r from-yellow-400 to-pink-500 text-white font-extrabold shadow-lg border-4 border-yellow-300 hover:scale-105 transition-transform duration-200"
-										on:click={handleGoToCompletion}
-										style="box-shadow: 0 0 20px 5px #ffe066, 0 0 40px 10px #ff6f91;"
-									>
-										🎉 See Your Results!
-									</button>
-								{:else}
-									<button
+								<button
 										class="sedna-btn sedna-btn-accent {(!isGeneratingQuestion && nextQuestion) ? 'pulse' : ''} text-2xl py-6 px-10"
 										on:click={handleNextQuestion}
 										disabled={isGeneratingQuestion || !nextQuestion}
@@ -619,7 +587,6 @@
 									>
 										{isGeneratingQuestion ? '🔄 LOADING...' : nextQuestion ? '🎯 NEXT QUESTION' : '⏳ GENERATING QUESTION'}
 									</button>
-								{/if}
 								<button
 									class="sedna-btn sedna-btn-secondary text-2xl py-6 px-10"
 									on:click={handleResetGame}
