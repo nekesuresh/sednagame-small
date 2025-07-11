@@ -244,7 +244,7 @@ class QuestionGenerator {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              model: 'gemma:2bx',
+              model: 'gemma:2b',
               prompt: prompt,
               stream: false,
               options: {
