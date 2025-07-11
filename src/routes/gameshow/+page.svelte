@@ -427,6 +427,10 @@
 	$: if (!hasShownCongrats && answerHandler.getProgress() >= 100 && showAnswer) {
 		showCongratsPopup = true;
 		hasShownCongrats = true;
+		// Stop any question generation or preloading
+		isGeneratingQuestion = false;
+		isPreloadingNext = false;
+		nextQuestion = null;
 	}
 
 	function dismissCongratsPopup() {
