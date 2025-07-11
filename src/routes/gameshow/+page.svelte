@@ -215,10 +215,10 @@
 	}
 
 	function handleNextQuestion() {
-		// If the game is complete, never generate a new question
+		// If the game is complete or congrats popup has been shown, always go to completion
 		const progress = answerHandler.getProgress();
 		const isComplete = progress >= 100;
-		if (isComplete) {
+		if (isComplete || hasShownCongrats) {
 			handleGoToCompletion();
 			return;
 		}
@@ -406,6 +406,9 @@
 
 	function dismissCongratsPopup() {
 		showCongratsPopup = false;
+		// Force enable the next question button after congrats popup
+		isGeneratingQuestion = false;
+		nextQuestion = { id: 'completion', statement: '', isFact: true, explanation: '', sednaTip: { id: 0, tip: '', caseStudy: '' }, difficulty: 'easy' };
 	}
 </script>
 
@@ -557,10 +560,10 @@
 									<button
 										class="sedna-btn sedna-btn-accent {(!isGeneratingQuestion && nextQuestion) ? 'pulse' : ''} text-2xl py-6 px-10"
 										on:click={handleNextQuestion}
-										disabled={isGeneratingQuestion || !nextQuestion}
-										title={!nextQuestion ? 'Please wait for question to finish generating' : ''}
+										disabled={isGeneratingQuestion || (!nextQuestion && !hasShownCongrats)}
+										title={!nextQuestion && !hasShownCongrats ? 'Please wait for question to finish generating' : ''}
 									>
-										{isGeneratingQuestion ? '🔄 LOADING...' : nextQuestion ? '🎯 NEXT QUESTION' : '⏳ GENERATING QUESTION'}
+										{isGeneratingQuestion ? '🔄 LOADING...' : (hasShownCongrats ? '🏁 GO TO COMPLETION' : (nextQuestion ? '🎯 NEXT QUESTION' : '⏳ GENERATING QUESTION'))}
 									</button>
 								<button
 									class="sedna-btn sedna-btn-secondary text-2xl py-6 px-10"

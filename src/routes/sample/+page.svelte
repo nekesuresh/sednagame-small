@@ -42,116 +42,69 @@ function handlePlayForReal() {
   <title>Sample Question - AI or A-Lie</title>
 </svelte:head>
 
-<div class="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-sedna-cool-blue via-sedna-dark-blue to-sedna-navy p-4">
-  <div class="max-w-4xl w-full bg-white rounded-xl shadow-xl p-8 flex flex-col gap-8">
-    <h2 class="text-3xl font-retro-bold text-sedna-orange mb-2 text-center">How to Play</h2>
-    <div class="text-center text-sedna-steel-blue-tint text-base mb-4">
-      <strong>Note:</strong> This is just a sample question to show how the game works. In the real game, questions and tips are generated live!
-    </div>
-    <div class="flex flex-col md:flex-row gap-8">
-      <div class="flex-1 flex flex-col gap-6">
-        <div class="bg-sedna-pale-blue-grey border-2 border-sedna-cool-blue rounded-lg p-6 relative">
-          <div class="absolute -top-6 left-1/2 -translate-x-1/2 bg-sedna-bright-yellow text-sedna-dark-slate-blue px-4 py-1 rounded-full font-bold shadow">Game UI Preview</div>
-          <div class="flex flex-col gap-4">
-            <div class="flex justify-center gap-4 mb-2">
-              <div class="flex flex-col items-center">
-                <button class="sedna-btn text-lg px-4 py-2 opacity-80 cursor-default bg-sedna-muted-gold text-white border-sedna-muted-gold">🏠 HOME</button>
-                <span class="text-xs text-sedna-steel-blue-tint mt-1">Go back to start</span>
-              </div>
-              <div class="flex flex-col items-center">
-                <button class="sedna-btn text-lg px-4 py-2 opacity-80 cursor-default bg-sedna-muted-gold text-white border-sedna-muted-gold">📊 STATS</button>
-                <span class="text-xs text-sedna-steel-blue-tint mt-1">See your stats</span>
-              </div>
-              <div class="flex flex-col items-center">
-                <button class="sedna-btn sedna-btn-accent text-lg px-4 py-2 opacity-80 cursor-default">⚙️ DIFFICULTY</button>
-                <span class="text-xs text-sedna-steel-blue-tint mt-1">Change difficulty</span>
-              </div>
-              <div class="flex flex-col items-center">
-                <div class="ml-2 sedna-badge text-base bg-sedna-muted-gold text-white border-sedna-muted-gold">Level: MEDIUM</div>
-                <span class="text-xs text-sedna-steel-blue-tint mt-1">Current level</span>
-              </div>
-            </div>
-            <div class="sedna-card mt-2">
-              <div class="text-center mb-4">
-                <h3 class="text-xl font-retro-bold text-sedna-orange mb-2">MYTH OR FACT?</h3>
-              </div>
-              <div class="bg-sedna-light-grey border-2 border-sedna-cool-blue rounded-lg p-4 mb-4">
-                <p class="sedna-text text-lg text-center leading-relaxed">
-                  "AI can completely replace human cybersecurity analysts in detecting threats."
-                </p>
-              </div>
-              <div class="grid grid-cols-2 gap-4 mb-4">
-                <button class="sedna-btn text-lg py-4 px-6 opacity-80 cursor-default bg-sedna-pale-blue-grey text-sedna-dark-slate-blue border-sedna-pale-blue-grey">🚫 MYTH</button>
-                <button class="sedna-btn sedna-btn-accent text-lg py-4 px-6 opacity-80 cursor-default">✅ FACT</button>
-              </div>
-              <div class="bg-white border border-sedna-orange rounded-lg p-4 mb-2">
-                <div class="font-bold text-sedna-orange mb-1">Answer: <span class="text-sedna-cool-blue">MYTH</span></div>
-                <div class="font-bold text-sedna-orange mb-1">Explanation:</div>
-                <div class="text-gray-700">While AI can assist in threat detection, human analysts are still essential for context, decision-making, and handling complex scenarios that require human judgment.</div>
-              </div>
-              <div class="bg-sedna-light-grey border-2 border-sedna-orange rounded-lg p-6 mb-6">
-                <h4 class="text-xl font-retro-bold text-sedna-orange mb-3">
-                  💡 Sedna Did This:
-                </h4>
-                <p class="sedna-text mb-4">
-                  AI can help, but not fully replace, human experts in cybersecurity.
-                </p>
-                <button
-                  class="sedna-btn sedna-btn-accent"
-                  on:click={() => showSampleCaseStudy = true}
-                >
-                  📚 LEARN MORE
-                </button>
-              </div>
-              <div class="flex justify-center gap-4 mt-6">
-                <button class="sedna-btn sedna-btn-accent text-lg py-4 px-8 opacity-80 cursor-default">🎯 NEXT QUESTION</button>
-                <button class="sedna-btn text-lg py-4 px-8 opacity-80 cursor-default bg-sedna-pale-blue-grey text-sedna-dark-slate-blue border-sedna-pale-blue-grey">🔄 RESET GAME</button>
-              </div>
-            </div>
-          </div>
-        </div>
+<div class="min-h-screen bg-gradient-to-br from-sedna-cool-blue via-sedna-dark-blue to-sedna-navy p-4">
+  <div class="max-w-3xl w-full mx-auto bg-white rounded-xl shadow-xl p-6 mt-8">
+    <h2 class="text-3xl font-retro-bold text-sedna-orange mb-4 text-center">How to Play</h2>
+    
+    <!-- Sample Question -->
+    <div class="sedna-card mb-6">
+      <div class="text-center mb-4">
+        <h3 class="text-xl font-retro-bold text-sedna-orange">MYTH OR FACT?</h3>
       </div>
-      <div class="flex-1 flex flex-col gap-6 justify-center">
-        <div class="bg-sedna-muted-gold text-white rounded-lg p-6 shadow-md">
-          <h4 class="text-2xl font-retro-bold mb-2">How to Win</h4>
-          <ul class="list-disc pl-6 text-lg mb-2">
-            <li>Your goal: <span class="font-bold">Reach 100 points</span> by answering questions correctly.</li>
-            <li>Each correct answer gives you points based on your chosen difficulty.</li>
-            <li>You can change your difficulty at any time for more challenge and higher points per question.</li>
-            <li>Check your progress and stats with the <span class="font-bold">📊 STATS</span> button.</li>
-            <li>Use <span class="font-bold">RESET GAME</span> to start over at any time.</li>
-          </ul>
-        </div>
-        <div class="bg-sedna-pale-blue-grey border-2 border-sedna-cool-blue rounded-lg p-6">
-          <h4 class="text-xl font-retro-bold text-sedna-cool-blue mb-2">Tips</h4>
-          <ul class="list-disc pl-6 text-base">
-            <li>Look for the <span class="font-bold">⚙️ DIFFICULTY</span> button at the top to change your level.</li>
-            <li>Click <span class="font-bold">📊 STATS</span> to see your score, accuracy, and progress.</li>
-            <li>Use <span class="font-bold">HOME</span> to return to the start page at any time.</li>
-            <li>Try to answer quickly and accurately for the best experience!</li>
-          </ul>
-        </div>
+      <div class="bg-sedna-light-grey border-2 border-sedna-cool-blue rounded-lg p-4 mb-4">
+        <p class="sedna-text text-lg text-center">
+          "AI can completely replace human cybersecurity analysts in detecting threats."
+        </p>
+      </div>
+      <div class="grid grid-cols-2 gap-4 mb-4">
+        <button class="sedna-btn text-lg py-3 px-6 opacity-80 cursor-default bg-sedna-pale-blue-grey text-sedna-dark-slate-blue border-sedna-pale-blue-grey">🚫 MYTH</button>
+        <button class="sedna-btn sedna-btn-accent text-lg py-3 px-6 opacity-80 cursor-default">✅ FACT</button>
+      </div>
+      <div class="bg-white border border-sedna-orange rounded-lg p-4 mb-4">
+        <div class="font-bold text-sedna-orange mb-2">Answer: <span class="text-sedna-cool-blue">MYTH</span></div>
+        <div class="text-gray-700">While AI can assist in threat detection, human analysts are still essential for context and decision-making.</div>
+      </div>
+      
+      <!-- Sedna Tip Section -->
+      <div class="bg-sedna-light-grey border-2 border-sedna-orange rounded-lg p-4 mb-4">
+        <h4 class="text-xl font-retro-bold text-sedna-orange mb-2">💡 Sedna Did This:</h4>
+        <p class="sedna-text mb-3">AI can help, but not fully replace, human experts in cybersecurity.</p>
+        <button
+          class="sedna-btn sedna-btn-accent text-sm py-2 px-4"
+          on:click={() => showSampleCaseStudy = true}
+        >
+          📚 LEARN MORE
+        </button>
       </div>
     </div>
-    <!-- Centered Play for Real button below both columns -->
-    <div class="mt-6 flex flex-col items-center">
+
+    <!-- Quick Tips -->
+    <div class="bg-sedna-pale-blue-grey border-2 border-sedna-cool-blue rounded-lg p-4 mb-6">
+      <h4 class="text-xl font-retro-bold text-sedna-cool-blue mb-2">Quick Tips</h4>
+      <ul class="list-disc pl-6 text-base space-y-1">
+        <li>Reach <strong>100 points</strong> to win</li>
+        <li>Use <strong>📊 STATS</strong> to check your progress</li>
+        <li>Change difficulty anytime with <strong>⚙️ DIFFICULTY</strong></li>
+        <li>Click <strong>🏠 HOME</strong> to restart</li>
+      </ul>
+    </div>
+
+    <!-- Play Button -->
+    <div class="text-center">
       <button
-        class="sedna-btn sedna-btn-accent text-2xl py-4 px-10 w-full max-w-xs mx-auto {questionReady ? 'pulse' : ''}"
+        class="sedna-btn sedna-btn-accent text-2xl py-4 px-10 w-full max-w-xs {questionReady ? 'pulse' : ''}"
         on:click={handlePlayForReal}
         disabled={!questionReady}
       >
         {questionReady ? '🎮 PLAY FOR REAL' : '⏳ Generating question...'}
       </button>
-      <div class="text-center text-sedna-steel-blue-tint text-base mt-4 max-w-lg">
-        After you answer a question, you'll see a <span class="font-bold">Generating...</span> message while the next question is being generated in real time by the AI. When it's ready, the <span class="font-bold">Next Question</span> button will glow to let you know you can continue!
-      </div>
     </div>
   </div>
 </div>
 
 {#if showSampleCaseStudy}
   <div class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-    <div class="bg-white rounded-xl shadow-xl p-8 max-w-lg w-full relative">
+    <div class="bg-white rounded-xl shadow-xl p-6 max-w-lg w-full relative">
       <button class="absolute top-2 right-4 text-3xl text-sedna-dark-grey hover:text-sedna-cool-blue" on:click={() => showSampleCaseStudy = false}>×</button>
       <h3 class="text-2xl font-retro-bold text-sedna-orange mb-4">Case Study</h3>
       <div class="text-sedna-dark-slate-blue text-lg">Sedna helped a national cybersecurity agency stop data leaks using AI, achieving zero malicious exfiltrations for three years.</div>
