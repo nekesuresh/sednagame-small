@@ -152,7 +152,7 @@ class QuestionGenerator {
       const response = await fetch(`${this.ollamaUrl}/api/tags`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
-        signal: AbortSignal.timeout(30000) // 30 second timeout
+        signal: AbortSignal.timeout(15000) // 15 second timeout
       });
       this.isOllamaAvailable = response.ok;
       console.log('Ollama availability check result:', response.ok, 'Status:', response.status);
@@ -253,7 +253,7 @@ class QuestionGenerator {
                 max_tokens: 250
               }
             }),
-            signal: AbortSignal.timeout(30000) // 30 second timeout
+            signal: AbortSignal.timeout(15000) // 15 second timeout
           });
           const endTime = Date.now();
           const durationSeconds = ((endTime - startTime) / 1000).toFixed(2);
@@ -298,7 +298,7 @@ class QuestionGenerator {
                 max_tokens: 250
               }
             }),
-            signal: AbortSignal.timeout(30000) // 30 second timeout
+            signal: AbortSignal.timeout(15000) // 15 second timeout
           });
           const endTime = Date.now();
           const durationSeconds = ((endTime - startTime) / 1000).toFixed(2);

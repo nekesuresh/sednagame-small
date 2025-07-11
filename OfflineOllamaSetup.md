@@ -68,7 +68,7 @@ ollama run mistral "Hello, how are you?"
 ### Default Settings
 - **URL**: `http://localhost:11434`
 - **Model**: `mistral`
-- **Timeout**: 30 seconds for question generation
+- **Timeout**: 15 seconds for question generation
 
 ### Custom Configuration
 

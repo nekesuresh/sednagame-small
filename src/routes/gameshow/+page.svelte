@@ -134,19 +134,10 @@
 				currentQuestion = nextQuestion;
 				nextQuestion = null;
 			} else {
-				let attempts = 0;
 				let newQuestion: Question | null = null;
-				while (attempts < 10) {
-					newQuestion = await questionGenerator.generateQuestionFromRandomTip(difficulty);
-					console.log('Generated question ID:', newQuestion?.id);
-					console.log('Used IDs before:', Array.from(usedIds));
-					if (newQuestion && !usedIds.has(newQuestion.id)) {
-						break;
-					} else {
-						console.log('Repeat detected, skipping question with ID:', newQuestion?.id);
-					}
-					attempts++;
-				}
+				newQuestion = await questionGenerator.generateQuestionFromRandomTip(difficulty);
+				console.log('Generated question ID:', newQuestion?.id);
+				console.log('Used IDs before:', Array.from(usedIds));
 				currentQuestion = newQuestion;
 			}
 			if (currentQuestion) {
@@ -187,16 +178,9 @@
 			if (userInfo.difficulty === 'easy') correctEasy = 0;
 			if (userInfo.difficulty === 'medium') correctMedium = 0;
 			// Preload the next question at the higher difficulty
-			let attempts = 0;
 			let newQuestion: Question | null = null;
 			const difficulty = upgradeTarget;
-			while (attempts < 10) {
-				newQuestion = await questionGenerator.generateQuestionFromRandomTip(difficulty);
-				if (newQuestion && !usedIds.has(newQuestion.id)) {
-					break;
-				}
-				attempts++;
-			}
+			newQuestion = await questionGenerator.generateQuestionFromRandomTip(difficulty);
 			upgradePreloadedQuestion = newQuestion;
 			upgradePreloading = false;
 		}
@@ -365,19 +349,10 @@
 		try {
 			const userInfo = answerHandler.getUserInfo();
 			const difficulty = userInfo?.difficulty || 'medium';
-			let attempts = 0;
 			let newQuestion: Question | null = null;
-			while (attempts < 10) {
-				newQuestion = await questionGenerator.generateQuestionFromRandomTip(difficulty);
-				console.log('Preload - Generated question ID:', newQuestion?.id);
-				console.log('Preload - Used IDs before:', Array.from(usedIds));
-				if (newQuestion && !usedIds.has(newQuestion.id)) {
-					break;
-				} else {
-					console.log('Preload - Repeat detected, skipping question with ID:', newQuestion?.id);
-				}
-				attempts++;
-			}
+			newQuestion = await questionGenerator.generateQuestionFromRandomTip(difficulty);
+			console.log('Preload - Generated question ID:', newQuestion?.id);
+			console.log('Preload - Used IDs before:', Array.from(usedIds));
 			nextQuestion = newQuestion;
 			if (nextQuestion) {
 				console.log('Preload - Used IDs after:', Array.from(usedIds));
@@ -427,10 +402,6 @@
 	$: if (!hasShownCongrats && answerHandler.getProgress() >= 100 && showAnswer) {
 		showCongratsPopup = true;
 		hasShownCongrats = true;
-		// Stop any question generation or preloading
-		isGeneratingQuestion = false;
-		isPreloadingNext = false;
-		nextQuestion = null;
 	}
 
 	function dismissCongratsPopup() {
@@ -583,7 +554,7 @@
 										</div>
 									</div>
 								{/if}
-								<button
+									<button
 										class="sedna-btn sedna-btn-accent {(!isGeneratingQuestion && nextQuestion) ? 'pulse' : ''} text-2xl py-6 px-10"
 										on:click={handleNextQuestion}
 										disabled={isGeneratingQuestion || !nextQuestion}
@@ -736,7 +707,7 @@
 			</div>
 		</div>
 	</div>
-{/if}
+{/if} 
 
 <style>
 @keyframes bounce-in {
