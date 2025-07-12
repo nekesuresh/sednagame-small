@@ -31,7 +31,7 @@ function handleLogin() {
 
 function exportCSV() {
   if (!users.length) return;
-  const header = 'Name,Phone,Email,Pain Point,Organization,Timestamp\n';
+  const header = 'Name,Phone,Title,Email,Pain Point,Organization,Timestamp\n';
   const rows = users.map(u => `"${u.name}",="${u.phone}","${u.email}","${u.painPoint}","${u.organization}","${new Date(u.timestamp).toLocaleString()}"`).join('\n');
   const csv = header + rows;
   const blob = new Blob([csv], { type: 'text/csv' });
@@ -145,7 +145,15 @@ async function clearAllUsers() {
     </div>
   {:else}
     <div class="bg-white rounded-xl shadow-xl p-8 max-w-5xl w-full flex flex-col items-center">
-      <h2 class="text-2xl font-retro-bold text-sedna-orange mb-4">User Data</h2>
+      <div class="text-center mb-8">
+        <h1 class="sedna-header mb-4 flex items-center justify-center gap-3 whitespace-nowrap text-3xl md:text-4xl lg:text-5xl">
+          <span>📊</span>
+          <span>USER DATA</span>
+        </h1>
+        <p class="sedna-subheader">
+          Manage and export user information from the AI or A-Lie game
+        </p>
+      </div>
       <div class="flex gap-4 mb-4">
         <button class="sedna-btn sedna-btn-accent" on:click={fetchUsers}>Refresh</button>
         <button class="sedna-btn sedna-btn-secondary" on:click={exportCSV}>Export as CSV</button>
