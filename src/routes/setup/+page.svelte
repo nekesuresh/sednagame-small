@@ -15,7 +15,6 @@
 	let phone = '';
 	let email = '';
 	let state = '';
-	let county = '';
 
 	const organizations = [
 		'Government Agency',
@@ -63,7 +62,7 @@
 	}
 
 	async function handleSubmit() {
-		if (!name.trim() || !title.trim() || !organization.trim() || !aiConcern.trim() || !phone.trim() || !email.trim() || !state.trim() || !county.trim()) {
+		if (!name.trim() || !title.trim() || !organization.trim() || !aiConcern.trim() || !phone.trim() || !email.trim() || !state.trim()) {
 			alert('Please fill in all fields');
 			return;
 		}
@@ -74,7 +73,7 @@
 		isSubmitting = true;
 
 		try {
-			await saveUserInfo({ name: name.trim(), title: title.trim(), painPoint: aiConcern.trim(), organization: organization.trim(), phone: phone.trim(), email: email.trim(), state: state.trim(), county: county.trim() });
+			await saveUserInfo({ name: name.trim(), title: title.trim(), painPoint: aiConcern.trim(), organization: organization.trim(), phone: phone.trim(), email: email.trim(), state: state.trim() });
 			answerHandler.initializeUserInfo(name.trim(), organization.trim(), aiConcern.trim(), selectedDifficulty as 'easy' | 'medium' | 'hard');
 			localStorage.removeItem('sedna_show_start_page');
 			goto('/sample');
@@ -309,19 +308,7 @@
 						<option value="WY">Wyoming</option>
 					</select>
 				</div>
-				<div>
-					<label for="county" class="block text-xl font-retro-bold text-sedna-navy mb-3">
-						🏛️ County
-					</label>
-					<input
-						id="county"
-						type="text"
-						bind:value={county}
-						class="sedna-input w-full text-xl"
-						placeholder="Enter your county..."
-						required
-					/>
-				</div>
+
 				<div class="text-center pt-6">
 					<button
 						type="submit"

@@ -31,8 +31,8 @@ function handleLogin() {
 
 function exportCSV() {
   if (!users.length) return;
-  const header = 'Name,Title,Phone,Email,Pain Point,Organization,State,County,Timestamp\n';
-  const rows = users.map(u => `"${u.name}","${u.title || ''}","${u.phone}","${u.email}","${u.painPoint}","${u.organization}","${u.state}","${u.county}","${new Date(u.timestamp).toLocaleString()}"`).join('\n');
+  const header = 'Name,Title,Phone,Email,Pain Point,Organization,State,Timestamp\n';
+  const rows = users.map(u => `"${u.name}","${u.title || ''}","${u.phone}","${u.email}","${u.painPoint}","${u.organization}","${u.state}","${new Date(u.timestamp).toLocaleString()}"`).join('\n');
   const csv = header + rows;
   const blob = new Blob([csv], { type: 'text/csv' });
   const url = URL.createObjectURL(blob);
@@ -110,8 +110,7 @@ function handleSearch() {
     (u.email && u.email.toLowerCase().includes(term)) ||
     (u.phone && u.phone.toLowerCase().includes(term)) ||
     (u.organization && u.organization.toLowerCase().includes(term)) ||
-    (u.state && u.state.toLowerCase().includes(term)) ||
-    (u.county && u.county.toLowerCase().includes(term))
+    (u.state && u.state.toLowerCase().includes(term))
   );
 }
 
@@ -171,7 +170,6 @@ async function clearAllUsers() {
               <th class="border-b-2 p-2">Pain Point</th>
               <th class="border-b-2 p-2">Organization</th>
               <th class="border-b-2 p-2">State</th>
-              <th class="border-b-2 p-2">County</th>
               <th class="border-b-2 p-2">Timestamp</th>
               <th class="border-b-2 p-2">Raffle Entries</th>
               <th class="border-b-2 p-2">Actions</th>
@@ -190,7 +188,6 @@ async function clearAllUsers() {
                 <td class="border-b p-2">{user.painPoint}</td>
                 <td class="border-b p-2">{user.organization}</td>
                 <td class="border-b p-2">{user.state}</td>
-                <td class="border-b p-2">{user.county}</td>
                 <td class="border-b p-2">{new Date(user.timestamp).toLocaleString()}</td>
                 <td class="border-b p-2">
                   <input type="number" min="1" class="w-16 border rounded px-2 py-1" value={user.raffleEntries} on:change={e => updateRaffleEntries(user.id, +e.target.value)}>
