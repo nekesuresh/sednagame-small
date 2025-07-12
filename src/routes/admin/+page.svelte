@@ -31,8 +31,8 @@ function handleLogin() {
 
 function exportCSV() {
   if (!users.length) return;
-  const header = 'Name,Title,Phone,Email,Pain Point,Organization,State,Timestamp\n';
-  const rows = users.map(u => `"${u.name}","${u.title || ''}","${u.phone}","${u.email}","${u.painPoint}","${u.organization}","${u.state}","${new Date(u.timestamp).toLocaleString()}"`).join('\n');
+  const header = 'Name,Title,Phone,Email,Pain Point,Organization,State,Timestamp,Raffle Entries\n';
+  const rows = users.map(u => `"${u.name}","${u.title || ''}","${u.phone}","${u.email}","${u.painPoint}","${u.organization}","${u.state}","${new Date(u.timestamp).toLocaleString()}","${u.raffleEntries || 1}"`).join('\n');
   const csv = header + rows;
   const blob = new Blob([csv], { type: 'text/csv' });
   const url = URL.createObjectURL(blob);
