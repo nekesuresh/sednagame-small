@@ -30,7 +30,7 @@ export async function getAllUsers() {
   }));
 }
 
-export async function updateUserField(id: number, field: 'name' | 'painPoint' | 'organization', value: string) {
+export async function updateUserField(id: number, field: 'name' | 'painPoint' | 'organization' | 'title', value: string) {
   const db = await dbPromise;
   const user = await db.get('users', id);
   if (user) {
