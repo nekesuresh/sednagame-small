@@ -1,19 +1,12 @@
 import { openDB } from 'idb';
 
 const DB_NAME = 'sedna-user-db';
-const DB_VERSION = 2;
+const DB_VERSION = 1;
 
 export const dbPromise = openDB(DB_NAME, DB_VERSION, {
-  upgrade(db, oldVersion, newVersion) {
+  upgrade(db) {
     if (!db.objectStoreNames.contains('users')) {
       db.createObjectStore('users', { keyPath: 'id', autoIncrement: true });
-    }
-    
-    // Clear existing data when upgrading to version 2 to ensure title field is available
-    if (oldVersion < 2) {
-      const tx = db.transaction('users', 'readwrite');
-      const store = tx.objectStore('users');
-      store.clear();
     }
   }
 });
