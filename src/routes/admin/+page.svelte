@@ -31,8 +31,8 @@ function handleLogin() {
 
 function exportCSV() {
   if (!users.length) return;
-  const header = 'Name,Phone,Title,Email,Pain Point,Organization,Timestamp\n';
-  const rows = users.map(u => `"${u.name}",="${u.phone}","${u.email}","${u.painPoint}","${u.organization}","${new Date(u.timestamp).toLocaleString()}"`).join('\n');
+  const header = 'Name,Title,Phone,Email,Pain Point,Organization,State,County,Timestamp\n';
+  const rows = users.map(u => `"${u.name}","${u.title || ''}","${u.phone}","${u.email}","${u.painPoint}","${u.organization}","${u.state}","${u.county}","${new Date(u.timestamp).toLocaleString()}"`).join('\n');
   const csv = header + rows;
   const blob = new Blob([csv], { type: 'text/csv' });
   const url = URL.createObjectURL(blob);
@@ -106,6 +106,7 @@ function handleSearch() {
   const term = searchTerm.trim().toLowerCase();
   pagedUsers = users.filter(u =>
     (u.name && u.name.toLowerCase().includes(term)) ||
+    (u.title && u.title.toLowerCase().includes(term)) ||
     (u.email && u.email.toLowerCase().includes(term)) ||
     (u.phone && u.phone.toLowerCase().includes(term)) ||
     (u.organization && u.organization.toLowerCase().includes(term)) ||
@@ -164,6 +165,7 @@ async function clearAllUsers() {
             <tr>
               <th class="border-b-2 p-2"><input type="checkbox" checked={selectedIds.length === users.length && users.length > 0} on:change={selectAll}></th>
               <th class="border-b-2 p-2">Name</th>
+              <th class="border-b-2 p-2">Title</th>
               <th class="border-b-2 p-2">Phone</th>
               <th class="border-b-2 p-2">Email</th>
               <th class="border-b-2 p-2">Pain Point</th>
@@ -182,6 +184,7 @@ async function clearAllUsers() {
                   <input type="checkbox" checked={selectedIds.includes(user.id)} on:change={() => toggleSelect(user.id)}>
                 </td>
                 <td class="border-b p-2">{user.name}</td>
+                <td class="border-b p-2">{user.title || '-'}</td>
                 <td class="border-b p-2">{user.phone}</td>
                 <td class="border-b p-2">{user.email}</td>
                 <td class="border-b p-2">{user.painPoint}</td>
