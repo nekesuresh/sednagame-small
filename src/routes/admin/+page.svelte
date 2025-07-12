@@ -165,7 +165,7 @@ async function saveEditTitle(user) {
       <button class="sedna-btn sedna-btn-accent w-full" on:click={handleLogin}>Login</button>
     </div>
   {:else}
-    <div class="bg-white rounded-xl shadow-xl p-8 max-w-5xl w-full flex flex-col items-center">
+    <div class="bg-white rounded-xl shadow-xl p-8 max-w-7xl w-full flex flex-col items-center">
       <h2 class="text-2xl font-retro-bold text-sedna-orange mb-4">User Data</h2>
       <div class="flex gap-4 mb-4">
         <button class="sedna-btn sedna-btn-accent" on:click={fetchUsers}>Refresh</button>
