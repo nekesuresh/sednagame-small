@@ -179,21 +179,21 @@ async function saveEditTitle(user) {
         <div class="mb-4">
           <button class="sedna-btn sedna-btn-secondary" on:click={deleteSelected} disabled={selectedIds.length === 0}>Delete Selected</button>
         </div>
-        <div class="overflow-auto w-full" style="max-height: 60vh;">
-        <table class="w-full text-left border-collapse">
+        <div class="overflow-auto w-full" style="max-height: 60vh; overflow-x: auto;">
+        <table class="w-full text-left border-collapse min-w-[1200px]">
           <thead>
             <tr>
-              <th class="border-b-2 p-2"><input type="checkbox" checked={selectedIds.length === users.length && users.length > 0} on:change={selectAll}></th>
-              <th class="border-b-2 p-2">Name</th>
-              <th class="border-b-2 p-2">Title</th>
-              <th class="border-b-2 p-2">Phone</th>
-              <th class="border-b-2 p-2">Email</th>
-              <th class="border-b-2 p-2">Pain Point</th>
-              <th class="border-b-2 p-2">Organization</th>
-              <th class="border-b-2 p-2">State</th>
-              <th class="border-b-2 p-2">Timestamp</th>
-              <th class="border-b-2 p-2">Raffle Entries</th>
-              <th class="border-b-2 p-2">Actions</th>
+              <th class="border-b-2 p-2 w-8"><input type="checkbox" checked={selectedIds.length === users.length && users.length > 0} on:change={selectAll}></th>
+              <th class="border-b-2 p-2 w-32">Name</th>
+              <th class="border-b-2 p-2 w-40">Title</th>
+              <th class="border-b-2 p-2 w-32">Phone</th>
+              <th class="border-b-2 p-2 w-48">Email</th>
+              <th class="border-b-2 p-2 w-40">Pain Point</th>
+              <th class="border-b-2 p-2 w-40">Organization</th>
+              <th class="border-b-2 p-2 w-20">State</th>
+              <th class="border-b-2 p-2 w-48">Timestamp</th>
+              <th class="border-b-2 p-2 w-24">Raffle Entries</th>
+              <th class="border-b-2 p-2 w-20">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -202,8 +202,8 @@ async function saveEditTitle(user) {
                 <td class="border-b p-2">
                   <input type="checkbox" checked={selectedIds.includes(user.id)} on:change={() => toggleSelect(user.id)}>
                 </td>
-                <td class="border-b p-2">{user.name}</td>
-                <td class="border-b p-2">
+                <td class="border-b p-2 break-words">{user.name}</td>
+                <td class="border-b p-2 break-words">
                   {#if editingTitleId === user.id}
                     <input
                       class="sedna-input w-32 text-sm"
@@ -217,12 +217,12 @@ async function saveEditTitle(user) {
                     <button class="ml-2 text-xs text-blue-600 underline" on:click={() => startEditTitle(user)}>Edit</button>
                   {/if}
                 </td>
-                <td class="border-b p-2">{user.phone}</td>
-                <td class="border-b p-2">{user.email}</td>
-                <td class="border-b p-2">{user.painPoint}</td>
-                <td class="border-b p-2">{user.organization}</td>
-                <td class="border-b p-2">{user.state}</td>
-                <td class="border-b p-2">{new Date(user.timestamp).toLocaleString()}</td>
+                <td class="border-b p-2 break-words">{user.phone}</td>
+                <td class="border-b p-2 break-words">{user.email}</td>
+                <td class="border-b p-2 break-words">{user.painPoint}</td>
+                <td class="border-b p-2 break-words">{user.organization}</td>
+                <td class="border-b p-2 break-words">{user.state}</td>
+                <td class="border-b p-2 break-words">{new Date(user.timestamp).toLocaleString()}</td>
                 <td class="border-b p-2">
                   <input type="number" min="1" class="w-16 border rounded px-2 py-1" value={user.raffleEntries} on:change={e => updateRaffleEntries(user.id, +e.target.value)}>
                 </td>
