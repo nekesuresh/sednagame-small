@@ -11,22 +11,22 @@ export const dbPromise = openDB(DB_NAME, DB_VERSION, {
   }
 });
 
-export async function saveUserInfo({ name, painPoint, organization, phone, email, state, county }: { name: string, painPoint: string, organization: string, phone: string, email: string, state: string, county: string }) {
+export async function saveUserInfo({ name, title, painPoint, organization, phone, email, state }: { name: string, title: string, painPoint: string, organization: string, phone: string, email: string, state: string }) {
   const db = await dbPromise;
-  await db.add('users', { name, painPoint, organization, phone, email, state, county, timestamp: Date.now(), raffleEntries: 1 });
+  await db.add('users', { name, title, painPoint, organization, phone, email, state, timestamp: Date.now(), raffleEntries: 1 });
 }
 
 export async function getAllUsers() {
   const db = await dbPromise;
   const users = await db.getAll('users');
-  // Ensure all users have raffleEntries, phone, email, state, and county
+  // Ensure all users have raffleEntries, phone, email, state, and title
   return users.map(u => ({
     ...u,
     raffleEntries: u.raffleEntries ?? 1,
     phone: u.phone ?? '',
     email: u.email ?? '',
     state: u.state ?? '',
-    county: u.county ?? ''
+    title: u.title ?? ''
   }));
 }
 
