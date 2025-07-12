@@ -11,8 +11,7 @@ let winner: any = null;
 let currentPage = 1;
 const pageSize = 10;
 let searchTerm = '';
-let editingTitleId: number | null = null;
-let editingTitleValue = '';
+
 
 $: totalPages = Math.ceil(users.length / pageSize);
 $: pagedUsers = users.slice((currentPage - 1) * pageSize, currentPage * pageSize);
@@ -128,19 +127,7 @@ async function clearAllUsers() {
   }
 }
 
-async function startEditTitle(user) {
-  editingTitleId = user.id;
-  editingTitleValue = user.title || '';
-}
 
-async function saveEditTitle(user) {
-  if (editingTitleId !== null) {
-    await updateUserField(user.id, 'title', editingTitleValue);
-    editingTitleId = null;
-    editingTitleValue = '';
-    await fetchUsers();
-  }
-}
 </script>
 
 <svelte:head>
@@ -202,20 +189,7 @@ async function saveEditTitle(user) {
                   <input type="checkbox" checked={selectedIds.includes(user.id)} on:change={() => toggleSelect(user.id)}>
                 </td>
                 <td class="border-b p-2">{user.name}</td>
-                <td class="border-b p-2">
-                  {#if editingTitleId === user.id}
-                    <input
-                      class="sedna-input w-32 text-sm"
-                      bind:value={editingTitleValue}
-                      on:blur={() => saveEditTitle(user)}
-                      on:keydown={(e) => { if (e.key === 'Enter') saveEditTitle(user); }}
-                      autofocus
-                    />
-                  {:else}
-                    {user.title || '-'}
-                    <button class="ml-2 text-xs text-blue-600 underline" on:click={() => startEditTitle(user)}>Edit</button>
-                  {/if}
-                </td>
+                <td class="border-b p-2">{user.title || '-'}</td>
                 <td class="border-b p-2">{user.phone}</td>
                 <td class="border-b p-2">{user.email}</td>
                 <td class="border-b p-2">{user.painPoint}</td>
