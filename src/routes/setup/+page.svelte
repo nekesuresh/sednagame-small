@@ -42,6 +42,11 @@
 	$: if (difficulty && !questionPreloaded && !isPreloading) {
 		handleDifficultyChange(difficulty);
 	}
+	
+	// Preload medium difficulty question by default if no difficulty is selected
+	$: if (!difficulty && !questionPreloaded && !isPreloading) {
+		handleDifficultyChange('medium');
+	}
 
 	async function handleDifficultyChange(newDifficulty: 'easy' | 'medium' | 'hard') {
 		isPreloading = true;
@@ -58,16 +63,19 @@
 	}
 
 	async function handleSubmit() {
-		if (!name.trim() || !title.trim() || !organization.trim() || !aiConcern.trim() || !difficulty || !phone.trim() || !email.trim() || !state.trim() || !county.trim()) {
+		if (!name.trim() || !title.trim() || !organization.trim() || !aiConcern.trim() || !phone.trim() || !email.trim() || !state.trim() || !county.trim()) {
 			alert('Please fill in all fields');
 			return;
 		}
+
+		// Default to medium if no difficulty is selected
+		const selectedDifficulty = difficulty || 'medium';
 
 		isSubmitting = true;
 
 		try {
 			await saveUserInfo({ name: name.trim(), title: title.trim(), painPoint: aiConcern.trim(), organization: organization.trim(), phone: phone.trim(), email: email.trim(), state: state.trim(), county: county.trim() });
-			answerHandler.initializeUserInfo(name.trim(), organization.trim(), aiConcern.trim(), title.trim(), difficulty as 'easy' | 'medium' | 'hard');
+			answerHandler.initializeUserInfo(name.trim(), organization.trim(), aiConcern.trim(), selectedDifficulty as 'easy' | 'medium' | 'hard');
 			localStorage.removeItem('sedna_show_start_page');
 			goto('/sample');
 		} catch (error) {
@@ -99,10 +107,10 @@
 				<!-- Difficulty selection FIRST -->
 				<div>
 					<label class="block text-xl font-retro-bold text-sedna-navy mb-3">
-						🎯 Choose your difficulty level:
+						🎯 Choose your difficulty level (optional):
 					</label>
 					<p class="text-sm text-sedna-steel-blue-tint mb-4 text-center">
-						💡 Don't worry, you can change this later in the game!
+						💡 Medium is selected by default if you don't choose. You can change this later in the game!
 					</p>
 					<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 						<label class="block {difficulty ? 'cursor-not-allowed' : 'cursor-pointer'}">

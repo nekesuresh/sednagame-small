@@ -58,7 +58,6 @@
 				<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 					<div>
 						<p class="sedna-text"><span class="sedna-highlight">Name:</span> {userInfo.name}</p>
-						<p class="sedna-text"><span class="sedna-highlight">Title:</span> {userInfo.title}</p>
 						<p class="sedna-text"><span class="sedna-highlight">Organization:</span> {userInfo.organization}</p>
 					</div>
 					<div>
