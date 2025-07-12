@@ -67,7 +67,7 @@
 
 		try {
 			await saveUserInfo({ name: name.trim(), title: title.trim(), painPoint: aiConcern.trim(), organization: organization.trim(), phone: phone.trim(), email: email.trim(), state: state.trim(), county: county.trim() });
-			answerHandler.initializeUserInfo(name.trim(), organization.trim(), aiConcern.trim(), difficulty as 'easy' | 'medium' | 'hard');
+			answerHandler.initializeUserInfo(name.trim(), organization.trim(), aiConcern.trim(), title.trim(), difficulty as 'easy' | 'medium' | 'hard');
 			localStorage.removeItem('sedna_show_start_page');
 			goto('/sample');
 		} catch (error) {

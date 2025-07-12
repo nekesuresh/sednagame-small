@@ -59,6 +59,11 @@
 				<h2 class="text-3xl font-retro-bold text-sedna-dark-slate-blue mb-4">
 					🏆 Congratulations, {userInfo?.name || 'Champion'}!
 				</h2>
+				{#if userInfo?.title}
+					<p class="sedna-text text-lg text-sedna-steel-blue-tint mb-4">
+						{userInfo.title} at {userInfo?.organization || 'your organization'}
+					</p>
+				{/if}
 				<p class="sedna-text text-xl mb-6">
 					You've successfully completed AI or A-Lie and demonstrated your understanding of AI in government and public sector applications!
 				</p>

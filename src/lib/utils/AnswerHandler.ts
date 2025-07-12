@@ -12,6 +12,7 @@ export interface UserInfo {
   name: string;
   organization: string;
   aiConcern: string;
+  title: string;
   difficulty: 'easy' | 'medium' | 'hard';
   score: number;
   totalQuestions: number;
@@ -55,11 +56,12 @@ class AnswerHandler {
     this.saveUserInfo();
   }
 
-  public initializeUserInfo(name: string, organization: string, aiConcern: string, difficulty: 'easy' | 'medium' | 'hard' = 'medium'): void {
+  public initializeUserInfo(name: string, organization: string, aiConcern: string, title: string, difficulty: 'easy' | 'medium' | 'hard' = 'medium'): void {
     this.userInfo = {
       name,
       organization,
       aiConcern,
+      title,
       difficulty,
       score: 0,
       totalQuestions: 0,
@@ -183,6 +185,7 @@ class AnswerHandler {
       this.userInfo.name = '';
       this.userInfo.organization = '';
       this.userInfo.aiConcern = '';
+      this.userInfo.title = '';
       this.saveUserInfo();
     }
   }
